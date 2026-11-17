@@ -1,0 +1,9520 @@
+{
+ "chains": [
+  {
+   "key": "dc5e_0047aa720c2960",
+   "name": "蛋包蛋进化链",
+   "stages": [
+    {
+     "pet_id": 647,
+     "pet_key": "pet_000649",
+     "name": "蛋包蛋",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 648,
+     "pet_key": "pet_000650",
+     "name": "鸡麻麻",
+     "stage": 2,
+     "level": 36,
+     "condition": ""
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_31bc8506351842",
+   "name": "翡翠水母进化链",
+   "stages": [
+    {
+     "pet_id": 397,
+     "pet_key": "pet_000108",
+     "name": "翡翠水母",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 398,
+     "pet_key": "pet_000109",
+     "name": "琉璃水母",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 399,
+     "pet_key": "pet_000705",
+     "name": "琉璃君主",
+     "condition": "首领化",
+     "item": "琉璃君主的信物"
+    }
+   ]
+  },
+  {
+   "key": "dc5e_358574fd0eaab8",
+   "name": "滴溜豚进化链",
+   "stages": [
+    {
+     "pet_id": 659,
+     "pet_key": "pet_000661",
+     "name": "滴溜豚",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 660,
+     "pet_key": "pet_000662",
+     "name": "滴廿豚",
+     "stage": 2,
+     "level": 36,
+     "condition": ""
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_532e761b925779",
+   "name": "阿布进化链",
+   "stages": [
+    {
+     "pet_id": 661,
+     "pet_key": "pet_000710",
+     "name": "阿布",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 662,
+     "pet_key": "pet_000714",
+     "name": "超能阿布",
+     "condition": "首领化",
+     "item": "旧忆头巾"
+    }
+   ]
+  },
+  {
+   "key": "dc5e_60db7dce6beee5",
+   "name": "鲸羽进化链",
+   "stages": [
+    {
+     "pet_id": 651,
+     "pet_key": "pet_000653",
+     "name": "鲸羽",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 652,
+     "pet_key": "pet_000654",
+     "name": "圆环鲸羽",
+     "stage": 2,
+     "level": 35,
+     "condition": "晴天，位于商店街周边/咸水湾/拾荒港口/彼得大道/向日葵海岸"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_6c81f5c70d9044",
+   "name": "地银链进化链",
+   "stages": [
+    {
+     "pet_id": 638,
+     "pet_key": "pet_000640",
+     "name": "地银链",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 639,
+     "pet_key": "pet_000641",
+     "name": "地底银鳞",
+     "stage": 2,
+     "level": 24,
+     "condition": "与蓝晶碧玺/紫莲刚玉/黄石榴石/黑晶琉璃累计交互6次"
+    },
+    {
+     "pet_id": 640,
+     "pet_key": "pet_000642",
+     "name": "地绡银龙",
+     "stage": 3,
+     "level": 47,
+     "condition": ""
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_744e21f436cf82",
+   "name": "乐乐鲨进化链（柠檬鲨分支）",
+   "stages": [
+    {
+     "pet_id": 644,
+     "pet_key": "pet_000646",
+     "name": "乐乐鲨",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 645,
+     "pet_key": "pet_000647",
+     "name": "阿瓦鲨（柠檬鲨的样子）",
+     "stage": 2,
+     "level": 34,
+     "condition": "使用3次防御类技能"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_7bede4dbd340d7",
+   "name": "西瓜虫进化链",
+   "stages": [
+    {
+     "pet_id": 655,
+     "pet_key": "pet_000657",
+     "name": "西瓜虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 656,
+     "pet_key": "pet_000658",
+     "name": "冬虫夏瓜",
+     "stage": 2,
+     "level": 33,
+     "condition": ""
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_8106f92a8d96e6",
+   "name": "乐乐鲨进化链（虎纹鲨分支）",
+   "stages": [
+    {
+     "pet_id": 644,
+     "pet_key": "pet_000646",
+     "name": "乐乐鲨",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 646,
+     "pet_key": "pet_000648",
+     "name": "阿瓦鲨（虎纹鲨的样子）",
+     "stage": 2,
+     "level": 34,
+     "condition": "使用3次攻击类技能"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_8350f9c12309f6",
+   "name": "小剪影进化链",
+   "stages": [
+    {
+     "pet_id": 657,
+     "pet_key": "pet_000659",
+     "name": "小剪影",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 658,
+     "pet_key": "pet_000660",
+     "name": "影子剪纸",
+     "stage": 2,
+     "level": 32,
+     "condition": ""
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_85b1512625efd1",
+   "name": "小冥龙进化链",
+   "stages": [
+    {
+     "pet_id": 636,
+     "pet_key": "pet_000638",
+     "name": "小冥龙",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 637,
+     "pet_key": "pet_000639",
+     "name": "冥古龙",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_9550958f4bf948",
+   "name": "乐乐鲨进化链（柠檬鲨分支）",
+   "stages": [
+    {
+     "pet_id": 644,
+     "pet_key": "pet_000646",
+     "name": "乐乐鲨",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 645,
+     "pet_key": "pet_000647",
+     "name": "阿瓦鲨（柠檬鲨的样子）",
+     "stage": 2,
+     "level": 34,
+     "condition": "使用3次防御类技能"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_9550958f4bf948",
+   "name": "乐乐鲨进化链（虎纹鲨分支）",
+   "stages": [
+    {
+     "pet_id": 644,
+     "pet_key": "pet_000646",
+     "name": "乐乐鲨",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 646,
+     "pet_key": "pet_000648",
+     "name": "阿瓦鲨（虎纹鲨的样子）",
+     "stage": 2,
+     "level": 34,
+     "condition": "使用3次攻击类技能"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_98ec5af7fd2283",
+   "name": "布鲁斯进化链",
+   "stages": [
+    {
+     "pet_id": 406,
+     "pet_key": "pet_000215",
+     "name": "布鲁斯",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 407,
+     "pet_key": "pet_000216",
+     "name": "雪顶布鲁斯",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    },
+    {
+     "pet_id": 408,
+     "pet_key": "pet_000217",
+     "name": "冰钻布鲁斯",
+     "stage": 3,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 409,
+     "pet_key": "pet_000706",
+     "name": "圣冠布鲁斯",
+     "condition": "首领化",
+     "item": "圣冠布鲁斯的信物"
+    }
+   ]
+  },
+  {
+   "key": "dc5e_d92e4fbb814ad4",
+   "name": "沉金兽进化链",
+   "stages": [
+    {
+     "pet_id": 641,
+     "pet_key": "pet_000643",
+     "name": "沉金兽",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 642,
+     "pet_key": "pet_000644",
+     "name": "龙头金",
+     "stage": 2,
+     "level": 27,
+     "condition": "与蓝晶碧玺/紫莲刚玉/黄石榴石/黑晶琉璃累计交互6次"
+    },
+    {
+     "pet_id": 643,
+     "pet_key": "pet_000645",
+     "name": "龙嵴金脉",
+     "stage": 3,
+     "level": 49,
+     "condition": ""
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_e8c9bdd058f20a",
+   "name": "豆粒鹅进化链",
+   "stages": [
+    {
+     "pet_id": 653,
+     "pet_key": "pet_000655",
+     "name": "豆粒鹅",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 654,
+     "pet_key": "pet_000656",
+     "name": "刨雪鹅",
+     "stage": 2,
+     "level": 35,
+     "condition": "晴天，位于商店街周边/咸水湾/拾荒港口/彼得大道/向日葵海岸"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "dc5e_fcd6f3acd80b87",
+   "name": "蟹蟹椰进化链",
+   "stages": [
+    {
+     "pet_id": 649,
+     "pet_key": "pet_000651",
+     "name": "蟹蟹椰",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 650,
+     "pet_key": "pet_000652",
+     "name": "沙咔蟹",
+     "stage": 2,
+     "level": 35,
+     "condition": "晴天，位于商店街周边/咸水湾/拾荒港口/彼得大道/向日葵海岸"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_0111b7d5b79a",
+   "name": "冬羽雀进化链（夏天的样子）",
+   "stages": [
+    {
+     "pet_id": 41,
+     "pet_key": "pet_000230",
+     "name": "雪绒鸟（夏天的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 46,
+     "pet_key": "pet_000233",
+     "name": "冬羽雀（夏天的样子）",
+     "stage": 2,
+     "level": 5,
+     "condition": null
+    },
+    {
+     "pet_id": 50,
+     "pet_key": "pet_000236",
+     "name": "岚鸟（夏天的样子）",
+     "stage": 3,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 54,
+     "pet_key": "pet_000564",
+     "name": "霜翼领主（夏天的样子）",
+     "condition": "首领化",
+     "item": "霜翼领主的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_017762201f2c",
+   "name": "锥尾羊进化链",
+   "stages": [
+    {
+     "pet_id": 37,
+     "pet_key": "pet_000042",
+     "name": "锥尾羊",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 38,
+     "pet_key": "pet_000043",
+     "name": "铃兰羊",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 39,
+     "pet_key": "pet_000044",
+     "name": "花影羚羊",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_02719244cec9",
+   "name": "火尾瓦特进化链",
+   "stages": [
+    {
+     "pet_id": 349,
+     "pet_key": "pet_000081",
+     "name": "火尾瓦特",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 350,
+     "pet_key": "pet_000082",
+     "name": "火尾战士",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 351,
+     "pet_key": "pet_000083",
+     "name": "烈火守护",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 352,
+     "pet_key": "pet_000625",
+     "name": "烈焰狂战士",
+     "condition": "首领化",
+     "item": "烈焰狂战士的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_03e5b95fb668",
+   "name": "云梦豚进化链",
+   "stages": [
+    {
+     "pet_id": 634,
+     "pet_key": "pet_000620",
+     "name": "云梦豚",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 635,
+     "pet_key": "pet_000621",
+     "name": "长江豚",
+     "stage": 2,
+     "level": 39,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_043f450da096",
+   "name": "菊花梨进化链",
+   "stages": [
+    {
+     "pet_id": 170,
+     "pet_key": "pet_000193",
+     "name": "菊花梨",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_05dd8a2bfafb",
+   "name": "星云旅者进化链",
+   "stages": [
+    {
+     "pet_id": 574,
+     "pet_key": "pet_000367",
+     "name": "星云旅者",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_07465adc65fc",
+   "name": "公平鸽进化链",
+   "stages": [
+    {
+     "pet_id": 268,
+     "pet_key": "pet_000397",
+     "name": "公平鸽",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_08eff3ab1f19",
+   "name": "海盔虫进化链（本来的样子）",
+   "stages": [
+    {
+     "pet_id": 162,
+     "pet_key": "pet_000269",
+     "name": "海盔虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 164,
+     "pet_key": "pet_000270",
+     "name": "刺盔虫",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    },
+    {
+     "pet_id": 166,
+     "pet_key": "pet_000271",
+     "name": "千棘盔",
+     "stage": 3,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 168,
+     "pet_key": "pet_000545",
+     "name": "千棘海针",
+     "condition": "首领化",
+     "item": "千棘海针的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_090476f3179d",
+   "name": "逗逗进化链",
+   "stages": [
+    {
+     "pet_id": 326,
+     "pet_key": "pet_000300",
+     "name": "逗逗",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 327,
+     "pet_key": "pet_000301",
+     "name": "气球猫",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 328,
+     "pet_key": "pet_000302",
+     "name": "梦想三三",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 329,
+     "pet_key": "pet_000557",
+     "name": "奇梦咪",
+     "condition": "首领化",
+     "item": "奇梦咪的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_09d4ec165580",
+   "name": "毛毛进化链（奇丽花的样子）",
+   "stages": [
+    {
+     "pet_id": 72,
+     "pet_key": "pet_000122",
+     "name": "毛毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 73,
+     "pet_key": "pet_000123",
+     "name": "爬爬",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 77,
+     "pet_key": "pet_000373",
+     "name": "化蝶（奇丽花的样子）",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_0a6488f81ad9",
+   "name": "烈钻鸟进化链",
+   "stages": [
+    {
+     "pet_id": 541,
+     "pet_key": "pet_000069",
+     "name": "烈钻鸟",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 542,
+     "pet_key": "pet_000070",
+     "name": "长尾火鸟",
+     "stage": 2,
+     "level": 25,
+     "condition": null
+    },
+    {
+     "pet_id": 543,
+     "pet_key": "pet_000071",
+     "name": "火羽",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_0b8b33030b78",
+   "name": "鸭吉吉进化链（起来鸭）",
+   "stages": [
+    {
+     "pet_id": 24,
+     "pet_key": "pet_000513",
+     "name": "鸭吉吉（起来鸭）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 30,
+     "pet_key": "pet_000585",
+     "name": "鸭吉吉国王（起来鸭）",
+     "condition": "首领化",
+     "item": "金色传说"
+    }
+   ]
+  },
+  {
+   "key": "evolution_0c2babc864dc",
+   "name": "果实立方人进化链",
+   "stages": [
+    {
+     "pet_id": 633,
+     "pet_key": "pet_000622",
+     "name": "果实立方人",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_0dd7a890011d",
+   "name": "缇塔进化链",
+   "stages": [
+    {
+     "pet_id": 367,
+     "pet_key": "pet_000327",
+     "name": "缇塔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 368,
+     "pet_key": "pet_000328",
+     "name": "声波缇塔",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_0ed502614ad1",
+   "name": "诅咒狼灵进化链",
+   "stages": [
+    {
+     "pet_id": 610,
+     "pet_key": "pet_000606",
+     "name": "诅咒狼灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 611,
+     "pet_key": "pet_000607",
+     "name": "新月狼灵",
+     "stage": 2,
+     "level": 28,
+     "condition": "突破1次"
+    },
+    {
+     "pet_id": 612,
+     "pet_key": "pet_000608",
+     "name": "银月狼王",
+     "stage": 3,
+     "level": 40,
+     "condition": "突破2次"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_1021b1669e52",
+   "name": "厉毒小萝进化链",
+   "stages": [
+    {
+     "pet_id": 454,
+     "pet_key": "pet_000332",
+     "name": "厉毒小萝",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 455,
+     "pet_key": "pet_000333",
+     "name": "厉毒修萝",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_1140a8f1d37b",
+   "name": "猴麦仔进化链",
+   "stages": [
+    {
+     "pet_id": 522,
+     "pet_key": "pet_000506",
+     "name": "猴麦仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 523,
+     "pet_key": "pet_000507",
+     "name": "音碟吼",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_14b6316155a1",
+   "name": "烟花团进化链",
+   "stages": [
+    {
+     "pet_id": 530,
+     "pet_key": "pet_000490",
+     "name": "烟花团",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 531,
+     "pet_key": "pet_000491",
+     "name": "烟花伯爵",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_16cfea3594a0",
+   "name": "布灵进化链",
+   "stages": [
+    {
+     "pet_id": 631,
+     "pet_key": "pet_000618",
+     "name": "布灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 632,
+     "pet_key": "pet_000619",
+     "name": "布灵布灵",
+     "stage": 2,
+     "level": 42,
+     "condition": "位于魔法师之家/商店街/彼得大道/国王城堡附近"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_176ab057d3ff",
+   "name": "花怨鳗进化链（果壳铃的样子）",
+   "stages": [
+    {
+     "pet_id": 331,
+     "pet_key": "pet_000634",
+     "name": "花怨鳗（果壳铃的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 333,
+     "pet_key": "pet_000635",
+     "name": "鳗尾兽（果壳铃的样子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_181ff92bb537",
+   "name": "空空颅进化链",
+   "stages": [
+    {
+     "pet_id": 490,
+     "pet_key": "pet_000134",
+     "name": "空空颅",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 491,
+     "pet_key": "pet_000135",
+     "name": "夜宿颅",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    },
+    {
+     "pet_id": 492,
+     "pet_key": "pet_000136",
+     "name": "夜枭",
+     "stage": 3,
+     "level": 50,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 493,
+     "pet_key": "pet_000591",
+     "name": "暗夜颅主",
+     "condition": "首领化",
+     "item": "暗夜颅主的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_189ae30f9ba7",
+   "name": "哭哭菇进化链",
+   "stages": [
+    {
+     "pet_id": 232,
+     "pet_key": "pet_000204",
+     "name": "哭哭菇",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 233,
+     "pet_key": "pet_000205",
+     "name": "怖须菇",
+     "stage": 2,
+     "level": 24,
+     "condition": null
+    },
+    {
+     "pet_id": 234,
+     "pet_key": "pet_000206",
+     "name": "怖哭菇",
+     "stage": 3,
+     "level": 38,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_19d0ef3841d4",
+   "name": "小甲虫进化链",
+   "stages": [
+    {
+     "pet_id": 444,
+     "pet_key": "pet_000035",
+     "name": "小甲虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 445,
+     "pet_key": "pet_000012",
+     "name": "铠甲虫",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_1b5e81af8ec4",
+   "name": "丢丢进化链（火山附近的样子）",
+   "stages": [
+    {
+     "pet_id": 101,
+     "pet_key": "pet_000238",
+     "name": "丢丢（火山附近的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 105,
+     "pet_key": "pet_000241",
+     "name": "卡卡虫（火山附近的样子）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 109,
+     "pet_key": "pet_000244",
+     "name": "卡瓦重（火山附近的样子）",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_1b6ab8b3c87b",
+   "name": "石肤蜥进化链（本来的样子）",
+   "stages": [
+    {
+     "pet_id": 59,
+     "pet_key": "pet_000095",
+     "name": "石肤蜥",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 61,
+     "pet_key": "pet_000096",
+     "name": "石刺蜥",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 63,
+     "pet_key": "pet_000097",
+     "name": "石冠王蜥",
+     "stage": 3,
+     "level": 48,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_1d95256556c5",
+   "name": "果冻进化链（椰浆布丁分支）",
+   "stages": [
+    {
+     "pet_id": 476,
+     "pet_key": "pet_000107",
+     "name": "果冻",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 478,
+     "pet_key": "pet_000414",
+     "name": "椰浆布丁",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_1dde5331205c",
+   "name": "雪灵兽进化链",
+   "stages": [
+    {
+     "pet_id": 555,
+     "pet_key": "pet_000275",
+     "name": "雪灵兽",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 556,
+     "pet_key": "pet_000276",
+     "name": "幻雪兽",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 557,
+     "pet_key": "pet_000277",
+     "name": "饮雪狂兽",
+     "stage": 3,
+     "level": 46,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_1e03bba8385f",
+   "name": "嘟嘟煲进化链",
+   "stages": [
+    {
+     "pet_id": 121,
+     "pet_key": "pet_000294",
+     "name": "嘟嘟煲",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 122,
+     "pet_key": "pet_000295",
+     "name": "嘟嘟锅",
+     "stage": 2,
+     "level": 38,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_1e5e55b3c620",
+   "name": "棋棋进化链（白棋棋齐垒分支）",
+   "stages": [
+    {
+     "pet_id": 301,
+     "pet_key": "pet_000432",
+     "name": "棋棋（白子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 307,
+     "pet_key": "pet_000435",
+     "name": "棋齐垒（白子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 309,
+     "pet_key": "pet_000574",
+     "name": "棋契陛下（白棋棋齐垒分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_200370b1e685",
+   "name": "墨鱿士进化链（混乱鱿彩分支）",
+   "stages": [
+    {
+     "pet_id": 441,
+     "pet_key": "pet_000449",
+     "name": "墨鱿士",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 442,
+     "pet_key": "pet_000450",
+     "name": "混乱鱿彩",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_2183ab5e7d72",
+   "name": "呱呱进化链（学院呱呱）",
+   "stages": [
+    {
+     "pet_id": 540,
+     "pet_key": "pet_000485",
+     "name": "学院呱呱",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_21b13849df8b",
+   "name": "灵狐进化链",
+   "stages": [
+    {
+     "pet_id": 253,
+     "pet_key": "pet_000066",
+     "name": "灵狐",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 254,
+     "pet_key": "pet_000067",
+     "name": "九尾狐",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    },
+    {
+     "pet_id": 255,
+     "pet_key": "pet_000068",
+     "name": "尖嘴狐仙",
+     "stage": 3,
+     "level": 50,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_23544ef8b1db",
+   "name": "海枝枝进化链（杏黄百合）",
+   "stages": [
+    {
+     "pet_id": 355,
+     "pet_key": "pet_000335",
+     "name": "海枝枝（杏黄百合）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_238ecbe871c5",
+   "name": "绿翼鸟进化链",
+   "stages": [
+    {
+     "pet_id": 196,
+     "pet_key": "pet_000226",
+     "name": "绿翼鸟",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 197,
+     "pet_key": "pet_000227",
+     "name": "魔翼鸟",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 198,
+     "pet_key": "pet_000228",
+     "name": "魔眷鸟",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_23a784dc26f1",
+   "name": "小浣蛋进化链",
+   "stages": [
+    {
+     "pet_id": 626,
+     "pet_key": "pet_000614",
+     "name": "小浣蛋",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 627,
+     "pet_key": "pet_000615",
+     "name": "黑手浣熊",
+     "stage": 2,
+     "level": 36,
+     "condition": "生涯使用三次黑手"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_240738a2824d",
+   "name": "丢丢进化链（沙地附近的样子）",
+   "stages": [
+    {
+     "pet_id": 102,
+     "pet_key": "pet_000239",
+     "name": "丢丢（沙地附近的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 106,
+     "pet_key": "pet_000242",
+     "name": "卡卡虫（沙地附近的样子）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 110,
+     "pet_key": "pet_000245",
+     "name": "卡瓦重（沙地附近的样子）",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_24a9870348d6",
+   "name": "水滴蛇进化链",
+   "stages": [
+    {
+     "pet_id": 265,
+     "pet_key": "pet_000462",
+     "name": "水滴蛇",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 266,
+     "pet_key": "pet_000463",
+     "name": "水蛇锁",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 267,
+     "pet_key": "pet_000464",
+     "name": "游蛇魔使",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_2521c4a1973a",
+   "name": "仪使者进化链",
+   "stages": [
+    {
+     "pet_id": 209,
+     "pet_key": "pet_000098",
+     "name": "仪使者",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 210,
+     "pet_key": "pet_000099",
+     "name": "仪式之星",
+     "stage": 2,
+     "level": 35,
+     "condition": null
+    },
+    {
+     "pet_id": 211,
+     "pet_key": "pet_000100",
+     "name": "仪式巨像",
+     "stage": 3,
+     "level": 45,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 212,
+     "pet_key": "pet_000542",
+     "name": "祭礼巨像",
+     "condition": "首领化",
+     "item": "祭礼巨像的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_26a78d6314ce",
+   "name": "呆小路进化链",
+   "stages": [
+    {
+     "pet_id": 323,
+     "pet_key": "pet_000084",
+     "name": "呆小路",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 324,
+     "pet_key": "pet_000085",
+     "name": "舞动路路",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    },
+    {
+     "pet_id": 325,
+     "pet_key": "pet_000086",
+     "name": "白发路路",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_2842579cc5a9",
+   "name": "蹦蹦种子进化链（短毛球形态）",
+   "stages": [
+    {
+     "pet_id": 138,
+     "pet_key": "pet_000248",
+     "name": "蹦蹦种子（短毛球形态）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 142,
+     "pet_key": "pet_000251",
+     "name": "蹦蹦草（短毛球形态）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 146,
+     "pet_key": "pet_000254",
+     "name": "蹦蹦花（短毛球形态）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 150,
+     "pet_key": "pet_000567",
+     "name": "蹦蹦果（短毛球形态）",
+     "condition": "首领化",
+     "item": "蹦蹦果的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_28871ec0e002",
+   "name": "松仔进化链",
+   "stages": [
+    {
+     "pet_id": 259,
+     "pet_key": "pet_000459",
+     "name": "松仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 260,
+     "pet_key": "pet_000460",
+     "name": "松叶羊",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 261,
+     "pet_key": "pet_000461",
+     "name": "针叶巡林",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_28eee12c0bde",
+   "name": "加灵进化链",
+   "stages": [
+    {
+     "pet_id": 579,
+     "pet_key": "pet_000196",
+     "name": "加灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 580,
+     "pet_key": "pet_000197",
+     "name": "加益",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 581,
+     "pet_key": "pet_000198",
+     "name": "加尔",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_28eee12c0bde",
+   "name": "加灵进化链（黑化的样子）",
+   "stages": [
+    {
+     "pet_id": 579,
+     "pet_key": "pet_000196",
+     "name": "加灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 580,
+     "pet_key": "pet_000197",
+     "name": "加益",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 582,
+     "pet_key": "pet_000199",
+     "name": "黑化加尔",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_28f9e54603bf",
+   "name": "棋棋进化链（黑棋棋齐垒分支）",
+   "stages": [
+    {
+     "pet_id": 302,
+     "pet_key": "pet_000437",
+     "name": "棋棋（黑子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 308,
+     "pet_key": "pet_000440",
+     "name": "棋齐垒（黑子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 310,
+     "pet_key": "pet_000578",
+     "name": "棋契陛下（黑棋棋齐垒分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_2957b1bd4dff",
+   "name": "小翼龙进化链",
+   "stages": [
+    {
+     "pet_id": 361,
+     "pet_key": "pet_000186",
+     "name": "小翼龙",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 362,
+     "pet_key": "pet_000187",
+     "name": "翼龙",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_29a03ad53c7b",
+   "name": "刺轮砣进化链（下弦的样子）",
+   "stages": [
+    {
+     "pet_id": 387,
+     "pet_key": "pet_000454",
+     "name": "刺轮砣（下弦的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 389,
+     "pet_key": "pet_000455",
+     "name": "月亮砣（下弦的样子）",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 391,
+     "pet_key": "pet_000627",
+     "name": "满月砣（下弦的样子）",
+     "condition": "首领化",
+     "item": "满月砣的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_29e0fb99c1cb",
+   "name": "果冻进化链（抹茶布丁分支）",
+   "stages": [
+    {
+     "pet_id": 476,
+     "pet_key": "pet_000107",
+     "name": "果冻",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 477,
+     "pet_key": "pet_000413",
+     "name": "抹茶布丁",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_2b7fc3691944",
+   "name": "咬咬小子进化链",
+   "stages": [
+    {
+     "pet_id": 583,
+     "pet_key": "pet_000502",
+     "name": "咬咬小子",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 584,
+     "pet_key": "pet_000503",
+     "name": "胡桃王子",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_2c466f2fbee1",
+   "name": "噼啪鸟进化链",
+   "stages": [
+    {
+     "pet_id": 430,
+     "pet_key": "pet_000348",
+     "name": "噼啪鸟",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_2d676eedf6cd",
+   "name": "鸭吉吉进化链（等一等鸭）",
+   "stages": [
+    {
+     "pet_id": 22,
+     "pet_key": "pet_000354",
+     "name": "鸭吉吉（等一等鸭）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 28,
+     "pet_key": "pet_000571",
+     "name": "鸭吉吉国王（等一等鸭）",
+     "condition": "首领化",
+     "item": "金色传说"
+    }
+   ]
+  },
+  {
+   "key": "evolution_2ec7ee0391f5",
+   "name": "小草虫进化链",
+   "stages": [
+    {
+     "pet_id": 193,
+     "pet_key": "pet_000125",
+     "name": "小草虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 194,
+     "pet_key": "pet_000126",
+     "name": "草衣虫",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 195,
+     "pet_key": "pet_000127",
+     "name": "花衣蝶",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_2f30b53fffdf",
+   "name": "海枝枝进化链（洋红沙丁）",
+   "stages": [
+    {
+     "pet_id": 356,
+     "pet_key": "pet_000336",
+     "name": "海枝枝（洋红沙丁）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_2fcc27e2c257",
+   "name": "甜田螺进化链",
+   "stages": [
+    {
+     "pet_id": 298,
+     "pet_key": "pet_000101",
+     "name": "甜田螺",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 299,
+     "pet_key": "pet_000102",
+     "name": "壳乙螺",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 300,
+     "pet_key": "pet_000103",
+     "name": "卡洛儿",
+     "stage": 3,
+     "level": 44,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_30b562936521",
+   "name": "喵喵进化链（叶冕魔力猫分支）",
+   "stages": [
+    {
+     "pet_id": 6,
+     "pet_key": "pet_000001",
+     "name": "喵喵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 7,
+     "pet_key": "pet_000022",
+     "name": "喵呜",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 8,
+     "pet_key": "pet_000007",
+     "name": "魔力猫",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 9,
+     "pet_key": "pet_000536",
+     "name": "叶冕魔力猫",
+     "condition": "首领化",
+     "item": "阳光罐头"
+    }
+   ]
+  },
+  {
+   "key": "evolution_30b562936521",
+   "name": "喵喵进化链（武斗酷猫分支）",
+   "stages": [
+    {
+     "pet_id": 6,
+     "pet_key": "pet_000001",
+     "name": "喵喵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 7,
+     "pet_key": "pet_000022",
+     "name": "喵呜",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 8,
+     "pet_key": "pet_000007",
+     "name": "魔力猫",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 10,
+     "pet_key": "pet_000593",
+     "name": "武斗酷猫",
+     "condition": "首领化",
+     "item": "月光罐头"
+    }
+   ]
+  },
+  {
+   "key": "evolution_30fae12a1797",
+   "name": "水蓝蓝进化链",
+   "stages": [
+    {
+     "pet_id": 15,
+     "pet_key": "pet_000002",
+     "name": "水蓝蓝",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 16,
+     "pet_key": "pet_000030",
+     "name": "波波拉",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 17,
+     "pet_key": "pet_000005",
+     "name": "水灵",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 18,
+     "pet_key": "pet_000543",
+     "name": "圣水守护",
+     "condition": "首领化",
+     "item": "命运钥匙"
+    }
+   ]
+  },
+  {
+   "key": "evolution_31352c33ccc0",
+   "name": "瑰眼仔进化链",
+   "stages": [
+    {
+     "pet_id": 565,
+     "pet_key": "pet_000162",
+     "name": "瑰眼仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 566,
+     "pet_key": "pet_000163",
+     "name": "耳翎瑰魅",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 567,
+     "pet_key": "pet_000164",
+     "name": "邪眼巨魔",
+     "stage": 3,
+     "level": 38,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_3216b9832925",
+   "name": "双灯鱼进化链",
+   "stages": [
+    {
+     "pet_id": 483,
+     "pet_key": "pet_000309",
+     "name": "双灯鱼",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 484,
+     "pet_key": "pet_000310",
+     "name": "利灯鱼",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_326aad5fb21b",
+   "name": "小狮鹫进化链（崖间地的样子）",
+   "stages": [
+    {
+     "pet_id": 272,
+     "pet_key": "pet_000116",
+     "name": "小狮鹫（崖间地的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 274,
+     "pet_key": "pet_000117",
+     "name": "神圣狮鹫（崖间地的样子）",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 276,
+     "pet_key": "pet_000118",
+     "name": "皇家狮鹫（崖间地的样子）",
+     "stage": 3,
+     "level": 46,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_3359b7500103",
+   "name": "星星眼进化链",
+   "stages": [
+    {
+     "pet_id": 630,
+     "pet_key": "pet_000597",
+     "name": "星星眼",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_35699be25494",
+   "name": "恶魔狼进化链",
+   "stages": [
+    {
+     "pet_id": 235,
+     "pet_key": "pet_000010",
+     "name": "恶魔狼",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 236,
+     "pet_key": "pet_000549",
+     "name": "恶魔狼王",
+     "condition": "首领化",
+     "item": "恶魔狼王的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_372c1dd4dcca",
+   "name": "地鼠进化链（枯水期的样子）",
+   "stages": [
+    {
+     "pet_id": 435,
+     "pet_key": "pet_000019",
+     "name": "地鼠（枯水期的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 437,
+     "pet_key": "pet_000020",
+     "name": "遁鼠（枯水期的样子）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 439,
+     "pet_key": "pet_000021",
+     "name": "遁地鼠（枯水期的样子）",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_37cbfd546bbe",
+   "name": "矿晶虫进化链（西瓜碧玺的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 84,
+     "pet_key": "pet_000257",
+     "name": "晶石蜗（西瓜碧玺的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 90,
+     "pet_key": "pet_000534",
+     "name": "钻石蜗（西瓜碧玺的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_38df69ff2c72",
+   "name": "棋棋进化链（黑棋棋绮后分支）",
+   "stages": [
+    {
+     "pet_id": 302,
+     "pet_key": "pet_000437",
+     "name": "棋棋（黑子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 316,
+     "pet_key": "pet_000439",
+     "name": "棋绮后（黑子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 318,
+     "pet_key": "pet_000577",
+     "name": "棋契陛下（黑棋棋绮后分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_3a148e999006",
+   "name": "刺轮砣进化链（上弦的样子）",
+   "stages": [
+    {
+     "pet_id": 386,
+     "pet_key": "pet_000452",
+     "name": "刺轮砣（上弦的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 388,
+     "pet_key": "pet_000453",
+     "name": "月亮砣（上弦的样子）",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 390,
+     "pet_key": "pet_000626",
+     "name": "满月砣（上弦的样子）",
+     "condition": "首领化",
+     "item": "满月砣的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_3c6a4b6dac2b",
+   "name": "古钟蛇进化链（本来的样子）",
+   "stages": [
+    {
+     "pet_id": 345,
+     "pet_key": "pet_000191",
+     "name": "古钟蛇",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 346,
+     "pet_key": "pet_000192",
+     "name": "寒音蛇",
+     "stage": 2,
+     "level": 38,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_3c77fefa3b7b",
+   "name": "量风碗进化链",
+   "stages": [
+    {
+     "pet_id": 624,
+     "pet_key": "pet_000604",
+     "name": "量风碗",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 625,
+     "pet_key": "pet_000605",
+     "name": "测风蝉",
+     "stage": 2,
+     "level": 42,
+     "condition": "除晴天/雾天外的天气"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_3d0cc5393c1a",
+   "name": "新月鹭进化链",
+   "stages": [
+    {
+     "pet_id": 613,
+     "pet_key": "pet_000609",
+     "name": "新月鹭",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 614,
+     "pet_key": "pet_000610",
+     "name": "月辉鹭",
+     "stage": 2,
+     "level": 16,
+     "condition": "击败六只火系精灵"
+    },
+    {
+     "pet_id": 615,
+     "pet_key": "pet_000611",
+     "name": "月使鹭纳",
+     "stage": 3,
+     "level": 36,
+     "condition": "击败六只火系精灵"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_3efcd5c1bf24",
+   "name": "脆筒甜甜进化链（蓝莓抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 382,
+     "pet_key": "pet_000363",
+     "name": "圣代甜甜（蓝莓抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_3fb6979ccdb0",
+   "name": "布瓜蝌进化链",
+   "stages": [
+    {
+     "pet_id": 502,
+     "pet_key": "pet_000374",
+     "name": "布瓜蝌",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 503,
+     "pet_key": "pet_000375",
+     "name": "上岸蛙",
+     "stage": 2,
+     "level": 33,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_40c438484639",
+   "name": "毛头小蛛进化链（捕尘长绒分支）",
+   "stages": [
+    {
+     "pet_id": 459,
+     "pet_key": "pet_000468",
+     "name": "毛头小蛛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 460,
+     "pet_key": "pet_000469",
+     "name": "捕尘长绒",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4103e9f6cecc",
+   "name": "吸泥鸥进化链",
+   "stages": [
+    {
+     "pet_id": 449,
+     "pet_key": "pet_000390",
+     "name": "吸泥鸥",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 450,
+     "pet_key": "pet_000391",
+     "name": "泥吼牙",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 451,
+     "pet_key": "pet_000590",
+     "name": "淤泥乌泽",
+     "condition": "首领化",
+     "item": "淤泥乌泽的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_4233225bbc78",
+   "name": "冬羽雀进化链（秋天的样子）",
+   "stages": [
+    {
+     "pet_id": 42,
+     "pet_key": "pet_000231",
+     "name": "雪绒鸟（秋天的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 47,
+     "pet_key": "pet_000234",
+     "name": "冬羽雀（秋天的样子）",
+     "stage": 2,
+     "level": 5,
+     "condition": null
+    },
+    {
+     "pet_id": 51,
+     "pet_key": "pet_000237",
+     "name": "岚鸟（秋天的样子）",
+     "stage": 3,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 55,
+     "pet_key": "pet_000565",
+     "name": "霜翼领主（秋天的样子）",
+     "condition": "首领化",
+     "item": "霜翼领主的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_423846c3f339",
+   "name": "毛头小蛛进化链（食尘短绒分支）",
+   "stages": [
+    {
+     "pet_id": 459,
+     "pet_key": "pet_000468",
+     "name": "毛头小蛛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 461,
+     "pet_key": "pet_000470",
+     "name": "食尘短绒",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_42fdc781bd8c",
+   "name": "炫光迪迪进化链",
+   "stages": [
+    {
+     "pet_id": 534,
+     "pet_key": "pet_000511",
+     "name": "炫光迪迪",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 535,
+     "pet_key": "pet_000512",
+     "name": "霹雳迪迪",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_454200cba9a6",
+   "name": "小鼓象进化链",
+   "stages": [
+    {
+     "pet_id": 536,
+     "pet_key": "pet_000500",
+     "name": "小鼓象",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 537,
+     "pet_key": "pet_000501",
+     "name": "巨鼓象",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_457adfa30843",
+   "name": "大头骨龙进化链",
+   "stages": [
+    {
+     "pet_id": 452,
+     "pet_key": "pet_000224",
+     "name": "大头骨龙",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 453,
+     "pet_key": "pet_000225",
+     "name": "寂灭骨龙",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_46c4468871f6",
+   "name": "圆眼蜘蛛进化链",
+   "stages": [
+    {
+     "pet_id": 278,
+     "pet_key": "pet_000119",
+     "name": "圆眼蜘蛛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 279,
+     "pet_key": "pet_000120",
+     "name": "尖角蜘蛛",
+     "stage": 2,
+     "level": 24,
+     "condition": null
+    },
+    {
+     "pet_id": 280,
+     "pet_key": "pet_000121",
+     "name": "芋香巨角蛛",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_471ed8369a30",
+   "name": "布鲁斯进化链",
+   "stages": [
+    {
+     "pet_id": 406,
+     "pet_key": "pet_000215",
+     "name": "布鲁斯",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 407,
+     "pet_key": "pet_000216",
+     "name": "雪顶布鲁斯",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    },
+    {
+     "pet_id": 408,
+     "pet_key": "pet_000217",
+     "name": "冰钻布鲁斯",
+     "stage": 3,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4ac5c8d7a2fe",
+   "name": "冬羽雀进化链（春天的样子）",
+   "stages": [
+    {
+     "pet_id": 40,
+     "pet_key": "pet_000229",
+     "name": "雪绒鸟（春天的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 45,
+     "pet_key": "pet_000232",
+     "name": "冬羽雀（春天的样子）",
+     "stage": 2,
+     "level": 5,
+     "condition": null
+    },
+    {
+     "pet_id": 49,
+     "pet_key": "pet_000235",
+     "name": "岚鸟（春天的样子）",
+     "stage": 3,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 53,
+     "pet_key": "pet_000563",
+     "name": "霜翼领主（春天的样子）",
+     "condition": "首领化",
+     "item": "霜翼领主的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_4b3f989d8391",
+   "name": "脆筒甜甜进化链（蓝莓巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 380,
+     "pet_key": "pet_000361",
+     "name": "圣代甜甜（蓝莓巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4beb782b8a2a",
+   "name": "宝藏小狐进化链",
+   "stages": [
+    {
+     "pet_id": 608,
+     "pet_key": "pet_000595",
+     "name": "宝藏小狐",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 609,
+     "pet_key": "pet_000596",
+     "name": "宝藏沙狐",
+     "stage": 2,
+     "level": 33,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4c525fcc779d",
+   "name": "海豹战士进化链",
+   "stages": [
+    {
+     "pet_id": 294,
+     "pet_key": "pet_000189",
+     "name": "海豹战士",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 295,
+     "pet_key": "pet_000190",
+     "name": "海豹船长",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4c6215b9f57a",
+   "name": "芽眼魔进化链",
+   "stages": [
+    {
+     "pet_id": 571,
+     "pet_key": "pet_000281",
+     "name": "芽眼魔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 572,
+     "pet_key": "pet_000282",
+     "name": "叶眼魔",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    },
+    {
+     "pet_id": 573,
+     "pet_key": "pet_000283",
+     "name": "障眼魔",
+     "stage": 3,
+     "level": 50,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4da51d7bff42",
+   "name": "墨鱿士进化链（混乱鱿彩分支）",
+   "stages": [
+    {
+     "pet_id": 441,
+     "pet_key": "pet_000449",
+     "name": "墨鱿士",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 442,
+     "pet_key": "pet_000450",
+     "name": "混乱鱿彩",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4da51d7bff42",
+   "name": "墨鱿士进化链（秩序鱿墨分支）",
+   "stages": [
+    {
+     "pet_id": 441,
+     "pet_key": "pet_000449",
+     "name": "墨鱿士",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 443,
+     "pet_key": "pet_000451",
+     "name": "秩序鱿墨",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4e9cdfd617cf",
+   "name": "脆筒甜甜进化链（樱桃巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 377,
+     "pet_key": "pet_000115",
+     "name": "圣代甜甜（樱桃巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4e9cdfd617cf",
+   "name": "脆筒甜甜进化链（樱桃草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 378,
+     "pet_key": "pet_000359",
+     "name": "圣代甜甜（樱桃草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4e9cdfd617cf",
+   "name": "脆筒甜甜进化链（樱桃抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 379,
+     "pet_key": "pet_000360",
+     "name": "圣代甜甜（樱桃抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_4fa0bd62d75e",
+   "name": "梦游进化链（穿旧睡衣的样子）",
+   "stages": [
+    {
+     "pet_id": 128,
+     "pet_key": "pet_000342",
+     "name": "梦游（穿旧睡衣的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 130,
+     "pet_key": "pet_000343",
+     "name": "梦悠悠（穿旧睡衣的样子）",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_510440a24405",
+   "name": "小怂猫进化链",
+   "stages": [
+    {
+     "pet_id": 270,
+     "pet_key": "pet_000202",
+     "name": "小怂猫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 271,
+     "pet_key": "pet_000203",
+     "name": "怒目怂猫",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_51875d564101",
+   "name": "毛头小蛛进化链（捕尘长绒分支）",
+   "stages": [
+    {
+     "pet_id": 459,
+     "pet_key": "pet_000468",
+     "name": "毛头小蛛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 460,
+     "pet_key": "pet_000469",
+     "name": "捕尘长绒",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_51875d564101",
+   "name": "毛头小蛛进化链（食尘短绒分支）",
+   "stages": [
+    {
+     "pet_id": 459,
+     "pet_key": "pet_000468",
+     "name": "毛头小蛛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 461,
+     "pet_key": "pet_000470",
+     "name": "食尘短绒",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_51b56c8774ab",
+   "name": "画精灵进化链（画间法师手分支）",
+   "stages": [
+    {
+     "pet_id": 462,
+     "pet_key": "pet_000471",
+     "name": "画精灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 463,
+     "pet_key": "pet_000472",
+     "name": "画像守护",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 464,
+     "pet_key": "pet_000473",
+     "name": "画间法师手",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_51e58dcf8cfd",
+   "name": "矿晶虫进化链（星彩榴石的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 86,
+     "pet_key": "pet_000350",
+     "name": "晶石蜗（星彩榴石的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 92,
+     "pet_key": "pet_000581",
+     "name": "钻石蜗（星彩榴石的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_52482648ec66",
+   "name": "鸭吉吉进化链（燃了鸭）",
+   "stages": [
+    {
+     "pet_id": 23,
+     "pet_key": "pet_000393",
+     "name": "鸭吉吉（燃了鸭）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 29,
+     "pet_key": "pet_000572",
+     "name": "鸭吉吉国王（燃了鸭）",
+     "condition": "首领化",
+     "item": "金色传说"
+    }
+   ]
+  },
+  {
+   "key": "evolution_530d9f4442ee",
+   "name": "棋棋进化链（白棋棋骑士分支）",
+   "stages": [
+    {
+     "pet_id": 301,
+     "pet_key": "pet_000432",
+     "name": "棋棋（白子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 303,
+     "pet_key": "pet_000433",
+     "name": "棋骑士（白子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 305,
+     "pet_key": "pet_000556",
+     "name": "棋契陛下（白棋棋骑士分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_530d9f4442ee",
+   "name": "棋棋进化链（白棋棋绮后分支）",
+   "stages": [
+    {
+     "pet_id": 301,
+     "pet_key": "pet_000432",
+     "name": "棋棋（白子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 315,
+     "pet_key": "pet_000434",
+     "name": "棋绮后（白子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 317,
+     "pet_key": "pet_000573",
+     "name": "棋契陛下（白棋棋绮后分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_530d9f4442ee",
+   "name": "棋棋进化链（白棋棋齐垒分支）",
+   "stages": [
+    {
+     "pet_id": 301,
+     "pet_key": "pet_000432",
+     "name": "棋棋（白子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 307,
+     "pet_key": "pet_000435",
+     "name": "棋齐垒（白子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 309,
+     "pet_key": "pet_000574",
+     "name": "棋契陛下（白棋棋齐垒分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_530d9f4442ee",
+   "name": "棋棋进化链（白棋棋祈督分支）",
+   "stages": [
+    {
+     "pet_id": 301,
+     "pet_key": "pet_000432",
+     "name": "棋棋（白子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 311,
+     "pet_key": "pet_000436",
+     "name": "棋祈督（白子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 313,
+     "pet_key": "pet_000575",
+     "name": "棋契陛下（白棋棋祈督分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_534705a169bd",
+   "name": "毛毛进化链（幽冥眼的样子）",
+   "stages": [
+    {
+     "pet_id": 72,
+     "pet_key": "pet_000122",
+     "name": "毛毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 73,
+     "pet_key": "pet_000123",
+     "name": "爬爬",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 75,
+     "pet_key": "pet_000371",
+     "name": "化蝶（幽冥眼的样子）",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_53532e27eb34",
+   "name": "热团团进化链",
+   "stages": [
+    {
+     "pet_id": 616,
+     "pet_key": "pet_000599",
+     "name": "热团团",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 617,
+     "pet_key": "pet_000600",
+     "name": "焰米龙",
+     "stage": 2,
+     "level": 19,
+     "condition": "击败六只冰系精灵"
+    },
+    {
+     "pet_id": 618,
+     "pet_key": "pet_000601",
+     "name": "圣凯布米龙",
+     "stage": 3,
+     "level": 39,
+     "condition": "击败六只冰系精灵"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_535d2f2e0b16",
+   "name": "棋棋进化链（白棋棋祈督分支）",
+   "stages": [
+    {
+     "pet_id": 301,
+     "pet_key": "pet_000432",
+     "name": "棋棋（白子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 311,
+     "pet_key": "pet_000436",
+     "name": "棋祈督（白子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 313,
+     "pet_key": "pet_000575",
+     "name": "棋契陛下（白棋棋祈督分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_53ca2841605a",
+   "name": "可爱猿进化链",
+   "stages": [
+    {
+     "pet_id": 403,
+     "pet_key": "pet_000074",
+     "name": "可爱猿",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 404,
+     "pet_key": "pet_000075",
+     "name": "炽热猿",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 405,
+     "pet_key": "pet_000076",
+     "name": "火焰猿",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_547a50a4724f",
+   "name": "小星光进化链（月光能量的样子）",
+   "stages": [
+    {
+     "pet_id": 172,
+     "pet_key": "pet_000346",
+     "name": "小星光（月光能量的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 174,
+     "pet_key": "pet_000347",
+     "name": "星光狮（月光能量的样子）",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_54c42f74d51d",
+   "name": "毛毛进化链（喵喵的样子）",
+   "stages": [
+    {
+     "pet_id": 72,
+     "pet_key": "pet_000122",
+     "name": "毛毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 73,
+     "pet_key": "pet_000123",
+     "name": "爬爬",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 76,
+     "pet_key": "pet_000372",
+     "name": "化蝶（喵喵的样子）",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_54e46813a579",
+   "name": "蒲公英进化链",
+   "stages": [
+    {
+     "pet_id": 155,
+     "pet_key": "pet_000031",
+     "name": "蒲公英",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 156,
+     "pet_key": "pet_000024",
+     "name": "蒲公英娃娃",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_55e03a78ba18",
+   "name": "里奥进化链",
+   "stages": [
+    {
+     "pet_id": 256,
+     "pet_key": "pet_000317",
+     "name": "里奥",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 257,
+     "pet_key": "pet_000318",
+     "name": "灵羽勇士",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 258,
+     "pet_key": "pet_000319",
+     "name": "圣羽翼王",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_568af59e70b8",
+   "name": "果冻进化链（抹茶布丁分支）",
+   "stages": [
+    {
+     "pet_id": 476,
+     "pet_key": "pet_000107",
+     "name": "果冻",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 477,
+     "pet_key": "pet_000413",
+     "name": "抹茶布丁",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_568af59e70b8",
+   "name": "果冻进化链（椰浆布丁分支）",
+   "stages": [
+    {
+     "pet_id": 476,
+     "pet_key": "pet_000107",
+     "name": "果冻",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 478,
+     "pet_key": "pet_000414",
+     "name": "椰浆布丁",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_568af59e70b8",
+   "name": "果冻进化链（熔岩布丁分支）",
+   "stages": [
+    {
+     "pet_id": 476,
+     "pet_key": "pet_000107",
+     "name": "果冻",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 479,
+     "pet_key": "pet_000415",
+     "name": "熔岩布丁",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_58c64b2f25dd",
+   "name": "贝瑟进化链",
+   "stages": [
+    {
+     "pet_id": 496,
+     "pet_key": "pet_000180",
+     "name": "贝瑟",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 497,
+     "pet_key": "pet_000181",
+     "name": "贝加尔",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 498,
+     "pet_key": "pet_000182",
+     "name": "贝古斯",
+     "stage": 3,
+     "level": 38,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_58f5699679a1",
+   "name": "毛毛进化链（平常的样子）",
+   "stages": [
+    {
+     "pet_id": 72,
+     "pet_key": "pet_000122",
+     "name": "毛毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 73,
+     "pet_key": "pet_000123",
+     "name": "爬爬",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 74,
+     "pet_key": "pet_000124",
+     "name": "化蝶（平常的样子）",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_58f5699679a1",
+   "name": "毛毛进化链（幽冥眼的样子）",
+   "stages": [
+    {
+     "pet_id": 72,
+     "pet_key": "pet_000122",
+     "name": "毛毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 73,
+     "pet_key": "pet_000123",
+     "name": "爬爬",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 75,
+     "pet_key": "pet_000371",
+     "name": "化蝶（幽冥眼的样子）",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_58f5699679a1",
+   "name": "毛毛进化链（喵喵的样子）",
+   "stages": [
+    {
+     "pet_id": 72,
+     "pet_key": "pet_000122",
+     "name": "毛毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 73,
+     "pet_key": "pet_000123",
+     "name": "爬爬",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 76,
+     "pet_key": "pet_000372",
+     "name": "化蝶（喵喵的样子）",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_58f5699679a1",
+   "name": "毛毛进化链（奇丽花的样子）",
+   "stages": [
+    {
+     "pet_id": 72,
+     "pet_key": "pet_000122",
+     "name": "毛毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 73,
+     "pet_key": "pet_000123",
+     "name": "爬爬",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 77,
+     "pet_key": "pet_000373",
+     "name": "化蝶（奇丽花的样子）",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_59754747ccac",
+   "name": "点点进化链",
+   "stages": [
+    {
+     "pet_id": 575,
+     "pet_key": "pet_000528",
+     "name": "点点",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 576,
+     "pet_key": "pet_000529",
+     "name": "珀尔鼬",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_59bcfb16063d",
+   "name": "螺旋帕帕进化链",
+   "stages": [
+    {
+     "pet_id": 419,
+     "pet_key": "pet_000384",
+     "name": "螺旋帕帕",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 420,
+     "pet_key": "pet_000431",
+     "name": "帕帕斯卡",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_5c8821f2deae",
+   "name": "脆筒甜甜进化链（樱桃巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 377,
+     "pet_key": "pet_000115",
+     "name": "圣代甜甜（樱桃巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_5de4d985f1e1",
+   "name": "板板壳进化链（蜕皮时的样子）",
+   "stages": [
+    {
+     "pet_id": 32,
+     "pet_key": "pet_000409",
+     "name": "板板壳（蜕皮时的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 34,
+     "pet_key": "pet_000410",
+     "name": "咔咔壳（蜕皮时的样子）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 36,
+     "pet_key": "pet_000411",
+     "name": "水泡壳（蜕皮时的样子）",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_5fa11c187e20",
+   "name": "冬羽雀进化链（本来的样子）",
+   "stages": [
+    {
+     "pet_id": 43,
+     "pet_key": "pet_000420",
+     "name": "雪绒鸟",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 44,
+     "pet_key": "pet_000025",
+     "name": "冬羽雀",
+     "stage": 2,
+     "level": 5,
+     "condition": null
+    },
+    {
+     "pet_id": 48,
+     "pet_key": "pet_000034",
+     "name": "岚鸟",
+     "stage": 3,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 52,
+     "pet_key": "pet_000547",
+     "name": "霜翼领主",
+     "condition": "首领化",
+     "item": "霜翼领主的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_60f98db780f6",
+   "name": "矿晶虫进化链（蓝锥矿的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 88,
+     "pet_key": "pet_000352",
+     "name": "晶石蜗（蓝锥矿的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 94,
+     "pet_key": "pet_000583",
+     "name": "钻石蜗（蓝锥矿的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_6222ad38c49d",
+   "name": "伏地兽进化链",
+   "stages": [
+    {
+     "pet_id": 133,
+     "pet_key": "pet_000146",
+     "name": "伏地兽",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 134,
+     "pet_key": "pet_000147",
+     "name": "贪食鼹",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 135,
+     "pet_key": "pet_000148",
+     "name": "巨噬针鼹",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_639db65c6b81",
+   "name": "小鼠獭进化链",
+   "stages": [
+    {
+     "pet_id": 80,
+     "pet_key": "pet_000261",
+     "name": "小鼠獭",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 81,
+     "pet_key": "pet_000262",
+     "name": "燕尾獭",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    },
+    {
+     "pet_id": 82,
+     "pet_key": "pet_000263",
+     "name": "卷胡巨獭",
+     "stage": 3,
+     "level": 48,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_659fd18f0f68",
+   "name": "友爱天天进化链",
+   "stages": [
+    {
+     "pet_id": 561,
+     "pet_key": "pet_000194",
+     "name": "友爱天天",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 562,
+     "pet_key": "pet_000195",
+     "name": "友爱星飞",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_65b03a28e5bc",
+   "name": "多多进化链",
+   "stages": [
+    {
+     "pet_id": 229,
+     "pet_key": "pet_000137",
+     "name": "多多",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 230,
+     "pet_key": "pet_000138",
+     "name": "多啦多",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 231,
+     "pet_key": "pet_000139",
+     "name": "古啦多",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_65fad33ff121",
+   "name": "旋叶虫进化链（金黄的样子）",
+   "stages": [
+    {
+     "pet_id": 216,
+     "pet_key": "pet_000303",
+     "name": "旋叶虫（金黄的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 218,
+     "pet_key": "pet_000383",
+     "name": "蓬叶虫（金黄的样子）",
+     "stage": 2,
+     "level": 25,
+     "condition": null
+    },
+    {
+     "pet_id": 220,
+     "pet_key": "pet_000304",
+     "name": "风滚暮虫（金黄的样子）",
+     "stage": 3,
+     "level": 45,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 222,
+     "pet_key": "pet_000589",
+     "name": "暮风隐者（金黄的样子）",
+     "condition": "首领化",
+     "item": "暮风隐者的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_68a6188f7157",
+   "name": "风铃鲨进化链",
+   "stages": [
+    {
+     "pet_id": 203,
+     "pet_key": "pet_000104",
+     "name": "风铃鲨",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 204,
+     "pet_key": "pet_000105",
+     "name": "蓝蝶鲨",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 205,
+     "pet_key": "pet_000106",
+     "name": "彩蝶鲨",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 206,
+     "pet_key": "pet_000544",
+     "name": "神谕鲨",
+     "condition": "首领化",
+     "item": "遥远之音"
+    }
+   ]
+  },
+  {
+   "key": "evolution_6931f4710107",
+   "name": "电咩咩进化链",
+   "stages": [
+    {
+     "pet_id": 152,
+     "pet_key": "pet_000167",
+     "name": "电咩咩",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 153,
+     "pet_key": "pet_000168",
+     "name": "粉咩咩",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    },
+    {
+     "pet_id": 154,
+     "pet_key": "pet_000169",
+     "name": "电球咩咩",
+     "stage": 3,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_69599e739573",
+   "name": "小灵面进化链（睁眼的样子）",
+   "stages": [
+    {
+     "pet_id": 123,
+     "pet_key": "pet_000052",
+     "name": "小灵面",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 124,
+     "pet_key": "pet_000053",
+     "name": "暗影灵面（睁眼的样子）",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 126,
+     "pet_key": "pet_000326",
+     "name": "幽冥眼（睁眼的样子）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_69599e739573",
+   "name": "小灵面进化链（闭眼的样子）",
+   "stages": [
+    {
+     "pet_id": 123,
+     "pet_key": "pet_000052",
+     "name": "小灵面",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 125,
+     "pet_key": "pet_000381",
+     "name": "暗影灵面（闭眼的样子）",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 127,
+     "pet_key": "pet_000382",
+     "name": "幽冥眼（闭眼的样子）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_6a44eb997ce5",
+   "name": "小帕尔进化链",
+   "stages": [
+    {
+     "pet_id": 456,
+     "pet_key": "pet_000159",
+     "name": "小帕尔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 457,
+     "pet_key": "pet_000160",
+     "name": "帕尔萨斯",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 458,
+     "pet_key": "pet_000161",
+     "name": "龙息帕尔",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_6bea9c7a0b04",
+   "name": "鸭吉吉进化链（急急急鸭）",
+   "stages": [
+    {
+     "pet_id": 21,
+     "pet_key": "pet_000353",
+     "name": "鸭吉吉（急急急鸭）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 27,
+     "pet_key": "pet_000570",
+     "name": "鸭吉吉国王（急急急鸭）",
+     "condition": "首领化",
+     "item": "金色传说"
+    }
+   ]
+  },
+  {
+   "key": "evolution_6cb88ec8bdc0",
+   "name": "乖乖鹄进化链（翠顶夫人分支）",
+   "stages": [
+    {
+     "pet_id": 182,
+     "pet_key": "pet_000278",
+     "name": "乖乖鹄",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 183,
+     "pet_key": "pet_000279",
+     "name": "蓝珠天鹅",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 184,
+     "pet_key": "pet_000280",
+     "name": "翠顶夫人",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_6cb88ec8bdc0",
+   "name": "乖乖鹄进化链（黑羽夫人分支）",
+   "stages": [
+    {
+     "pet_id": 182,
+     "pet_key": "pet_000278",
+     "name": "乖乖鹄",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 183,
+     "pet_key": "pet_000279",
+     "name": "蓝珠天鹅",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 185,
+     "pet_key": "pet_000446",
+     "name": "黑羽夫人",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_6d3e69d6754d",
+   "name": "伊贝儿进化链",
+   "stages": [
+    {
+     "pet_id": 157,
+     "pet_key": "pet_000040",
+     "name": "伊贝儿",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 158,
+     "pet_key": "pet_000041",
+     "name": "伊贝粉粉",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_723e7156bd7c",
+   "name": "雪娃娃进化链",
+   "stages": [
+    {
+     "pet_id": 244,
+     "pet_key": "pet_000272",
+     "name": "雪娃娃",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 245,
+     "pet_key": "pet_000273",
+     "name": "冰封怨灵",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    },
+    {
+     "pet_id": 246,
+     "pet_key": "pet_000274",
+     "name": "雪灵",
+     "stage": 3,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_740b749a9626",
+   "name": "蝴蝶陶陶进化链",
+   "stages": [
+    {
+     "pet_id": 587,
+     "pet_key": "pet_000291",
+     "name": "蝴蝶陶陶",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 588,
+     "pet_key": "pet_000292",
+     "name": "铆钉毛毛",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 589,
+     "pet_key": "pet_000293",
+     "name": "徘徊爪爪",
+     "stage": 3,
+     "level": 50,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_74c75abedbf7",
+   "name": "迪莫进化链（圣光迪莫分支）",
+   "stages": [
+    {
+     "pet_id": 1,
+     "pet_key": "pet_000004",
+     "name": "迪莫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 2,
+     "pet_key": "pet_000558",
+     "name": "圣光迪莫",
+     "condition": "首领化",
+     "item": "至尊光戒"
+    }
+   ]
+  },
+  {
+   "key": "evolution_74c75abedbf7",
+   "name": "迪莫进化链（圣草迪莫分支）",
+   "stages": [
+    {
+     "pet_id": 1,
+     "pet_key": "pet_000004",
+     "name": "迪莫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 3,
+     "pet_key": "pet_000559",
+     "name": "圣草迪莫",
+     "condition": "首领化",
+     "item": "原初之草"
+    }
+   ]
+  },
+  {
+   "key": "evolution_74c75abedbf7",
+   "name": "迪莫进化链（圣火迪莫分支）",
+   "stages": [
+    {
+     "pet_id": 1,
+     "pet_key": "pet_000004",
+     "name": "迪莫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 4,
+     "pet_key": "pet_000560",
+     "name": "圣火迪莫",
+     "condition": "首领化",
+     "item": "原初之火"
+    }
+   ]
+  },
+  {
+   "key": "evolution_74c75abedbf7",
+   "name": "迪莫进化链（圣水迪莫分支）",
+   "stages": [
+    {
+     "pet_id": 1,
+     "pet_key": "pet_000004",
+     "name": "迪莫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 5,
+     "pet_key": "pet_000561",
+     "name": "圣水迪莫",
+     "condition": "首领化",
+     "item": "原初之水"
+    }
+   ]
+  },
+  {
+   "key": "evolution_78ab1c994b3c",
+   "name": "书魔虫进化链（古卷执政官分支）",
+   "stages": [
+    {
+     "pet_id": 466,
+     "pet_key": "pet_000475",
+     "name": "书魔虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 467,
+     "pet_key": "pet_000476",
+     "name": "书卷守护",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 468,
+     "pet_key": "pet_000477",
+     "name": "古卷执政官",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_78c9bd177021",
+   "name": "里拉鳐进化链",
+   "stages": [
+    {
+     "pet_id": 353,
+     "pet_key": "pet_000412",
+     "name": "里拉鳐",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7a4dd91724a1",
+   "name": "加油海葵进化链",
+   "stages": [
+    {
+     "pet_id": 524,
+     "pet_key": "pet_000486",
+     "name": "加油海葵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 525,
+     "pet_key": "pet_000487",
+     "name": "加油蟹（两只海葵的样子）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7a4dd91724a1",
+   "name": "加油海葵进化链（单只海葵的样子）",
+   "stages": [
+    {
+     "pet_id": 524,
+     "pet_key": "pet_000486",
+     "name": "加油海葵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 526,
+     "pet_key": "pet_000514",
+     "name": "加油蟹（单只海葵的样子）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7b41bd16e699",
+   "name": "小黑猫进化链",
+   "stages": [
+    {
+     "pet_id": 224,
+     "pet_key": "pet_000444",
+     "name": "小黑猫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 225,
+     "pet_key": "pet_000445",
+     "name": "黑猫巫师",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 226,
+     "pet_key": "pet_000540",
+     "name": "黑猫密探",
+     "condition": "首领化",
+     "item": "黑猫密探的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_7d15b749a582",
+   "name": "矿晶虫进化链（火山琉璃的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 87,
+     "pet_key": "pet_000351",
+     "name": "晶石蜗（火山琉璃的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 93,
+     "pet_key": "pet_000582",
+     "name": "钻石蜗（火山琉璃的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（樱桃巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 377,
+     "pet_key": "pet_000115",
+     "name": "圣代甜甜（樱桃巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（樱桃草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 378,
+     "pet_key": "pet_000359",
+     "name": "圣代甜甜（樱桃草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（樱桃抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 379,
+     "pet_key": "pet_000360",
+     "name": "圣代甜甜（樱桃抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（蓝莓巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 380,
+     "pet_key": "pet_000361",
+     "name": "圣代甜甜（蓝莓巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（蓝莓草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 381,
+     "pet_key": "pet_000362",
+     "name": "圣代甜甜（蓝莓草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（蓝莓抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 382,
+     "pet_key": "pet_000363",
+     "name": "圣代甜甜（蓝莓抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（杨桃巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 383,
+     "pet_key": "pet_000364",
+     "name": "圣代甜甜（杨桃巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（杨桃草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 384,
+     "pet_key": "pet_000365",
+     "name": "圣代甜甜（杨桃草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_7d9144cbdfae",
+   "name": "脆筒甜甜进化链（杨桃抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 385,
+     "pet_key": "pet_000366",
+     "name": "圣代甜甜（杨桃抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_84e6d216314b",
+   "name": "霹雳宝宝进化链",
+   "stages": [
+    {
+     "pet_id": 552,
+     "pet_key": "pet_000285",
+     "name": "霹雳宝宝",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 553,
+     "pet_key": "pet_000286",
+     "name": "雷鸣小子",
+     "stage": 2,
+     "level": 22,
+     "condition": null
+    },
+    {
+     "pet_id": 554,
+     "pet_key": "pet_000287",
+     "name": "雷神之子",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_86ce17e32083",
+   "name": "加灵进化链（黑化的样子）",
+   "stages": [
+    {
+     "pet_id": 579,
+     "pet_key": "pet_000196",
+     "name": "加灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 580,
+     "pet_key": "pet_000197",
+     "name": "加益",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 582,
+     "pet_key": "pet_000199",
+     "name": "黑化加尔",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_87fd89b31a74",
+   "name": "月牙雪熊进化链",
+   "stages": [
+    {
+     "pet_id": 485,
+     "pet_key": "pet_000358",
+     "name": "月牙雪熊",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8a2a14976587",
+   "name": "棋棋进化链（白棋棋绮后分支）",
+   "stages": [
+    {
+     "pet_id": 301,
+     "pet_key": "pet_000432",
+     "name": "棋棋（白子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 315,
+     "pet_key": "pet_000434",
+     "name": "棋绮后（白子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 317,
+     "pet_key": "pet_000573",
+     "name": "棋契陛下（白棋棋绮后分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_8a54096d7cda",
+   "name": "栗鼠进化链",
+   "stages": [
+    {
+     "pet_id": 605,
+     "pet_key": "pet_000442",
+     "name": "栗鼠",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 606,
+     "pet_key": "pet_000443",
+     "name": "壳栗丝鼠",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8c52af60610a",
+   "name": "绒绒进化链",
+   "stages": [
+    {
+     "pet_id": 470,
+     "pet_key": "pet_000207",
+     "name": "绒绒",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 471,
+     "pet_key": "pet_000208",
+     "name": "小绒茧",
+     "stage": 2,
+     "level": 27,
+     "condition": null
+    },
+    {
+     "pet_id": 472,
+     "pet_key": "pet_000209",
+     "name": "绒仙子",
+     "stage": 3,
+     "level": 47,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8c845d82c860",
+   "name": "足尖元件进化链",
+   "stages": [
+    {
+     "pet_id": 585,
+     "pet_key": "pet_000504",
+     "name": "足尖元件",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 586,
+     "pet_key": "pet_000505",
+     "name": "离心舞者",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8cb75f9b2a19",
+   "name": "兽花蕾进化链",
+   "stages": [
+    {
+     "pet_id": 132,
+     "pet_key": "pet_000392",
+     "name": "兽花蕾",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8ccd7da46a17",
+   "name": "丢丢进化链（草地附近的样子）",
+   "stages": [
+    {
+     "pet_id": 100,
+     "pet_key": "pet_000037",
+     "name": "丢丢（草地附近的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 104,
+     "pet_key": "pet_000038",
+     "name": "卡卡虫（草地附近的样子）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 108,
+     "pet_key": "pet_000039",
+     "name": "卡瓦重（草地附近的样子）",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8d557b11be9b",
+   "name": "墨鱿士进化链（秩序鱿墨分支）",
+   "stages": [
+    {
+     "pet_id": 441,
+     "pet_key": "pet_000449",
+     "name": "墨鱿士",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 443,
+     "pet_key": "pet_000451",
+     "name": "秩序鱿墨",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8d612806ba02",
+   "name": "星尘虫进化链",
+   "stages": [
+    {
+     "pet_id": 480,
+     "pet_key": "pet_000320",
+     "name": "星尘虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 481,
+     "pet_key": "pet_000321",
+     "name": "落星虫",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 482,
+     "pet_key": "pet_000322",
+     "name": "陨星虫",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8d8dd76a165c",
+   "name": "矮脚爬爬进化链",
+   "stages": [
+    {
+     "pet_id": 347,
+     "pet_key": "pet_000157",
+     "name": "矮脚爬爬",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 348,
+     "pet_key": "pet_000158",
+     "name": "恶魔红钻",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8f2968e1ec7e",
+   "name": "幽影树进化链",
+   "stages": [
+    {
+     "pet_id": 78,
+     "pet_key": "pet_000056",
+     "name": "幽影树",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 79,
+     "pet_key": "pet_000552",
+     "name": "幻影荆棘",
+     "condition": "首领化",
+     "item": "幻影荆棘的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_8f34d4393975",
+   "name": "脆筒甜甜进化链（樱桃草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 378,
+     "pet_key": "pet_000359",
+     "name": "圣代甜甜（樱桃草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_8ff14c94b1a4",
+   "name": "加油海葵进化链（单只海葵的样子）",
+   "stages": [
+    {
+     "pet_id": 524,
+     "pet_key": "pet_000486",
+     "name": "加油海葵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 526,
+     "pet_key": "pet_000514",
+     "name": "加油蟹（单只海葵的样子）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_92a318540c24",
+   "name": "小箱怪进化链",
+   "stages": [
+    {
+     "pet_id": 343,
+     "pet_key": "pet_000483",
+     "name": "小箱怪",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 344,
+     "pet_key": "pet_000484",
+     "name": "迷迷箱怪",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_930c4a2a3da1",
+   "name": "牵线木偶进化链",
+   "stages": [
+    {
+     "pet_id": 538,
+     "pet_key": "pet_000200",
+     "name": "牵线木偶",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 539,
+     "pet_key": "pet_000201",
+     "name": "帅帅魔偶",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_932a87b63225",
+   "name": "火红尾进化链",
+   "stages": [
+    {
+     "pet_id": 504,
+     "pet_key": "pet_000515",
+     "name": "火红尾",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 505,
+     "pet_key": "pet_000516",
+     "name": "雅丹鬃",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_941222564031",
+   "name": "稻草人进化链（暖和的样子）",
+   "stages": [
+    {
+     "pet_id": 602,
+     "pet_key": "pet_000636",
+     "name": "稻草人（暖和的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 604,
+     "pet_key": "pet_000637",
+     "name": "稻草守护者（暖和的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_94ad4c253b70",
+   "name": "凡雀进化链",
+   "stages": [
+    {
+     "pet_id": 515,
+     "pet_key": "pet_000314",
+     "name": "凡雀",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 516,
+     "pet_key": "pet_000315",
+     "name": "紫翎鹰",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 517,
+     "pet_key": "pet_000316",
+     "name": "凡鹰",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_94bb0140d20b",
+   "name": "火花进化链",
+   "stages": [
+    {
+     "pet_id": 11,
+     "pet_key": "pet_000003",
+     "name": "火花",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 12,
+     "pet_key": "pet_000029",
+     "name": "焰火",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 13,
+     "pet_key": "pet_000006",
+     "name": "火神",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 14,
+     "pet_key": "pet_000550",
+     "name": "烈火战神",
+     "condition": "首领化",
+     "item": "熔炼之火"
+    }
+   ]
+  },
+  {
+   "key": "evolution_95afe4f3ef8a",
+   "name": "莫比乌乌进化链",
+   "stages": [
+    {
+     "pet_id": 563,
+     "pet_key": "pet_000518",
+     "name": "莫比乌乌",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 564,
+     "pet_key": "pet_000519",
+     "name": "克莱因龙",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_9648635a431e",
+   "name": "奔波鼠进化链",
+   "stages": [
+    {
+     "pet_id": 319,
+     "pet_key": "pet_000213",
+     "name": "奔波鼠",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 321,
+     "pet_key": "pet_000214",
+     "name": "流浪鼠",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_97658753a355",
+   "name": "海枝枝进化链（翠绿纶布）",
+   "stages": [
+    {
+     "pet_id": 357,
+     "pet_key": "pet_000337",
+     "name": "海枝枝（翠绿纶布）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_979cb62e97fb",
+   "name": "拉特进化链",
+   "stages": [
+    {
+     "pet_id": 337,
+     "pet_key": "pet_000165",
+     "name": "拉特",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 338,
+     "pet_key": "pet_000166",
+     "name": "酷拉",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 339,
+     "pet_key": "pet_000592",
+     "name": "风暴酷拉",
+     "condition": "首领化",
+     "item": "风暴酷拉的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_97b64d2a43ca",
+   "name": "板板壳进化链（本来的样子）",
+   "stages": [
+    {
+     "pet_id": 31,
+     "pet_key": "pet_000047",
+     "name": "板板壳",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 33,
+     "pet_key": "pet_000048",
+     "name": "咔咔壳",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 35,
+     "pet_key": "pet_000049",
+     "name": "水泡壳",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_98841545bcd8",
+   "name": "记忆石进化链",
+   "stages": [
+    {
+     "pet_id": 189,
+     "pet_key": "pet_000046",
+     "name": "记忆石",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_9919c1eaa5b6",
+   "name": "书魔虫进化链（古卷执政官分支）",
+   "stages": [
+    {
+     "pet_id": 466,
+     "pet_key": "pet_000475",
+     "name": "书魔虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 467,
+     "pet_key": "pet_000476",
+     "name": "书卷守护",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 468,
+     "pet_key": "pet_000477",
+     "name": "古卷执政官",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_9919c1eaa5b6",
+   "name": "书魔虫进化链（古卷匣魔像分支）",
+   "stages": [
+    {
+     "pet_id": 466,
+     "pet_key": "pet_000475",
+     "name": "书魔虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 467,
+     "pet_key": "pet_000476",
+     "name": "书卷守护",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 469,
+     "pet_key": "pet_000478",
+     "name": "古卷匣魔像",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_995563f4d90e",
+   "name": "奇丽草进化链",
+   "stages": [
+    {
+     "pet_id": 96,
+     "pet_key": "pet_000026",
+     "name": "奇丽草",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 97,
+     "pet_key": "pet_000027",
+     "name": "奇丽叶",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 98,
+     "pet_key": "pet_000028",
+     "name": "奇丽花",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 99,
+     "pet_key": "pet_000538",
+     "name": "奇丽果",
+     "condition": "首领化",
+     "item": "奇丽果的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_99c839d270b7",
+   "name": "脆筒甜甜进化链（杨桃巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 383,
+     "pet_key": "pet_000364",
+     "name": "圣代甜甜（杨桃巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_99c839d270b7",
+   "name": "脆筒甜甜进化链（杨桃草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 384,
+     "pet_key": "pet_000365",
+     "name": "圣代甜甜（杨桃草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_99c839d270b7",
+   "name": "脆筒甜甜进化链（杨桃抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 385,
+     "pet_key": "pet_000366",
+     "name": "圣代甜甜（杨桃抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_9d42cbf21763",
+   "name": "稻草人进化链",
+   "stages": [
+    {
+     "pet_id": 601,
+     "pet_key": "pet_000494",
+     "name": "稻草人",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 603,
+     "pet_key": "pet_000495",
+     "name": "稻草守护者",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_9d4749e15250",
+   "name": "治愈兔进化链",
+   "stages": [
+    {
+     "pet_id": 410,
+     "pet_key": "pet_000072",
+     "name": "治愈兔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 411,
+     "pet_key": "pet_000073",
+     "name": "红丝绒",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 412,
+     "pet_key": "pet_000284",
+     "name": "红绒十字",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_9ef92c85f829",
+   "name": "书魔虫进化链（古卷匣魔像分支）",
+   "stages": [
+    {
+     "pet_id": 466,
+     "pet_key": "pet_000475",
+     "name": "书魔虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 467,
+     "pet_key": "pet_000476",
+     "name": "书卷守护",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 469,
+     "pet_key": "pet_000478",
+     "name": "古卷匣魔像",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_9f5a726ed695",
+   "name": "权杖-Ⅱ进化链",
+   "stages": [
+    {
+     "pet_id": 251,
+     "pet_key": "pet_000329",
+     "name": "权杖-Ⅱ",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 252,
+     "pet_key": "pet_000330",
+     "name": "权杖-V",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a11f114a46c0",
+   "name": "翡翠水母进化链",
+   "stages": [
+    {
+     "pet_id": 397,
+     "pet_key": "pet_000108",
+     "name": "翡翠水母",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 398,
+     "pet_key": "pet_000109",
+     "name": "琉璃水母",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a126552f10fd",
+   "name": "可立鸡进化链（绅士鸡分支）",
+   "stages": [
+    {
+     "pet_id": 424,
+     "pet_key": "pet_000077",
+     "name": "可立鸡",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 425,
+     "pet_key": "pet_000078",
+     "name": "晕晕鸡",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 426,
+     "pet_key": "pet_000079",
+     "name": "绅士鸡",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a126552f10fd",
+   "name": "可立鸡进化链（武者鸡分支）",
+   "stages": [
+    {
+     "pet_id": 424,
+     "pet_key": "pet_000077",
+     "name": "可立鸡",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 425,
+     "pet_key": "pet_000078",
+     "name": "晕晕鸡",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 427,
+     "pet_key": "pet_000080",
+     "name": "武者鸡",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a39978b936d1",
+   "name": "蹦蹦种子进化链（彩玉球形态）",
+   "stages": [
+    {
+     "pet_id": 137,
+     "pet_key": "pet_000247",
+     "name": "蹦蹦种子（彩玉球形态）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 141,
+     "pet_key": "pet_000250",
+     "name": "蹦蹦草（彩玉球形态）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 145,
+     "pet_key": "pet_000253",
+     "name": "蹦蹦花（彩玉球形态）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 149,
+     "pet_key": "pet_000566",
+     "name": "蹦蹦果（彩玉球形态）",
+     "condition": "首领化",
+     "item": "蹦蹦果的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a3b5e1579135",
+   "name": "阿米亚特进化链",
+   "stages": [
+    {
+     "pet_id": 199,
+     "pet_key": "pet_000013",
+     "name": "阿米亚特",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 200,
+     "pet_key": "pet_000014",
+     "name": "阿米樱",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    },
+    {
+     "pet_id": 201,
+     "pet_key": "pet_000015",
+     "name": "罗隐",
+     "stage": 3,
+     "level": 50,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 202,
+     "pet_key": "pet_000586",
+     "name": "深渊罗隐",
+     "condition": "首领化",
+     "item": "深渊罗隐的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a419605ef100",
+   "name": "矿晶虫进化链（西瓜碧玺的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 84,
+     "pet_key": "pet_000257",
+     "name": "晶石蜗（西瓜碧玺的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 90,
+     "pet_key": "pet_000534",
+     "name": "钻石蜗（西瓜碧玺的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a419605ef100",
+   "name": "矿晶虫进化链（莲花刚玉的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 85,
+     "pet_key": "pet_000349",
+     "name": "晶石蜗（莲花刚玉的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 91,
+     "pet_key": "pet_000580",
+     "name": "钻石蜗（莲花刚玉的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a419605ef100",
+   "name": "矿晶虫进化链（星彩榴石的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 86,
+     "pet_key": "pet_000350",
+     "name": "晶石蜗（星彩榴石的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 92,
+     "pet_key": "pet_000581",
+     "name": "钻石蜗（星彩榴石的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a419605ef100",
+   "name": "矿晶虫进化链（火山琉璃的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 87,
+     "pet_key": "pet_000351",
+     "name": "晶石蜗（火山琉璃的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 93,
+     "pet_key": "pet_000582",
+     "name": "钻石蜗（火山琉璃的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a419605ef100",
+   "name": "矿晶虫进化链（蓝锥矿的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 88,
+     "pet_key": "pet_000352",
+     "name": "晶石蜗（蓝锥矿的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 94,
+     "pet_key": "pet_000583",
+     "name": "钻石蜗（蓝锥矿的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a419605ef100",
+   "name": "矿晶虫进化链（烧蓝黄金的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 89,
+     "pet_key": "pet_000386",
+     "name": "晶石蜗（烧蓝黄金的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 95,
+     "pet_key": "pet_000584",
+     "name": "钻石蜗（烧蓝黄金的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a4f4945bb2d8",
+   "name": "大耳帽兜进化链",
+   "stages": [
+    {
+     "pet_id": 247,
+     "pet_key": "pet_000110",
+     "name": "大耳帽兜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 248,
+     "pet_key": "pet_000111",
+     "name": "帽兜娃娃",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 249,
+     "pet_key": "pet_000112",
+     "name": "雪影娃娃",
+     "stage": 3,
+     "level": 48,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 250,
+     "pet_key": "pet_000546",
+     "name": "雪影冰灵",
+     "condition": "首领化",
+     "item": "雪影冰灵的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a66a6a7aa55a",
+   "name": "森豆丁进化链",
+   "stages": [
+    {
+     "pet_id": 549,
+     "pet_key": "pet_000520",
+     "name": "森豆丁",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 550,
+     "pet_key": "pet_000521",
+     "name": "森蛮人",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 551,
+     "pet_key": "pet_000522",
+     "name": "森巨人",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a689f4c7e97d",
+   "name": "小狮鹫进化链（高山地的样子）",
+   "stages": [
+    {
+     "pet_id": 273,
+     "pet_key": "pet_000368",
+     "name": "小狮鹫（高山地的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 275,
+     "pet_key": "pet_000369",
+     "name": "神圣狮鹫（高山地的样子）",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 277,
+     "pet_key": "pet_000370",
+     "name": "皇家狮鹫（高山地的样子）",
+     "stage": 3,
+     "level": 46,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a6eaabf7ae4f",
+   "name": "小独角兽进化链",
+   "stages": [
+    {
+     "pet_id": 213,
+     "pet_key": "pet_000054",
+     "name": "小独角兽",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 214,
+     "pet_key": "pet_000055",
+     "name": "白金独角兽",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 215,
+     "pet_key": "pet_000535",
+     "name": "彩虹独角兽",
+     "condition": "首领化",
+     "item": "生长痛"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a72ba45add8e",
+   "name": "电动长颈鹿进化链",
+   "stages": [
+    {
+     "pet_id": 363,
+     "pet_key": "pet_000288",
+     "name": "电动长颈鹿",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 364,
+     "pet_key": "pet_000289",
+     "name": "奔乐鹿",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 365,
+     "pet_key": "pet_000290",
+     "name": "爵士鹿",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 366,
+     "pet_key": "pet_000553",
+     "name": "波普鹿",
+     "condition": "首领化",
+     "item": "波普鹿的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a75766be6ed0",
+   "name": "可立鸡进化链（武者鸡分支）",
+   "stages": [
+    {
+     "pet_id": 424,
+     "pet_key": "pet_000077",
+     "name": "可立鸡",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 425,
+     "pet_key": "pet_000078",
+     "name": "晕晕鸡",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 427,
+     "pet_key": "pet_000080",
+     "name": "武者鸡",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a834f03d489e",
+   "name": "卡波进化链",
+   "stages": [
+    {
+     "pet_id": 595,
+     "pet_key": "pet_000220",
+     "name": "卡波",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 596,
+     "pet_key": "pet_000221",
+     "name": "卡拉波斯",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a8f6a42be586",
+   "name": "绿草精灵进化链",
+   "stages": [
+    {
+     "pet_id": 187,
+     "pet_key": "pet_000023",
+     "name": "绿草精灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 188,
+     "pet_key": "pet_000032",
+     "name": "魔草巫灵",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a9457bbc29e4",
+   "name": "小鹬进化链",
+   "stages": [
+    {
+     "pet_id": 369,
+     "pet_key": "pet_000210",
+     "name": "小鹬",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 370,
+     "pet_key": "pet_000211",
+     "name": "鄙目鹬",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 371,
+     "pet_key": "pet_000212",
+     "name": "高脚鹬",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 372,
+     "pet_key": "pet_000587",
+     "name": "高帽鹬者",
+     "condition": "首领化",
+     "item": "高帽鹬者的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_a9d1099edbef",
+   "name": "石肤蜥进化链（球球尾巴的样子）",
+   "stages": [
+    {
+     "pet_id": 60,
+     "pet_key": "pet_000398",
+     "name": "石肤蜥（球球尾巴的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 62,
+     "pet_key": "pet_000399",
+     "name": "石刺蜥（球球尾巴的样子）",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 64,
+     "pet_key": "pet_000400",
+     "name": "石冠王蜥（球球尾巴的样子）",
+     "stage": 3,
+     "level": 48,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_a9e61b7541e0",
+   "name": "伊雷龙进化链",
+   "stages": [
+    {
+     "pet_id": 334,
+     "pet_key": "pet_000188",
+     "name": "伊雷龙",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 335,
+     "pet_key": "pet_000331",
+     "name": "伊兰亚龙",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 336,
+     "pet_key": "pet_000555",
+     "name": "伊兰龙",
+     "condition": "首领化",
+     "item": "伊兰龙的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_aca7da6f6e97",
+   "name": "咕咕帽进化链",
+   "stages": [
+    {
+     "pet_id": 532,
+     "pet_key": "pet_000492",
+     "name": "咕咕帽",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 533,
+     "pet_key": "pet_000493",
+     "name": "咕德帽帽",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_acd1218a9c29",
+   "name": "加灵进化链",
+   "stages": [
+    {
+     "pet_id": 579,
+     "pet_key": "pet_000196",
+     "name": "加灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 580,
+     "pet_key": "pet_000197",
+     "name": "加益",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 581,
+     "pet_key": "pet_000198",
+     "name": "加尔",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_acdea57778fb",
+   "name": "乌达进化链（极昼的样子）",
+   "stages": [
+    {
+     "pet_id": 413,
+     "pet_key": "pet_000423",
+     "name": "乌达（极昼的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 415,
+     "pet_key": "pet_000424",
+     "name": "迷你乌（极昼的样子）",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    },
+    {
+     "pet_id": 417,
+     "pet_key": "pet_000425",
+     "name": "乌拉塔（极昼的样子）",
+     "stage": 3,
+     "level": 50,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ad6d27b2cddf",
+   "name": "小灵菇进化链",
+   "stages": [
+    {
+     "pet_id": 56,
+     "pet_key": "pet_000131",
+     "name": "小灵菇",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 57,
+     "pet_key": "pet_000132",
+     "name": "幻灵菇",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 58,
+     "pet_key": "pet_000133",
+     "name": "幻影灵菇",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b05c0c86ea79",
+   "name": "嗜光嗡嗡进化链",
+   "stages": [
+    {
+     "pet_id": 486,
+     "pet_key": "pet_000479",
+     "name": "嗜光嗡嗡",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 487,
+     "pet_key": "pet_000480",
+     "name": "窃光蚊",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b07e1ac2940c",
+   "name": "脆筒甜甜进化链（杨桃巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 383,
+     "pet_key": "pet_000364",
+     "name": "圣代甜甜（杨桃巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b10aa9b46547",
+   "name": "乖乖鹄进化链（翠顶夫人分支）",
+   "stages": [
+    {
+     "pet_id": 182,
+     "pet_key": "pet_000278",
+     "name": "乖乖鹄",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 183,
+     "pet_key": "pet_000279",
+     "name": "蓝珠天鹅",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 184,
+     "pet_key": "pet_000280",
+     "name": "翠顶夫人",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b13349d01c38",
+   "name": "章脑丸进化链",
+   "stages": [
+    {
+     "pet_id": 619,
+     "pet_key": "pet_000612",
+     "name": "章脑丸",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 620,
+     "pet_key": "pet_000613",
+     "name": "智辉章脑",
+     "stage": 2,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b16df6444efd",
+   "name": "海盔虫进化链（磨损的样子）",
+   "stages": [
+    {
+     "pet_id": 163,
+     "pet_key": "pet_000376",
+     "name": "海盔虫（磨损的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 165,
+     "pet_key": "pet_000377",
+     "name": "刺盔虫（磨损的样子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    },
+    {
+     "pet_id": 167,
+     "pet_key": "pet_000378",
+     "name": "千棘盔（磨损的样子）",
+     "stage": 3,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 169,
+     "pet_key": "pet_000562",
+     "name": "千棘海针（磨损的样子）",
+     "condition": "首领化",
+     "item": "千棘海针的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_b1b7a5889807",
+   "name": "矿晶虫进化链（烧蓝黄金的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 89,
+     "pet_key": "pet_000386",
+     "name": "晶石蜗（烧蓝黄金的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 95,
+     "pet_key": "pet_000584",
+     "name": "钻石蜗（烧蓝黄金的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_b2ef98f04e2e",
+   "name": "小夜进化链",
+   "stages": [
+    {
+     "pet_id": 179,
+     "pet_key": "pet_000128",
+     "name": "小夜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 180,
+     "pet_key": "pet_000129",
+     "name": "紫夜",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    },
+    {
+     "pet_id": 181,
+     "pet_key": "pet_000130",
+     "name": "朔夜伊芙",
+     "stage": 3,
+     "level": 44,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b49371aa0ce5",
+   "name": "粉星仔进化链（粉耳星兔分支）",
+   "stages": [
+    {
+     "pet_id": 499,
+     "pet_key": "pet_000264",
+     "name": "粉星仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 500,
+     "pet_key": "pet_000265",
+     "name": "粉耳星兔",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b614ae693629",
+   "name": "春团进化链",
+   "stages": [
+    {
+     "pet_id": 506,
+     "pet_key": "pet_000144",
+     "name": "春团",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 507,
+     "pet_key": "pet_000145",
+     "name": "春兔",
+     "stage": 2,
+     "level": 21,
+     "condition": null
+    },
+    {
+     "pet_id": 508,
+     "pet_key": "pet_000299",
+     "name": "春花兔",
+     "stage": 3,
+     "level": 38,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b649c973529c",
+   "name": "加油海葵进化链",
+   "stages": [
+    {
+     "pet_id": 524,
+     "pet_key": "pet_000486",
+     "name": "加油海葵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 525,
+     "pet_key": "pet_000487",
+     "name": "加油蟹（两只海葵的样子）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b650eba61af8",
+   "name": "画精灵进化链（画间沉铁兽分支）",
+   "stages": [
+    {
+     "pet_id": 462,
+     "pet_key": "pet_000471",
+     "name": "画精灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 463,
+     "pet_key": "pet_000472",
+     "name": "画像守护",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 465,
+     "pet_key": "pet_000474",
+     "name": "画间沉铁兽",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b6c4bd6c2ddc",
+   "name": "火豆丁进化链",
+   "stages": [
+    {
+     "pet_id": 558,
+     "pet_key": "pet_000525",
+     "name": "火豆丁",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 559,
+     "pet_key": "pet_000526",
+     "name": "火蛮人",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 560,
+     "pet_key": "pet_000527",
+     "name": "火巨人",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_b70cf668fcb7",
+   "name": "小雪人进化链",
+   "stages": [
+    {
+     "pet_id": 518,
+     "pet_key": "pet_000418",
+     "name": "小雪人",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 519,
+     "pet_key": "pet_000419",
+     "name": "雪怪",
+     "stage": 2,
+     "level": 40,
+     "condition": "生涯使用[滚雪球]6次"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ba85521758b5",
+   "name": "爆焰仔进化链",
+   "stages": [
+    {
+     "pet_id": 520,
+     "pet_key": "pet_000447",
+     "name": "爆焰仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 521,
+     "pet_key": "pet_000448",
+     "name": "爆焰喷喷",
+     "stage": 2,
+     "level": 40,
+     "condition": "生涯使用[流星火雨]6次"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_bacfc388de61",
+   "name": "幽铃进化链",
+   "stages": [
+    {
+     "pet_id": 628,
+     "pet_key": "pet_000616",
+     "name": "幽铃",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 629,
+     "pet_key": "pet_000617",
+     "name": "摇铃魔偶",
+     "stage": 2,
+     "level": 42,
+     "condition": "游戏内处于夜晚"
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_bad7b99ba025",
+   "name": "睡铃雪影娃娃进化链",
+   "stages": [
+    {
+     "pet_id": 607,
+     "pet_key": "pet_000517",
+     "name": "睡铃雪影娃娃",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_bb0441d1bfb1",
+   "name": "鸭吉吉进化链（蓬松的样子）",
+   "stages": [
+    {
+     "pet_id": 19,
+     "pet_key": "pet_000011",
+     "name": "鸭吉吉（蓬松的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 25,
+     "pet_key": "pet_000539",
+     "name": "鸭吉吉国王（蓬松的样子）",
+     "condition": "首领化",
+     "item": "金色传说"
+    }
+   ]
+  },
+  {
+   "key": "evolution_bc42a3ca5bcf",
+   "name": "脆筒甜甜进化链（樱桃抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 374,
+     "pet_key": "pet_000114",
+     "name": "香草甜甜（樱桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 379,
+     "pet_key": "pet_000360",
+     "name": "圣代甜甜（樱桃抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_bc56fc9ea38e",
+   "name": "蹦蹦种子进化链（象牙球形态）",
+   "stages": [
+    {
+     "pet_id": 139,
+     "pet_key": "pet_000249",
+     "name": "蹦蹦种子（象牙球形态）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 143,
+     "pet_key": "pet_000252",
+     "name": "蹦蹦草（象牙球形态）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 147,
+     "pet_key": "pet_000255",
+     "name": "蹦蹦花（象牙球形态）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 151,
+     "pet_key": "pet_000568",
+     "name": "蹦蹦果（象牙球形态）",
+     "condition": "首领化",
+     "item": "蹦蹦果的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_bcfb8a0f7fac",
+   "name": "格兰种子进化链",
+   "stages": [
+    {
+     "pet_id": 432,
+     "pet_key": "pet_000063",
+     "name": "格兰种子",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 433,
+     "pet_key": "pet_000064",
+     "name": "格兰花",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 434,
+     "pet_key": "pet_000065",
+     "name": "格兰球",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_bf682d603e12",
+   "name": "一窝蜂进化链",
+   "stages": [
+    {
+     "pet_id": 175,
+     "pet_key": "pet_000050",
+     "name": "一窝蜂",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 176,
+     "pet_key": "pet_000051",
+     "name": "黄蜂后",
+     "stage": 2,
+     "level": 21,
+     "condition": null
+    },
+    {
+     "pet_id": 177,
+     "pet_key": "pet_000143",
+     "name": "花魁蜂后",
+     "stage": 3,
+     "level": 38,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 178,
+     "pet_key": "pet_000548",
+     "name": "女王蜂",
+     "condition": "首领化",
+     "item": "女王蜂的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_c263aca83356",
+   "name": "十字蝌蚪进化链",
+   "stages": [
+    {
+     "pet_id": 592,
+     "pet_key": "pet_000456",
+     "name": "十字蝌蚪",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 593,
+     "pet_key": "pet_000457",
+     "name": "十字蛙",
+     "stage": 2,
+     "level": 24,
+     "condition": null
+    },
+    {
+     "pet_id": 594,
+     "pet_key": "pet_000458",
+     "name": "深渊蛙",
+     "stage": 3,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_c2c94d8f2fbf",
+   "name": "不咕钟进化链",
+   "stages": [
+    {
+     "pet_id": 577,
+     "pet_key": "pet_000481",
+     "name": "不咕钟",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 578,
+     "pet_key": "pet_000482",
+     "name": "溯源钟",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_c2e560ee0df4",
+   "name": "圣剑侍从进化链",
+   "stages": [
+    {
+     "pet_id": 446,
+     "pet_key": "pet_000429",
+     "name": "圣剑侍从",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 447,
+     "pet_key": "pet_000430",
+     "name": "圣剑-X",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 448,
+     "pet_key": "pet_000554",
+     "name": "圣剑骑士",
+     "condition": "首领化",
+     "item": "圣剑骑士的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_c3482595b62f",
+   "name": "柴渣虫进化链",
+   "stages": [
+    {
+     "pet_id": 488,
+     "pet_key": "pet_000340",
+     "name": "柴渣虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 489,
+     "pet_key": "pet_000341",
+     "name": "燃薪虫",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_c4bb085f1dc5",
+   "name": "菇菇丁进化链",
+   "stages": [
+    {
+     "pet_id": 287,
+     "pet_key": "pet_000305",
+     "name": "菇菇丁",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 288,
+     "pet_key": "pet_000306",
+     "name": "多菇丁",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    },
+    {
+     "pet_id": 289,
+     "pet_key": "pet_000307",
+     "name": "九幽菇",
+     "stage": 3,
+     "level": 48,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_c5f49c7bc17a",
+   "name": "矿晶虫进化链（莲花刚玉的样子）",
+   "stages": [
+    {
+     "pet_id": 83,
+     "pet_key": "pet_000256",
+     "name": "矿晶虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 85,
+     "pet_key": "pet_000349",
+     "name": "晶石蜗（莲花刚玉的样子）",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 91,
+     "pet_key": "pet_000580",
+     "name": "钻石蜗（莲花刚玉的样子）",
+     "condition": "首领化",
+     "item": "钻石蜗的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_c6c02e8696e7",
+   "name": "脆筒甜甜进化链（蓝莓草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 381,
+     "pet_key": "pet_000362",
+     "name": "圣代甜甜（蓝莓草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_c7ab58da0b1f",
+   "name": "蹦蹦种子进化链（海神球形态）",
+   "stages": [
+    {
+     "pet_id": 136,
+     "pet_key": "pet_000016",
+     "name": "蹦蹦种子（海神球形态）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 140,
+     "pet_key": "pet_000017",
+     "name": "蹦蹦草（海神球形态）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 144,
+     "pet_key": "pet_000018",
+     "name": "蹦蹦花（海神球形态）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 148,
+     "pet_key": "pet_000537",
+     "name": "蹦蹦果（海神球形态）",
+     "condition": "首领化",
+     "item": "蹦蹦果的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_c8681805bf5e",
+   "name": "胆小鳗鱼进化链",
+   "stages": [
+    {
+     "pet_id": 395,
+     "pet_key": "pet_000222",
+     "name": "胆小鳗鱼",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 396,
+     "pet_key": "pet_000223",
+     "name": "闪电鳗鱼",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_c9957a04239b",
+   "name": "觅觅蝠进化链",
+   "stages": [
+    {
+     "pet_id": 568,
+     "pet_key": "pet_000266",
+     "name": "觅觅蝠",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 569,
+     "pet_key": "pet_000267",
+     "name": "翻翻蝠",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 570,
+     "pet_key": "pet_000268",
+     "name": "夜游魔",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_c99ec5b53c47",
+   "name": "蜜果骸进化链",
+   "stages": [
+    {
+     "pet_id": 599,
+     "pet_key": "pet_000498",
+     "name": "蜜果骸",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 600,
+     "pet_key": "pet_000499",
+     "name": "半朽蜜果灵",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_c9d1431680a6",
+   "name": "棋棋进化链（黑棋棋骑士分支）",
+   "stages": [
+    {
+     "pet_id": 302,
+     "pet_key": "pet_000437",
+     "name": "棋棋（黑子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 304,
+     "pet_key": "pet_000438",
+     "name": "棋骑士（黑子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 306,
+     "pet_key": "pet_000576",
+     "name": "棋契陛下（黑棋棋骑士分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_c9d1431680a6",
+   "name": "棋棋进化链（黑棋棋绮后分支）",
+   "stages": [
+    {
+     "pet_id": 302,
+     "pet_key": "pet_000437",
+     "name": "棋棋（黑子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 316,
+     "pet_key": "pet_000439",
+     "name": "棋绮后（黑子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 318,
+     "pet_key": "pet_000577",
+     "name": "棋契陛下（黑棋棋绮后分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_c9d1431680a6",
+   "name": "棋棋进化链（黑棋棋齐垒分支）",
+   "stages": [
+    {
+     "pet_id": 302,
+     "pet_key": "pet_000437",
+     "name": "棋棋（黑子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 308,
+     "pet_key": "pet_000440",
+     "name": "棋齐垒（黑子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 310,
+     "pet_key": "pet_000578",
+     "name": "棋契陛下（黑棋棋齐垒分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_c9d1431680a6",
+   "name": "棋棋进化链（黑棋棋祈督分支）",
+   "stages": [
+    {
+     "pet_id": 302,
+     "pet_key": "pet_000437",
+     "name": "棋棋（黑子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 312,
+     "pet_key": "pet_000441",
+     "name": "棋祈督（黑子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 314,
+     "pet_key": "pet_000579",
+     "name": "棋契陛下（黑棋棋祈督分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_ca1e669186d8",
+   "name": "果冻进化链（熔岩布丁分支）",
+   "stages": [
+    {
+     "pet_id": 476,
+     "pet_key": "pet_000107",
+     "name": "果冻",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 479,
+     "pet_key": "pet_000415",
+     "name": "熔岩布丁",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ca3434b8f8db",
+   "name": "棋棋进化链（黑棋棋骑士分支）",
+   "stages": [
+    {
+     "pet_id": 302,
+     "pet_key": "pet_000437",
+     "name": "棋棋（黑子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 304,
+     "pet_key": "pet_000438",
+     "name": "棋骑士（黑子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 306,
+     "pet_key": "pet_000576",
+     "name": "棋契陛下（黑棋棋骑士分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_cab0830e0c18",
+   "name": "多西进化链",
+   "stages": [
+    {
+     "pet_id": 358,
+     "pet_key": "pet_000183",
+     "name": "多西",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 359,
+     "pet_key": "pet_000184",
+     "name": "库多西",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 360,
+     "pet_key": "pet_000185",
+     "name": "波多西",
+     "stage": 3,
+     "level": 48,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_cb1e02fa39c2",
+   "name": "优优进化链",
+   "stages": [
+    {
+     "pet_id": 428,
+     "pet_key": "pet_000496",
+     "name": "优优",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 429,
+     "pet_key": "pet_000497",
+     "name": "绒光优优",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_cd9272528c66",
+   "name": "幽星光进化链",
+   "stages": [
+    {
+     "pet_id": 509,
+     "pet_key": "pet_000296",
+     "name": "幽星光",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 510,
+     "pet_key": "pet_000297",
+     "name": "曜星光",
+     "stage": 2,
+     "level": 21,
+     "condition": null
+    },
+    {
+     "pet_id": 511,
+     "pet_key": "pet_000298",
+     "name": "暮星辰",
+     "stage": 3,
+     "level": 38,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_cf7f051fd8c1",
+   "name": "豆丁鱼进化链",
+   "stages": [
+    {
+     "pet_id": 392,
+     "pet_key": "pet_000311",
+     "name": "豆丁鱼",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 393,
+     "pet_key": "pet_000312",
+     "name": "快鳍鱼",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 394,
+     "pet_key": "pet_000313",
+     "name": "龙鱼",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d09697373a73",
+   "name": "叮叮卯进化链",
+   "stages": [
+    {
+     "pet_id": 544,
+     "pet_key": "pet_000523",
+     "name": "叮叮卯",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 545,
+     "pet_key": "pet_000524",
+     "name": "飞飞钥",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d0eb96c03bd1",
+   "name": "小电企鹅进化链",
+   "stages": [
+    {
+     "pet_id": 237,
+     "pet_key": "pet_000338",
+     "name": "小电企鹅",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 238,
+     "pet_key": "pet_000339",
+     "name": "电企鹅",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d19004f02b9b",
+   "name": "恶魔叮进化链",
+   "stages": [
+    {
+     "pet_id": 69,
+     "pet_key": "pet_000009",
+     "name": "恶魔叮",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 70,
+     "pet_key": "pet_000036",
+     "name": "叮叮恶魔",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 71,
+     "pet_key": "pet_000588",
+     "name": "恶魔男爵",
+     "condition": "首领化",
+     "item": "恶魔男爵的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_d3da4927039b",
+   "name": "梦游进化链（穿星星睡衣的样子）",
+   "stages": [
+    {
+     "pet_id": 129,
+     "pet_key": "pet_000344",
+     "name": "梦游（穿星星睡衣的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 131,
+     "pet_key": "pet_000345",
+     "name": "梦悠悠（穿星星睡衣的样子）",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d3f6de54ac3b",
+   "name": "石石进化链",
+   "stages": [
+    {
+     "pet_id": 207,
+     "pet_key": "pet_000149",
+     "name": "石石",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 208,
+     "pet_key": "pet_000150",
+     "name": "巨灵石",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d4153a1ead4b",
+   "name": "深蓝鲸进化链",
+   "stages": [
+    {
+     "pet_id": 431,
+     "pet_key": "pet_000308",
+     "name": "深蓝鲸",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d4c1a14efc87",
+   "name": "地鼠进化链（储水时的样子）",
+   "stages": [
+    {
+     "pet_id": 436,
+     "pet_key": "pet_000355",
+     "name": "地鼠（储水时的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 438,
+     "pet_key": "pet_000356",
+     "name": "遁鼠（储水时的样子）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 440,
+     "pet_key": "pet_000357",
+     "name": "遁地鼠（储水时的样子）",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d57d0a559b19",
+   "name": "斑斑进化链",
+   "stages": [
+    {
+     "pet_id": 290,
+     "pet_key": "pet_000421",
+     "name": "斑斑",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 291,
+     "pet_key": "pet_000422",
+     "name": "斑枭",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d69840e9d055",
+   "name": "花怨鳗进化链",
+   "stages": [
+    {
+     "pet_id": 330,
+     "pet_key": "pet_000401",
+     "name": "花怨鳗",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 332,
+     "pet_key": "pet_000402",
+     "name": "鳗尾兽",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d6a19d7817d6",
+   "name": "脆筒甜甜进化链（蓝莓巧克力口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 380,
+     "pet_key": "pet_000361",
+     "name": "圣代甜甜（蓝莓巧克力口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d6a19d7817d6",
+   "name": "脆筒甜甜进化链（蓝莓草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 381,
+     "pet_key": "pet_000362",
+     "name": "圣代甜甜（蓝莓草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d6a19d7817d6",
+   "name": "脆筒甜甜进化链（蓝莓抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 376,
+     "pet_key": "pet_000380",
+     "name": "香草甜甜（蓝莓饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 382,
+     "pet_key": "pet_000363",
+     "name": "圣代甜甜（蓝莓抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_d8a0aa4c7f81",
+   "name": "脆筒甜甜进化链（杨桃抹茶口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 385,
+     "pet_key": "pet_000366",
+     "name": "圣代甜甜（杨桃抹茶口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_da99fb69e920",
+   "name": "草头鸭进化链",
+   "stages": [
+    {
+     "pet_id": 292,
+     "pet_key": "pet_000008",
+     "name": "草头鸭",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 293,
+     "pet_key": "pet_000059",
+     "name": "卷毛鸭",
+     "stage": 2,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_db441c4d9781",
+   "name": "机械方方进化链",
+   "stages": [
+    {
+     "pet_id": 421,
+     "pet_key": "pet_000177",
+     "name": "机械方方",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 422,
+     "pet_key": "pet_000178",
+     "name": "多彩方方",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 423,
+     "pet_key": "pet_000179",
+     "name": "立方人",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_dcac14317f9e",
+   "name": "波波螺进化链",
+   "stages": [
+    {
+     "pet_id": 281,
+     "pet_key": "pet_000403",
+     "name": "波波螺",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 283,
+     "pet_key": "pet_000404",
+     "name": "消波螺",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 285,
+     "pet_key": "pet_000405",
+     "name": "嗜波螺",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_dd47b479f520",
+   "name": "未完虫进化链",
+   "stages": [
+    {
+     "pet_id": 621,
+     "pet_key": "pet_000598",
+     "name": "未完虫",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_dd9f1627baf6",
+   "name": "粉粉星进化链",
+   "stages": [
+    {
+     "pet_id": 494,
+     "pet_key": "pet_000175",
+     "name": "粉粉星",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 495,
+     "pet_key": "pet_000176",
+     "name": "小皮球",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ddbbd4f1b518",
+   "name": "小丑豆豆进化链",
+   "stages": [
+    {
+     "pet_id": 527,
+     "pet_key": "pet_000387",
+     "name": "小丑豆豆",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 528,
+     "pet_key": "pet_000388",
+     "name": "小丑兔",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 529,
+     "pet_key": "pet_000389",
+     "name": "小丑公爵",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ddfcd320921c",
+   "name": "护主犬进化链（看守麦田的样子）",
+   "stages": [
+    {
+     "pet_id": 113,
+     "pet_key": "pet_000628",
+     "name": "护主犬（看守麦田的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 116,
+     "pet_key": "pet_000629",
+     "name": "音速犬（看守麦田的样子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 117,
+     "pet_key": "pet_000631",
+     "name": "风暴战犬（看守麦田的样子）",
+     "condition": "首领化",
+     "item": "风暴战犬的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_de96f713531a",
+   "name": "波波螺进化链（被污染的样子）",
+   "stages": [
+    {
+     "pet_id": 282,
+     "pet_key": "pet_000406",
+     "name": "波波螺（被污染的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 284,
+     "pet_key": "pet_000407",
+     "name": "消波螺（被污染的样子）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 286,
+     "pet_key": "pet_000408",
+     "name": "嗜波螺（被污染的样子）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_dec17eb933c8",
+   "name": "绿耳松鼠进化链",
+   "stages": [
+    {
+     "pet_id": 118,
+     "pet_key": "pet_000087",
+     "name": "绿耳松鼠",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 119,
+     "pet_key": "pet_000088",
+     "name": "抱枕松鼠",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    },
+    {
+     "pet_id": 120,
+     "pet_key": "pet_000089",
+     "name": "蹦床松鼠",
+     "stage": 3,
+     "level": 46,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_df1befcd842a",
+   "name": "小勇狮进化链",
+   "stages": [
+    {
+     "pet_id": 262,
+     "pet_key": "pet_000465",
+     "name": "小勇狮",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 263,
+     "pet_key": "pet_000466",
+     "name": "炽焰狮",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 264,
+     "pet_key": "pet_000467",
+     "name": "炽心勇狮",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e00adb96ae21",
+   "name": "雪豆丁进化链",
+   "stages": [
+    {
+     "pet_id": 239,
+     "pet_key": "pet_000151",
+     "name": "雪豆丁",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 240,
+     "pet_key": "pet_000152",
+     "name": "雪蛮人",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 241,
+     "pet_key": "pet_000153",
+     "name": "雪巨人",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e02d301ff87b",
+   "name": "棋棋进化链（黑棋棋祈督分支）",
+   "stages": [
+    {
+     "pet_id": 302,
+     "pet_key": "pet_000437",
+     "name": "棋棋（黑子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 312,
+     "pet_key": "pet_000441",
+     "name": "棋祈督（黑子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 314,
+     "pet_key": "pet_000579",
+     "name": "棋契陛下（黑棋棋祈督分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_e06c096a681e",
+   "name": "粉星仔进化链（落陨星兔分支）",
+   "stages": [
+    {
+     "pet_id": 499,
+     "pet_key": "pet_000264",
+     "name": "粉星仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 501,
+     "pet_key": "pet_000385",
+     "name": "落陨星兔",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e0825d72760c",
+   "name": "奔波鼠进化链（搬运果实的样子）",
+   "stages": [
+    {
+     "pet_id": 320,
+     "pet_key": "pet_000632",
+     "name": "奔波鼠（搬运果实的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 322,
+     "pet_key": "pet_000633",
+     "name": "流浪鼠（搬运果实的样子）",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e2e21d498779",
+   "name": "脆筒甜甜进化链（杨桃草莓口味）",
+   "stages": [
+    {
+     "pet_id": 373,
+     "pet_key": "pet_000113",
+     "name": "脆筒甜甜",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 375,
+     "pet_key": "pet_000379",
+     "name": "香草甜甜（杨桃饰品）",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 384,
+     "pet_key": "pet_000365",
+     "name": "圣代甜甜（杨桃草莓口味）",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e35badf7e825",
+   "name": "公平鸽进化链（称量的样子）",
+   "stages": [
+    {
+     "pet_id": 269,
+     "pet_key": "pet_000630",
+     "name": "公平鸽（称量的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e3d9e68c6850",
+   "name": "呼呼猪进化链",
+   "stages": [
+    {
+     "pet_id": 242,
+     "pet_key": "pet_000218",
+     "name": "呼呼猪",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 243,
+     "pet_key": "pet_000219",
+     "name": "獠牙猪",
+     "stage": 2,
+     "level": 33,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e4b51cde6190",
+   "name": "布是石进化链",
+   "stages": [
+    {
+     "pet_id": 65,
+     "pet_key": "pet_000092",
+     "name": "布是石",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 66,
+     "pet_key": "pet_000093",
+     "name": "布是岩",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 67,
+     "pet_key": "pet_000094",
+     "name": "布克棱岩",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 68,
+     "pet_key": "pet_000541",
+     "name": "迷嶂布莱克",
+     "condition": "首领化",
+     "item": "迷嶂布莱克的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_e4fd30b217bb",
+   "name": "乌达进化链（极夜的样子）",
+   "stages": [
+    {
+     "pet_id": 414,
+     "pet_key": "pet_000426",
+     "name": "乌达（极夜的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 416,
+     "pet_key": "pet_000427",
+     "name": "迷你乌（极夜的样子）",
+     "stage": 2,
+     "level": 30,
+     "condition": null
+    },
+    {
+     "pet_id": 418,
+     "pet_key": "pet_000428",
+     "name": "乌拉塔（极夜的样子）",
+     "stage": 3,
+     "level": 50,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e548b358eafd",
+   "name": "咔咔羽毛进化链",
+   "stages": [
+    {
+     "pet_id": 190,
+     "pet_key": "pet_000154",
+     "name": "咔咔羽毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 191,
+     "pet_key": "pet_000155",
+     "name": "咔咔雀",
+     "stage": 2,
+     "level": 18,
+     "condition": null
+    },
+    {
+     "pet_id": 192,
+     "pet_key": "pet_000156",
+     "name": "咔咔鸟",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e573bfb6eb3f",
+   "name": "画精灵进化链（画间法师手分支）",
+   "stages": [
+    {
+     "pet_id": 462,
+     "pet_key": "pet_000471",
+     "name": "画精灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 463,
+     "pet_key": "pet_000472",
+     "name": "画像守护",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 464,
+     "pet_key": "pet_000473",
+     "name": "画间法师手",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e573bfb6eb3f",
+   "name": "画精灵进化链（画间沉铁兽分支）",
+   "stages": [
+    {
+     "pet_id": 462,
+     "pet_key": "pet_000471",
+     "name": "画精灵",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 463,
+     "pet_key": "pet_000472",
+     "name": "画像守护",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 465,
+     "pet_key": "pet_000474",
+     "name": "画间沉铁兽",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e5e9584a28c9",
+   "name": "玳龟进化链",
+   "stages": [
+    {
+     "pet_id": 622,
+     "pet_key": "pet_000602",
+     "name": "玳龟",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 623,
+     "pet_key": "pet_000603",
+     "name": "玳塔",
+     "stage": 2,
+     "level": 42,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_e84564299274",
+   "name": "旋叶虫进化链（枯叶的样子）",
+   "stages": [
+    {
+     "pet_id": 217,
+     "pet_key": "pet_000394",
+     "name": "旋叶虫（枯叶的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 219,
+     "pet_key": "pet_000395",
+     "name": "蓬叶虫（枯叶的样子）",
+     "stage": 2,
+     "level": 25,
+     "condition": null
+    },
+    {
+     "pet_id": 221,
+     "pet_key": "pet_000396",
+     "name": "风滚暮虫（枯叶的样子）",
+     "stage": 3,
+     "level": 45,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 223,
+     "pet_key": "pet_000594",
+     "name": "暮风隐者（枯叶的样子）",
+     "condition": "首领化",
+     "item": "暮风隐者的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_ea780dacf896",
+   "name": "忽幽狸进化链",
+   "stages": [
+    {
+     "pet_id": 227,
+     "pet_key": "pet_000057",
+     "name": "忽幽狸",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 228,
+     "pet_key": "pet_000058",
+     "name": "影狸",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ea91c92bedee",
+   "name": "碎晶蝎进化链",
+   "stages": [
+    {
+     "pet_id": 546,
+     "pet_key": "pet_000323",
+     "name": "碎晶蝎",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 547,
+     "pet_key": "pet_000324",
+     "name": "晶尾蝎",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 548,
+     "pet_key": "pet_000325",
+     "name": "蝎子王",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ebb3687a3692",
+   "name": "苞米仔进化链",
+   "stages": [
+    {
+     "pet_id": 590,
+     "pet_key": "pet_000530",
+     "name": "苞米仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 591,
+     "pet_key": "pet_000531",
+     "name": "炮米花",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ebf599ad2b6d",
+   "name": "裘洛进化链",
+   "stages": [
+    {
+     "pet_id": 400,
+     "pet_key": "pet_000140",
+     "name": "裘洛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 401,
+     "pet_key": "pet_000141",
+     "name": "裘力",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 402,
+     "pet_key": "pet_000142",
+     "name": "裘卡",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ec813a9ba07e",
+   "name": "粉星仔进化链（粉耳星兔分支）",
+   "stages": [
+    {
+     "pet_id": 499,
+     "pet_key": "pet_000264",
+     "name": "粉星仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 500,
+     "pet_key": "pet_000265",
+     "name": "粉耳星兔",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ec813a9ba07e",
+   "name": "粉星仔进化链（落陨星兔分支）",
+   "stages": [
+    {
+     "pet_id": 499,
+     "pet_key": "pet_000264",
+     "name": "粉星仔",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 501,
+     "pet_key": "pet_000385",
+     "name": "落陨星兔",
+     "stage": 2,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ee54246ef18e",
+   "name": "守夜烛进化链",
+   "stages": [
+    {
+     "pet_id": 597,
+     "pet_key": "pet_000488",
+     "name": "守夜烛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 598,
+     "pet_key": "pet_000489",
+     "name": "流明坎德拉",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_eeb113edf509",
+   "name": "可立鸡进化链（绅士鸡分支）",
+   "stages": [
+    {
+     "pet_id": 424,
+     "pet_key": "pet_000077",
+     "name": "可立鸡",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 425,
+     "pet_key": "pet_000078",
+     "name": "晕晕鸡",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 426,
+     "pet_key": "pet_000079",
+     "name": "绅士鸡",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_ef9cdae6bf18",
+   "name": "小灵面进化链（闭眼的样子）",
+   "stages": [
+    {
+     "pet_id": 123,
+     "pet_key": "pet_000052",
+     "name": "小灵面",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 125,
+     "pet_key": "pet_000381",
+     "name": "暗影灵面（闭眼的样子）",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 127,
+     "pet_key": "pet_000382",
+     "name": "幽冥眼（闭眼的样子）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_f151a0f82737",
+   "name": "鸭吉吉进化链（紧实的样子）",
+   "stages": [
+    {
+     "pet_id": 20,
+     "pet_key": "pet_000033",
+     "name": "鸭吉吉（紧实的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 26,
+     "pet_key": "pet_000569",
+     "name": "鸭吉吉国王（紧实的样子）",
+     "condition": "首领化",
+     "item": "金色传说"
+    }
+   ]
+  },
+  {
+   "key": "evolution_f1dfb4adb297",
+   "name": "小星光进化链（星光能量的样子）",
+   "stages": [
+    {
+     "pet_id": 171,
+     "pet_key": "pet_000170",
+     "name": "小星光（星光能量的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 173,
+     "pet_key": "pet_000171",
+     "name": "星光狮（星光能量的样子）",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_f1e627967af9",
+   "name": "护主犬进化链",
+   "stages": [
+    {
+     "pet_id": 112,
+     "pet_key": "pet_000061",
+     "name": "护主犬",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 114,
+     "pet_key": "pet_000062",
+     "name": "音速犬",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 115,
+     "pet_key": "pet_000551",
+     "name": "风暴战犬",
+     "condition": "首领化",
+     "item": "风暴战犬的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_f22941e886ea",
+   "name": "白发懒人进化链",
+   "stages": [
+    {
+     "pet_id": 159,
+     "pet_key": "pet_000045",
+     "name": "白发懒人",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 160,
+     "pet_key": "pet_000090",
+     "name": "动力猿",
+     "stage": 2,
+     "level": 18,
+     "condition": null
+    },
+    {
+     "pet_id": 161,
+     "pet_key": "pet_000091",
+     "name": "瞌睡王",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_f664248a134a",
+   "name": "闪电环进化链",
+   "stages": [
+    {
+     "pet_id": 340,
+     "pet_key": "pet_000172",
+     "name": "闪电环",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 341,
+     "pet_key": "pet_000173",
+     "name": "刺电环",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 342,
+     "pet_key": "pet_000174",
+     "name": "荆棘电环",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_f73c49f320d6",
+   "name": "乖乖鹄进化链（黑羽夫人分支）",
+   "stages": [
+    {
+     "pet_id": 182,
+     "pet_key": "pet_000278",
+     "name": "乖乖鹄",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 183,
+     "pet_key": "pet_000279",
+     "name": "蓝珠天鹅",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 185,
+     "pet_key": "pet_000446",
+     "name": "黑羽夫人",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_f846d200fe19",
+   "name": "锤头鹳进化链",
+   "stages": [
+    {
+     "pet_id": 186,
+     "pet_key": "pet_000060",
+     "name": "锤头鹳",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_f99987ce0733",
+   "name": "毛毛进化链（平常的样子）",
+   "stages": [
+    {
+     "pet_id": 72,
+     "pet_key": "pet_000122",
+     "name": "毛毛",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 73,
+     "pet_key": "pet_000123",
+     "name": "爬爬",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 74,
+     "pet_key": "pet_000124",
+     "name": "化蝶（平常的样子）",
+     "stage": 3,
+     "level": 35,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_f9f270179fd1",
+   "name": "犀角鸟进化链",
+   "stages": [
+    {
+     "pet_id": 473,
+     "pet_key": "pet_000258",
+     "name": "犀角鸟",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 474,
+     "pet_key": "pet_000259",
+     "name": "光纤兽",
+     "stage": 2,
+     "level": 27,
+     "condition": null
+    },
+    {
+     "pet_id": 475,
+     "pet_key": "pet_000260",
+     "name": "疾光千兽",
+     "stage": 3,
+     "level": 47,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_fa68f67b18f7",
+   "name": "钨丝贝贝进化链",
+   "stages": [
+    {
+     "pet_id": 512,
+     "pet_key": "pet_000508",
+     "name": "钨丝贝贝",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 513,
+     "pet_key": "pet_000509",
+     "name": "辉光幕机",
+     "stage": 2,
+     "level": 28,
+     "condition": null
+    },
+    {
+     "pet_id": 514,
+     "pet_key": "pet_000510",
+     "name": "机幕方舟",
+     "stage": 3,
+     "level": 40,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_fa73196b59ba",
+   "name": "棋棋进化链（白棋棋骑士分支）",
+   "stages": [
+    {
+     "pet_id": 301,
+     "pet_key": "pet_000432",
+     "name": "棋棋（白子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 303,
+     "pet_key": "pet_000433",
+     "name": "棋骑士（白子）",
+     "stage": 2,
+     "level": 26,
+     "condition": null
+    }
+   ],
+   "lords": [
+    {
+     "pet_id": 305,
+     "pet_key": "pet_000556",
+     "name": "棋契陛下（白棋棋骑士分支）",
+     "condition": "首领化",
+     "item": "棋契陛下的信物"
+    }
+   ]
+  },
+  {
+   "key": "evolution_fa8ff88f38cd",
+   "name": "号儿鱼进化链",
+   "stages": [
+    {
+     "pet_id": 296,
+     "pet_key": "pet_000416",
+     "name": "号儿鱼",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 297,
+     "pet_key": "pet_000417",
+     "name": "圆号鱼",
+     "stage": 2,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_fc8b6304424e",
+   "name": "海枝枝进化链（碧蓝珊瑚）",
+   "stages": [
+    {
+     "pet_id": 354,
+     "pet_key": "pet_000334",
+     "name": "海枝枝（碧蓝珊瑚）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_fcbe95856938",
+   "name": "丢丢进化链（雪山附近的样子）",
+   "stages": [
+    {
+     "pet_id": 103,
+     "pet_key": "pet_000240",
+     "name": "丢丢（雪山附近的样子）",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 107,
+     "pet_key": "pet_000243",
+     "name": "卡卡虫（雪山附近的样子）",
+     "stage": 2,
+     "level": 16,
+     "condition": null
+    },
+    {
+     "pet_id": 111,
+     "pet_key": "pet_000246",
+     "name": "卡瓦重（雪山附近的样子）",
+     "stage": 3,
+     "level": 36,
+     "condition": null
+    }
+   ],
+   "lords": []
+  },
+  {
+   "key": "evolution_fdada4522d9e",
+   "name": "小灵面进化链（睁眼的样子）",
+   "stages": [
+    {
+     "pet_id": 123,
+     "pet_key": "pet_000052",
+     "name": "小灵面",
+     "stage": 1,
+     "level": null,
+     "condition": null
+    },
+    {
+     "pet_id": 124,
+     "pet_key": "pet_000053",
+     "name": "暗影灵面（睁眼的样子）",
+     "stage": 2,
+     "level": 20,
+     "condition": null
+    },
+    {
+     "pet_id": 126,
+     "pet_key": "pet_000326",
+     "name": "幽冥眼（睁眼的样子）",
+     "stage": 3,
+     "level": 32,
+     "condition": null
+    }
+   ],
+   "lords": []
+  }
+ ]
+}

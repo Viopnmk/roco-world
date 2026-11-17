@@ -1,0 +1,4 @@
+# 管道原始缓存：可由 fetch_nrc.py 随时重新拉取，不入库
+scraper/raw/
+__pycache__/
+*.pyc
