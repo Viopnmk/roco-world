@@ -252,6 +252,29 @@
   .nat-plus{color:var(--good); font-weight:700;}
   .nat-minus{color:var(--bad); font-weight:700;}
   .train-note{font-size:13px; color:#4a4d5e; line-height:1.6; margin-top:4px;}
+
+  /* ---------- 阵容页 ---------- */
+  .sq-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+  .sq-head h3{margin:0;}
+  .sq-tag{font-size:11.5px; padding:3px 9px; border-radius:999px; font-weight:600; background:var(--accent-soft); color:#4353c9; white-space:nowrap;}
+  .sq-score{margin-left:auto; font-size:13px; color:var(--sub); white-space:nowrap;}
+  .sq-score b{font-size:19px; color:var(--ink);}
+  .sq-avas{display:flex; gap:6px; margin:10px 0 8px;}
+  .sq-avas a{flex:1 1 0; min-width:0;}
+  .sq-avas .ava{width:100%; aspect-ratio:1; border-radius:10px; background:#f0f1f6;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .sq-avas .ava img{width:100%; height:100%; object-fit:contain; display:block;}
+  .sq-avas .sq-nm{font-size:11px; text-align:center; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .sq-blurb{font-size:13.5px; color:#4a4d5e; line-height:1.6;}
+  .sq-actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .sq-actions button{flex:1 1 130px; border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:999px; padding:8px 10px; font-size:13.5px; font-weight:600; cursor:pointer;}
+  .sq-actions button.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .sq-detail{margin-top:12px; border-top:1px solid #f0f1f6; padding-top:10px;}
+  .role-tag{font-size:11px; padding:3px 8px; border-radius:999px; font-weight:600; background:#fdf0d2; color:#8a5a00; white-space:nowrap;}
+  .sq-mem .r-why a{color:var(--accent); font-weight:600;}
+  .sq-notice{background:#eafaf0; border:1px solid #bfe8cd; color:#1e6b3c; border-radius:12px;
+    padding:10px 12px; font-size:13.5px; margin-top:12px; line-height:1.6;}
 </style>
 </head>
 <body>
@@ -309,6 +332,7 @@ function navHTML(active){
   }
   return '<nav class="topnav">' + item("list", "#/", "📖 图鉴") +
     item("battle", "#/battle", "⚔️ 对战") + item("team", "#/team", "🧩 配队") +
+    item("squads", "#/squads", "🏆 阵容") +
     item("train", "#/train", "🧬 培养") + "</nav>";
 }
 
@@ -1658,6 +1682,458 @@ function renderTrain(){
   window.scrollTo(0, 0);
 }
 
+/* ============ 阵容推荐（#/squads） ============ */
+/* 流派与天气证据全部来自对 skills.json 的全量扫描（技能/特性 desc 原文），
+   不是外部攻略：本作共有 5 种可由技能改写的天气——暴风雪、雨天、沙暴、
+   雷鸣、霞光梦境（另有「晴天」在本作不存在）。其中霞光梦境全库没有任何
+   技能/特性引用它的收益，证据不足，不组队；其余 4 种各有明确的开天气招
+   与受益条目，按「天气手 1–2 + 受益者优先 + 同系输出 + 补盲」组队。
+   天气证据（设定招均为变化类「将天气改为 X，持续 8 回合」）：
+   - 暴风雪：冬至 / 特性·高吹雪 开天气；特性·冰雪魂魄（冰系威力+100%）、
+     特性·环天顶弧、雪原狩猎（威力+50）受益。
+   - 雨天：落雨 开天气；特性·滴眼液（水系吸血 100%）、特性·得寸进尺
+     （双攻+100%）、沉溺（能耗-2）、汇流（延长雨天）受益。
+   - 沙暴：沙涌 开天气；特性·流沙统治者（速度+50）、扬尘（先手+1）受益。
+   - 雷鸣：惊雷 开天气；特性·电子音乐（电系技能后挂引电）受益。
+   兜底流派：火系队（单系池 62 只）、高速队（速度线 + 先手/迅捷招）、
+   坦克队（高体力/双防 + 真回复类续航招）。全部阵容用贪心从 662 只里选，
+   同一进化家族只取一只（familyOf 的 key 去重），评分复用配队页 scoreTeam。 */
+var WEATHER_DEFS = [
+  { id: "snow", name: "雪天队", weather: "暴风雪", type: "冰", setterSkills: ["冬至"], setterAbilities: ["高吹雪"],
+    beneAbilities: ["冰雪魂魄", "环天顶弧"], beneSkills: ["雪原狩猎"], emoji: "❄️" },
+  { id: "rain", name: "雨天队", weather: "雨天", type: "水", setterSkills: ["落雨"], setterAbilities: [],
+    beneAbilities: ["滴眼液", "得寸进尺"], beneSkills: ["沉溺", "汇流"], emoji: "🌧️" },
+  { id: "sand", name: "沙暴队", weather: "沙暴", type: "地", setterSkills: ["沙涌"], setterAbilities: [],
+    beneAbilities: ["流沙统治者"], beneSkills: ["扬尘"], emoji: "🏜️" },
+  { id: "thunder", name: "雷鸣队", weather: "雷鸣", type: "电", setterSkills: ["惊雷"], setterAbilities: [],
+    beneAbilities: ["电子音乐"], beneSkills: [], emoji: "⛈️" }
+];
+var squads = { cache: null, openId: "", notice: "" };
+
+function descFirst(desc){
+  var d = String(desc || "");
+  var i = d.indexOf("。");
+  var s = i >= 0 ? d.slice(0, i + 1) : d;
+  return s.length > 46 ? s.slice(0, 46) + "…" : s;
+}
+function petHasSkill(pet, name){
+  return petSkills(pet).some(function(sk){ return sk.name === name; });
+}
+function squadFamKey(pet){
+  var f = familyOf(pet);
+  return f ? "fam:" + f.key : "solo:" + pet.id;
+}
+function newSquadState(){ return { members: [], fams: {}, ids: {}, sps: {} }; }
+function squadAdd(st, pet, role, why){
+  st.members.push({ pet: pet, role: role, why: why });
+  st.fams[squadFamKey(pet)] = 1;
+  st.ids[pet.id] = 1;
+  st.sps[pet.species || pet.name] = 1;
+}
+/* 去重口径：同一进化家族只取一只，且同一物种的不同样子/分支
+   （如鳗尾兽与鳗尾兽（果壳铃的样子），species 相同）也只取一只 */
+function squadAvail(st, pet){
+  return !st.ids[pet.id] && !st.fams[squadFamKey(pet)] && !st.sps[pet.species || pet.name];
+}
+function greedyPick(st, cands, scoreFn){
+  var best = null, bs = -Infinity;
+  cands.forEach(function(p){
+    if (!squadAvail(st, p)) return;
+    var s = scoreFn(p);
+    if (s > bs || (s === bs && best && p.id < best.id)) { bs = s; best = p; }
+  });
+  return best;
+}
+function outScore(pet){
+  return Math.max(pet.stats.atk, pet.stats.spa) * 1.2 + pet.stats.total * 0.35;
+}
+function bestOwnMove(pet){
+  var best = null;
+  petSkills(pet).forEach(function(sk){
+    if (sk.power == null || pet.types.indexOf(sk.type) < 0) return;
+    if (sk.category !== "物理" && sk.category !== "魔法") return;
+    if (!best || sk.power > best.power) best = sk;
+  });
+  return best;
+}
+function weakCounts(pets){
+  var wc = {};
+  TYPES18.forEach(function(a){
+    var c = 0;
+    pets.forEach(function(p){ if (typeMult(a, p.types) > 1) c++; });
+    wc[a] = c;
+  });
+  return wc;
+}
+function superCountOf(pets){
+  var atk = teamAtkTypes(pets);
+  return TYPES18.filter(function(d){ return bestMult(atk, [d]) >= 2; }).length;
+}
+/* 补盲选人：新增超效打击面 + 反打全队最怕的属性 + 面板，返回 {pet, why} */
+function blindPick(st){
+  var cur = st.members.map(function(m){ return m.pet; });
+  var wc = weakCounts(cur);
+  var maxW = Math.max.apply(null, TYPES18.map(function(a){ return wc[a]; }));
+  var weakTops = TYPES18.filter(function(a){ return wc[a] === maxW && maxW > 0; });
+  var curSuper = superCountOf(cur);
+  var best = null, bs = -Infinity, bWhy = "";
+  DB.pets.forEach(function(p){
+    if (!squadAvail(st, p)) return;
+    var atk = petAtkTypes(p);
+    var newSuper = superCountOf(cur.concat([p])) - curSuper;
+    var anti = weakTops.filter(function(w){ return atk.some(function(t){ return typeMult(t, [w]) >= 2; }); });
+    var s = newSuper * 12 + anti.length * 10 + p.stats.total / 40;
+    if (s > bs) {
+      bs = s; best = p;
+      var bits = [];
+      if (anti.length) bits.push("它的技能能 ×2 打 " + anti.join("、") + "系，正克全队最怕的属性");
+      if (newSuper > 0) bits.push("新增超效打击面 " + newSuper + " 种");
+      if (!bits.length) bits.push("面板扎实，总和 " + p.stats.total + "，补上队伍短板");
+      bWhy = "补盲：" + bits.join("；") + "。";
+    }
+  });
+  return best ? { pet: best, why: bWhy } : null;
+}
+function fillBlind(st, count){
+  for (var i = 0; i < count && st.members.length < 6; i++) {
+    var r = blindPick(st);
+    if (!r) break;
+    squadAdd(st, r.pet, "🧭 补盲", r.why);
+  }
+}
+/* 天气证据判定：返回证据字符串或 null */
+function setterEvidence(pet, w){
+  for (var i = 0; i < w.setterSkills.length; i++) {
+    if (petHasSkill(pet, w.setterSkills[i])) {
+      var sk = skillOf(w.setterSkills[i]);
+      return "会开天气招「" + w.setterSkills[i] + "」——" + descFirst(sk ? sk.desc : "");
+    }
+  }
+  for (var j = 0; j < w.setterAbilities.length; j++) {
+    if (pet.ability === w.setterAbilities[j]) {
+      var ab = DB.abilityByName[w.setterAbilities[j]];
+      return "特性「" + w.setterAbilities[j] + "」能开天气——" + descFirst(ab ? ab.desc : "");
+    }
+  }
+  return null;
+}
+function beneEvidence(pet, w){
+  for (var i = 0; i < w.beneAbilities.length; i++) {
+    if (pet.ability === w.beneAbilities[i]) {
+      var ab = DB.abilityByName[w.beneAbilities[i]];
+      return { kind: "ability", text: "特性「" + w.beneAbilities[i] + "」——" + descFirst(ab ? ab.desc : "") };
+    }
+  }
+  for (var j = 0; j < w.beneSkills.length; j++) {
+    if (petHasSkill(pet, w.beneSkills[j])) {
+      var sk = skillOf(w.beneSkills[j]);
+      return { kind: "skill", text: "会「" + w.beneSkills[j] + "」——" + descFirst(sk ? sk.desc : "") };
+    }
+  }
+  return null;
+}
+function outputWhy(pet, tag){
+  var mv = bestOwnMove(pet);
+  var side = pet.stats.atk >= pet.stats.spa ? "物攻 " + pet.stats.atk : "魔攻 " + pet.stats.spa;
+  return (tag || "核心输出") + "：" + side + "，总和 " + pet.stats.total +
+    (mv ? "，本系大招「" + mv.name + "」威力 " + mv.power : "") + "。";
+}
+
+function buildWeatherSquad(w){
+  var st = newSquadState();
+  var setters = DB.pets.filter(function(p){ return setterEvidence(p, w); });
+  var setter = greedyPick(st, setters, function(p){
+    return p.stats.total + (p.types.indexOf(w.type) >= 0 ? 40 : 0);
+  });
+  var setterIsBene = false;
+  if (setter) {
+    setterIsBene = !!beneEvidence(setter, w);
+    squadAdd(st, setter, "🌦️ 天气手" + (setterIsBene ? " · ✨ 受益" : ""),
+      setterEvidence(setter, w) + "（" + w.weather + "队的天气发动机，总和 " + setter.stats.total + "）。");
+  }
+  var beneNeed = 2 - (setterIsBene ? 1 : 0);
+  var benes = DB.pets.filter(function(p){ return beneEvidence(p, w); });
+  for (var i = 0; i < beneNeed; i++) {
+    var b = greedyPick(st, benes, function(p){
+      var ev = beneEvidence(p, w);
+      return p.stats.total + (ev && ev.kind === "ability" ? 80 : 30);
+    });
+    if (!b) break;
+    squadAdd(st, b, "✨ 天气受益", "在" + w.weather + "下直接受益：" + beneEvidence(b, w).text + "（总和 " + b.stats.total + "）。");
+  }
+  var attackers = DB.pets.filter(function(p){ return p.types.indexOf(w.type) >= 0; });
+  var core = greedyPick(st, attackers, outScore);
+  if (core) squadAdd(st, core, "⚔️ 核心输出", outputWhy(core, w.type + "系核心输出"));
+  var core2 = greedyPick(st, attackers, outScore);
+  if (core2) squadAdd(st, core2, "⚔️ 核心输出", outputWhy(core2, w.type + "系输出"));
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
+function buildFireSquad(){
+  var st = newSquadState();
+  var fires = DB.pets.filter(function(p){ return p.types.indexOf("火") >= 0; });
+  var first = greedyPick(st, fires, outScore);
+  if (first) squadAdd(st, first, "⚔️ 核心输出", outputWhy(first, "火系头号输出"));
+  var firstPhys = first && first.stats.atk >= first.stats.spa;
+  var second = greedyPick(st, fires, function(p){
+    var opp = firstPhys ? (p.stats.spa > p.stats.atk ? 60 : 0) : (p.stats.atk > p.stats.spa ? 60 : 0);
+    return outScore(p) + opp;
+  });
+  if (second) squadAdd(st, second, "⚔️ 核心输出", outputWhy(second, "火系输出（与头号位错开物/魔侧）"));
+  var third = greedyPick(st, fires, outScore);
+  if (third) squadAdd(st, third, "⚔️ 核心输出", outputWhy(third, "火系输出"));
+  var wall = greedyPick(st, fires, function(p){ return p.stats.hp + p.stats.def + p.stats.spd; });
+  if (wall) squadAdd(st, wall, "🛡️ 前排坦克",
+    "火系里最能扛：体力 " + wall.stats.hp + "、物防 " + wall.stats.def + "、魔防 " + wall.stats.spd + "，总和 " + wall.stats.total + "，顶在前面给输出腾回合。");
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
+function hasPrioMove(pet){
+  return petSkills(pet).some(function(sk){
+    var d = sk.desc || "";
+    return (d.indexOf("先手+1") >= 0 || d.indexOf("迅捷") >= 0) && d.indexOf("先手-1") < 0;
+  });
+}
+function prioMoveName(pet){
+  var hit = null;
+  petSkills(pet).forEach(function(sk){
+    var d = sk.desc || "";
+    if (!hit && (d.indexOf("先手+1") >= 0 || d.indexOf("迅捷") >= 0) && d.indexOf("先手-1") < 0) hit = sk;
+  });
+  return hit;
+}
+function buildSpeedSquad(){
+  var st = newSquadState();
+  var fast = DB.pets.filter(function(p){ return p.stats.spe >= 100; });
+  for (var i = 0; i < 5; i++) {
+    var p = greedyPick(st, fast, function(x){
+      return x.stats.spe * 3 + x.stats.total * 0.3 + (hasPrioMove(x) ? 45 : 0);
+    });
+    if (!p) break;
+    var pm = prioMoveName(p);
+    squadAdd(st, p, i === 0 ? "🚀 先手核心" : "💨 高速输出",
+      "速度 " + p.stats.spe + "（全图鉴前列），总和 " + p.stats.total +
+      (pm ? "，还会先手/迅捷招「" + pm.name + "」，出手顺序再往前抢" : "，靠速度线先手压血") + "。");
+  }
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
+function isSustainSkill(sk){
+  /* 续航招口径（真回复）：变化类，且描述为回复生命/体力或吸血。
+     不算的：满图鉴普及的「减伤应对」姿态招（几乎人手一打、不区分队伍），
+     以及只回复能量的「回复」（须与生命/体力同现才算）。 */
+  if (sk.category !== "变化") return false;
+  var d = sk.desc || "";
+  if (d.indexOf("吸血") >= 0) return true;
+  var healWord = d.indexOf("回复") >= 0 || d.indexOf("恢复") >= 0 || d.indexOf("回血") >= 0 || d.indexOf("治疗") >= 0;
+  return healWord && (d.indexOf("生命") >= 0 || d.indexOf("体力") >= 0);
+}
+function sustainSkillsOf(pet){
+  return petSkills(pet).filter(isSustainSkill);
+}
+function sustainExample(pet){
+  /* 展示用例子：优先挑描述里带「生命」的，最能代表续航 */
+  var list = sustainSkillsOf(pet);
+  if (!list.length) return null;
+  var heal = list.filter(function(sk){ return (sk.desc || "").indexOf("生命") >= 0; });
+  return (heal.length ? heal : list)[0];
+}
+function duraOf(pet){ return pet.stats.hp + pet.stats.def + pet.stats.spd; }
+function buildTankSquad(){
+  var st = newSquadState();
+  var bulky = DB.pets.filter(function(p){ return duraOf(p) >= 380; });
+  for (var i = 0; i < 2; i++) {
+    var t = greedyPick(st, bulky, function(p){
+      return duraOf(p) + sustainSkillsOf(p).length * 20;
+    });
+    if (!t) break;
+    var susEx = sustainExample(t);
+    squadAdd(st, t, i === 0 ? "🛡️ 主坦" : "🛡️ 副坦",
+      "耐久担当：体力 " + t.stats.hp + "、物防 " + t.stats.def + "、魔防 " + t.stats.spd +
+      (susEx ? "，带续航招「" + susEx.name + "」" : "") + "，总和 " + t.stats.total + "。");
+  }
+  for (var j = 0; j < 2; j++) {
+    var s2 = greedyPick(st, DB.pets, function(p){
+      var n = sustainSkillsOf(p).length;
+      if (!n) return -1;
+      return duraOf(p) * 0.7 + n * 30 + p.stats.total * 0.2;
+    });
+    if (!s2) break;
+    var sus2 = sustainSkillsOf(s2);
+    var sus2Ex = sustainExample(s2);
+    squadAdd(st, s2, "💚 续航核心",
+      "带 " + sus2.length + " 个真回复技能（如「" + (sus2Ex ? sus2Ex.name : sus2[0].name) + "」），体力 " + s2.stats.hp +
+      "、双防 " + s2.stats.def + "/" + s2.stats.spd + "，负责把战斗拖进持久战。");
+  }
+  for (var k = 0; k < 2; k++) {
+    var o = greedyPick(st, bulky, outScore);
+    if (!o) break;
+    squadAdd(st, o, "⚔️ 耐久输出", outputWhy(o, "能扛能打") + "耐久（体力+双防）" + duraOf(o) + "，不会被一波带走。");
+  }
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
+function squadPlaybook(def, members, met){
+  var pets = members.map(function(m){ return m.pet; });
+  var names = function(rolePart){
+    return members.filter(function(m){ return m.role.indexOf(rolePart) >= 0; })
+      .map(function(m){ return m.pet.name; });
+  };
+  var txt = "";
+  if (def.weather) {
+    var setter = members.filter(function(m){ return m.role.indexOf("天气手") >= 0; })[0];
+    var benes = names("受益").filter(function(n){ return !setter || n !== setter.pet.name; });
+    txt = "先手让" + (setter ? setter.pet.name : "天气手") + "把天气改成" + def.weather + "（持续 8 回合），" +
+      (benes.length ? benes.join("、") + "在" + def.weather + "下拿到增益后接管输出；" : "同系输出跟着天气打；") +
+      "天气断档前打完一轮爆发，天气手活着就能续上下一段天气。";
+  } else if (def.id === "fire") {
+    txt = "四只火系正面压火力，靠本系大招打克制面；前排坦克先吃一轮伤害，补盲位专门处理火系打不动的属性。全队打击面覆盖 " +
+      met.superCount + "/18 种属性，平均种族值总和 " + Math.round(met.avgTotal) + "。";
+  } else if (def.id === "speed") {
+    txt = "全队平均速度 " + Math.round(met.avgSpe) + "，最快 " + met.fastest.name + " 速度 " + met.fastest.stats.spe +
+      "，靠先手和先制招抢回合：先压血线、先挂状态，让对方核心没机会舒服出手；补盲位保证被速度克制的对局也有人能反打。";
+  } else if (def.id === "tank") {
+    txt = "六只平均耐久（体力+物防+魔防）" + Math.round(met.avgDura) + "，打法是拖：主坦吃伤害、续航位不断回血，" +
+      "把比赛拖到对方能耗和血量见底，再用两只耐久输出收残局。全队打击面覆盖 " + met.superCount + "/18 种属性，不怕被单一属性通吃。";
+  }
+  var weakTxt = met.weakTops.length
+    ? "⚠ 注意弱点：" + met.weakTops.join("、") + "系——全队有 " + met.weakMax + "/6 只被它 ×2 克制，遇到" +
+      met.weakTops[0] + "系输出先用补盲位或坦克位顶上，别让它连续收割。"
+    : "⚠ 这队没有被同一种属性集体克制的明显弱点，正常轮换即可。";
+  return { play: txt, weak: weakTxt };
+}
+
+function buildSquads(){
+  if (squads.cache) return squads.cache;
+  var defs = WEATHER_DEFS.map(function(w){
+    return { id: w.id, name: w.name, emoji: w.emoji, tag: "天气 · " + w.weather, weather: w.weather,
+      members: buildWeatherSquad(w) };
+  });
+  defs.push({ id: "fire", name: "火系队", emoji: "🔥", tag: "单系 · 火", members: buildFireSquad() });
+  defs.push({ id: "speed", name: "高速队", emoji: "💨", tag: "速度线 · 先手", members: buildSpeedSquad() });
+  defs.push({ id: "tank", name: "坦克队", emoji: "🛡️", tag: "耐久 · 续航", members: buildTankSquad() });
+
+  var blurbs = {
+    snow: "冬至开暴风雪，冰雪魂魄让冰系威力翻倍的天气队。",
+    rain: "落雨铺雨天，水系在雨里吸血、减能耗、双攻翻倍。",
+    sand: "沙涌扬起沙暴，流沙统治者在沙里加速收割。",
+    thunder: "惊雷改天气为雷鸣，电系挂引电打连锁。",
+    fire: "四只火系正面压上，坦克顶前排、补盲堵短板。",
+    speed: "全员速度线拉满，靠先手和先制招抢回合。",
+    tank: "六只大肉带续航，把比赛拖进持久战。"
+  };
+  defs.forEach(function(d){
+    var pets = d.members.map(function(m){ return m.pet; });
+    var s = scoreTeam(pets, null);
+    var wc = weakCounts(pets);
+    var weakMax = Math.max.apply(null, TYPES18.map(function(a){ return wc[a]; }));
+    var avgSpe = pets.reduce(function(x, p){ return x + p.stats.spe; }, 0) / pets.length;
+    var avgDura = pets.reduce(function(x, p){ return x + duraOf(p); }, 0) / pets.length;
+    var fastest = pets.slice().sort(function(a, b){ return b.stats.spe - a.stats.spe; })[0];
+    d.score = s; d.blurb = blurbs[d.id] || "";
+    d.met = { superCount: s.detail.superList.length, weakMax: weakMax,
+      weakTops: TYPES18.filter(function(a){ return wc[a] === weakMax && weakMax > 0; }),
+      avgSpe: avgSpe, avgDura: avgDura, fastest: fastest,
+      avgTotal: pets.reduce(function(x, p){ return x + p.stats.total; }, 0) / pets.length };
+    var pb = squadPlaybook(d, d.members, d.met);
+    d.play = pb.play; d.weak = pb.weak;
+  });
+  squads.cache = defs;
+  return defs;
+}
+
+function squadCardHTML(d){
+  var open = squads.openId === d.id;
+  var avas = d.members.map(function(m){
+    return '<a href="#/pet/' + m.pet.id + '"><span class="ava">' + imgTag(m.pet.avatar, m.pet.name, true, true) + "</span>" +
+      '<div class="sq-nm">' + esc(m.pet.name) + "</div></a>";
+  }).join("");
+  var html = '<section class="blk"><div class="sq-head"><h3>' + d.emoji + " " + esc(d.name) + "</h3>" +
+    '<span class="sq-tag">' + esc(d.tag) + '</span>' +
+    '<span class="sq-score">综合 <b>' + d.score.total + "</b> 分</span></div>" +
+    '<div class="sq-avas">' + avas + "</div>" +
+    '<div class="sq-blurb">' + esc(d.blurb) + "</div>" +
+    '<div class="sq-actions">' +
+    '<button data-sq-open="' + d.id + '">' + (open ? "收起详情 ▲" : "展开详情 ▼") + "</button>" +
+    '<button class="primary" data-sq-set="' + d.id + '">设为我方队伍</button>' +
+    '<button data-sq-battle="' + d.id + '">去对战分析</button></div>';
+  if (open) {
+    var rows = d.score.parts.map(function(pt){
+      return '<div class="score-row"><div class="sr-head"><b>' + pt.label + '</b><span class="sr-val">' + pt.score + '</span></div>' +
+        '<div class="bar"><div class="fill" style="width:' + pt.score + '%"></div></div></div>';
+    }).join("");
+    var mems = d.members.map(function(m){
+      return '<div class="rec-item sq-mem"><a href="#/pet/' + m.pet.id + '"><span class="ava">' + imgTag(m.pet.avatar, m.pet.name, true, true) + "</span></a>" +
+        '<div><div class="r-nm">' + esc(m.pet.name) +
+        '<span class="badges" style="display:inline-flex;vertical-align:middle;margin-left:6px">' + m.pet.types.map(badge).join("") + "</span>" +
+        '<span class="role-tag" style="margin-left:6px">' + esc(m.role) + "</span></div>" +
+        '<div class="r-why">' + esc(m.why) + ' <a href="#/train?pet=' + m.pet.id + '">🧬 培养</a></div></div></div>';
+    }).join("");
+    html += '<div class="sq-detail">' + mems +
+      '<h4 style="margin:12px 0 2px">队伍评分（与配队页同口径）</h4>' + rows +
+      '<div class="cov-line">打击面覆盖 <b>' + d.met.superCount + "/18</b> 种属性能 ×2 克制 · 平均速度 <b>" +
+      Math.round(d.met.avgSpe) + "</b> · 弱点 TOP：" +
+      (d.met.weakTops.length ? d.met.weakTops.map(function(t){ return esc(t) + "系（" + d.met.weakMax + " 只被克）"; }).join("、") : "无集中弱点") + "</div>" +
+      '<h4 style="margin:12px 0 2px">打法说明</h4><div class="sq-blurb">' + esc(d.play) + "</div>" +
+      '<div class="sq-blurb" style="margin-top:6px">' + esc(d.weak) + "</div></div>";
+  }
+  return html + "</section>";
+}
+
+function renderSquads(){
+  var app = document.getElementById("app");
+  var body;
+  if (!DB.chart) {
+    body = '<section class="blk"><h3>阵容推荐</h3><div class="desc">克制表数据（typechart.json）加载失败，暂时无法生成阵容。</div></section>';
+  } else {
+    var list = buildSquads();
+    body = (squads.notice ? '<div class="sq-notice">' + esc(squads.notice) + "</div>" : "") +
+      list.map(squadCardHTML).join("") +
+      '<div class="footnote">阵容由本站模型按数据规则自动生成、供参考：天气队依据 skills.json 里技能/特性描述原文的天气机制证据组队（开天气招 + 受益条目均为真实数据）；' +
+      '其余流派按属性池深度、速度线、耐久与续航技能等规则贪心选人，同一进化家族只取一只。评分与配队页 scoreTeam 同口径。' +
+      '注：本作不存在「晴天」天气；「霞光梦境」天气虽有开天气招（筑梦），但全库没有引用它收益的技能/特性，证据不足，未组队。</div>';
+  }
+  app.innerHTML = navHTML("squads") +
+    '<header class="top"><h1>🏆 阵容推荐</h1><p>模型按流派自动组好的 6 只队伍：天气队、单系队、高速队、坦克队。看中哪套，一键设为我方队伍去打 6v6 分析。</p></header>' +
+    body;
+
+  app.querySelectorAll("[data-sq-open]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var id = b.getAttribute("data-sq-open");
+      squads.openId = squads.openId === id ? "" : id;
+      renderSquads();
+    });
+  });
+  function applySquad(id){
+    var d = buildSquads().filter(function(x){ return x.id === id; })[0];
+    if (!d) return null;
+    team.mine = d.members.map(function(m){ return m.pet.id; });
+    saveTeam();
+    return d;
+  }
+  app.querySelectorAll("[data-sq-set]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var d = applySquad(b.getAttribute("data-sq-set"));
+      if (d) {
+        squads.notice = "已把「" + d.name + "」设为我方队伍（" + team.mine.length + " 只），去对战页选好敌方就能做 6v6 分析，或在配队页继续微调。";
+        squads.openId = d.id;
+        renderSquads();
+      }
+    });
+  });
+  app.querySelectorAll("[data-sq-battle]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var d = applySquad(b.getAttribute("data-sq-battle"));
+      if (d) { battle.mode = "pvp"; location.hash = "#/battle"; }
+    });
+  });
+  window.scrollTo(0, 0);
+}
+
 /* ============ 路由与启动 ============ */
 function route(){
   var h = location.hash || "#/";
@@ -1683,6 +2159,7 @@ function route(){
     if (pm && DB.petById[parseInt(pm[1], 10)]) train.petId = parseInt(pm[1], 10);
     renderTrain(); return;
   }
+  if (h.indexOf("#/squads") === 0) { renderSquads(); return; }
   renderList();
   if (listScrollY) restoreScroll();
 }
