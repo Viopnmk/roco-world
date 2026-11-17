@@ -8,6 +8,7 @@
   :root{
     --bg:#f4f5f9; --card:#ffffff; --ink:#23242b; --sub:#7a7d8c; --line:#e6e7ee;
     --accent:#5b6cff; --accent-soft:#eef0ff; --radius:14px;
+    --good:#2f9e5f; --bad:#d35450; --warn:#e08a1e;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;}
@@ -17,11 +18,18 @@
   .wrap{max-width:960px; margin:0 auto; padding:0 12px 40px;}
   a{color:inherit; text-decoration:none;}
 
+  /* ---------- 顶部导航 ---------- */
+  .topnav{position:sticky; top:0; z-index:30; background:var(--bg); padding:10px 0 8px;
+    display:flex; gap:8px;}
+  .topnav a{flex:1; text-align:center; padding:9px 0; background:var(--card); border:1px solid var(--line);
+    border-radius:999px; font-size:15px; font-weight:600; color:var(--sub);}
+  .topnav a.on{background:var(--accent); border-color:var(--accent); color:#fff;}
+
   /* ---------- 列表页 ---------- */
-  header.top{padding:20px 2px 10px;}
+  header.top{padding:6px 2px 10px;}
   header.top h1{font-size:22px; margin:0 0 2px;}
   header.top p{margin:0; color:var(--sub); font-size:13px;}
-  .searchbar{position:sticky; top:0; z-index:20; background:var(--bg); padding:10px 0 6px;}
+  .searchbar{position:sticky; top:57px; z-index:20; background:var(--bg); padding:6px 0 6px;}
   .searchbar input{width:100%; padding:11px 14px; font-size:16px; border:1px solid var(--line);
     border-radius:12px; background:var(--card); outline:none; color:var(--ink);}
   .searchbar input:focus{border-color:var(--accent);}
@@ -66,6 +74,7 @@
   section.blk{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
     padding:14px 16px; margin-top:12px;}
   section.blk h3{margin:0 0 10px; font-size:16px;}
+  section.blk h4{margin:14px 0 6px; font-size:14px;}
   .stat-row{display:flex; align-items:center; gap:8px; margin:5px 0; font-size:13px;}
   .stat-row .lb{flex:0 0 44px; color:var(--sub);}
   .stat-row .bar{flex:1; height:10px; background:#eef0f5; border-radius:99px; overflow:hidden;}
@@ -102,6 +111,94 @@
   .errbox{margin:40px auto; max-width:420px; background:#fff; border:1px solid #f3c2c2; color:#a33;
     border-radius:var(--radius); padding:20px; text-align:center;}
   .loading{padding:60px 0; text-align:center; color:var(--sub);}
+  .footnote{color:var(--sub); font-size:12px; line-height:1.6; margin-top:10px;}
+
+  /* ---------- 精灵选择器（对战/配队共用） ---------- */
+  .picker input{width:100%; padding:10px 12px; font-size:16px; border:1px solid var(--line);
+    border-radius:10px; background:#fff; outline:none; color:var(--ink);}
+  .picker input:focus{border-color:var(--accent);}
+  .pick-list{max-height:264px; overflow-y:auto; margin-top:6px; border:1px solid var(--line);
+    border-radius:10px; background:#fff;}
+  .pick-list:empty{display:none;}
+  .pick-item{display:flex; align-items:center; gap:10px; width:100%; padding:7px 10px; border:0;
+    border-bottom:1px solid #f0f1f6; background:#fff; cursor:pointer; text-align:left; font-size:14px; color:var(--ink);}
+  .pick-item:last-child{border-bottom:0;}
+  .pick-item:active{background:var(--accent-soft);}
+  .pick-item[disabled]{opacity:.45; cursor:default;}
+  .pick-item .ava{width:40px; height:40px; flex:0 0 auto; border-radius:9px; background:#f0f1f6;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .pick-item .ava img{width:100%; height:100%; object-fit:contain; display:block;}
+  .pick-item .pi-nm{font-weight:600;}
+  .pick-item .pi-sub{color:var(--sub); font-size:12px; margin-left:auto; white-space:nowrap;}
+  .pick-item .badges{margin-top:0;}
+
+  /* ---------- 对战页 ---------- */
+  .vs-grid{display:grid; grid-template-columns:1fr; gap:0;}
+  @media (min-width:760px){ .vs-grid{grid-template-columns:1fr 1fr; gap:12px;} .vs-grid .blk{margin-top:12px;} }
+  .mini{display:flex; gap:12px; align-items:flex-start;}
+  .mini .ava{width:84px; height:84px; flex:0 0 auto; border-radius:12px; background:#f0f1f6;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .mini .ava img{width:100%; height:100%; object-fit:contain; display:block;}
+  .mini .m-nm{font-size:17px; font-weight:700;}
+  .mini .badges{justify-content:flex-start; margin-top:4px;}
+  .mini .m-stats{color:var(--sub); font-size:12px; margin-top:4px; line-height:1.5;}
+  .skill-list{max-height:300px; overflow-y:auto; border:1px solid var(--line); border-radius:10px;}
+  .skill-item{display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border:0;
+    border-bottom:1px solid #f0f1f6; background:#fff; cursor:pointer; text-align:left; font-size:14px; color:var(--ink);}
+  .skill-item:last-child{border-bottom:0;}
+  .skill-item.on{background:var(--accent-soft); outline:2px solid var(--accent); outline-offset:-2px;}
+  .skill-item .s-nm{font-weight:600;}
+  .skill-item .s-sub{color:var(--sub); font-size:12px; margin-left:auto; white-space:nowrap;}
+  .dmg-big{font-size:34px; font-weight:800; text-align:center; margin:2px 0;}
+  .dmg-big small{font-size:14px; color:var(--sub); font-weight:500;}
+  .hpbar{height:12px; background:#eef0f5; border-radius:99px; overflow:hidden; margin:8px 0 2px;}
+  .hpbar .fill{height:100%; background:var(--bad); border-radius:99px;}
+  .brk{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .brk span{background:#f4f5fa; border:1px solid var(--line); border-radius:999px; padding:4px 10px; font-size:12.5px;}
+  .mult-super{color:var(--good); font-weight:700;}
+  .mult-resist{color:var(--bad); font-weight:700;}
+  .skill-desc{font-size:13px; color:#4a4d5e; background:#fafbff; border:1px solid #eef0ff;
+    border-radius:10px; padding:8px 10px; margin-top:10px;}
+
+  /* ---------- 配队页 ---------- */
+  .slots{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  @media (min-width:760px){ .slots{grid-template-columns:repeat(6,1fr);} }
+  .slot{background:#fafbfe; border:1.5px dashed #cfd2e0; border-radius:var(--radius);
+    min-height:104px; display:flex; align-items:center; justify-content:center; color:#b9bcce;
+    font-size:13px; text-align:center; padding:8px 4px;}
+  .slot.filled{border-style:solid; border-color:var(--line); background:#fff; color:var(--ink);
+    flex-direction:column; position:relative; gap:2px;}
+  .slot .ava{width:52px; height:52px; border-radius:10px; background:#f0f1f6;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .slot .ava img{width:100%; height:100%; object-fit:contain; display:block;}
+  .slot .s-nm{font-size:12.5px; font-weight:600; line-height:1.25;}
+  .slot .s-rm{position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%;
+    border:1px solid var(--line); background:#fff; color:var(--sub); font-size:13px; line-height:1;
+    cursor:pointer; padding:0;}
+  .slot .badges{margin-top:2px;}
+  .score-total{text-align:center; padding:6px 0 2px;}
+  .score-total .n{font-size:40px; font-weight:800;}
+  .score-total .t{color:var(--sub); font-size:13px;}
+  .score-row{margin:12px 0;}
+  .score-row .sr-head{display:flex; align-items:baseline; gap:8px; font-size:14px;}
+  .score-row .sr-head b{font-size:15px;}
+  .score-row .sr-val{margin-left:auto; font-weight:700;}
+  .score-row .bar{height:9px; background:#eef0f5; border-radius:99px; overflow:hidden; margin:5px 0 4px;}
+  .score-row .fill{height:100%; background:var(--accent); border-radius:99px;}
+  .score-row .why{color:var(--sub); font-size:12.5px; line-height:1.55;}
+  .seg{display:flex; gap:8px; align-items:center; margin-top:4px;}
+  .seg button{border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px;
+    padding:6px 14px; font-size:13.5px; cursor:pointer;}
+  .seg button.on{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;}
+  .rec-item{display:flex; gap:10px; align-items:flex-start; padding:10px 2px; border-bottom:1px solid #f0f1f6;}
+  .rec-item:last-child{border-bottom:0;}
+  .rec-item .ava{width:52px; height:52px; flex:0 0 auto; border-radius:10px; background:#f0f1f6;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .rec-item .ava img{width:100%; height:100%; object-fit:contain; display:block;}
+  .rec-item .r-nm{font-weight:700; font-size:14.5px;}
+  .rec-item .r-nm .gain{color:var(--good); font-size:12.5px; margin-left:6px;}
+  .rec-item .r-why{color:#4a4d5e; font-size:12.5px; line-height:1.55; margin-top:2px;}
+  .cov-line{font-size:13px; line-height:1.9;}
 </style>
 </head>
 <body>
@@ -153,10 +250,18 @@ function imgTag(fn, name, thumb, lazy){
     (lazy ? ' loading="lazy"' : "") +
     ' data-fn="' + esc(fn) + '" data-init="' + esc(init) + '" onerror="imgErr(this)">';
 }
+function navHTML(active){
+  function item(key, href, label){
+    return '<a href="' + href + '"' + (active === key ? ' class="on"' : "") + ">" + label + "</a>";
+  }
+  return '<nav class="topnav">' + item("list", "#/", "📖 图鉴") +
+    item("battle", "#/battle", "⚔️ 对战") + item("team", "#/team", "🧩 配队") + "</nav>";
+}
 
 /* ============ 数据 ============ */
-var DB = { pets: [], skills: [], chains: [], images: {},
-           petById: {}, skillByName: {}, abilityByName: {}, familyByKey: {}, familyByPet: {} };
+var DB = { pets: [], skills: [], chains: [], images: {}, chart: null,
+           petById: {}, skillByName: {}, abilityByName: {}, familyByKey: {}, familyByPet: {},
+           maxTotal: 1, minTotal: 0, maxSpe: 1 };
 
 function buildIndex(){
   DB.pets.forEach(function(p){ DB.petById[p.id] = p; });
@@ -169,6 +274,11 @@ function buildIndex(){
   });
   /* 特性同名兜底：个别技能名只在特性表里出现时也允许查到 */
   DB.skills.forEach(function(s){ if (!DB.skillByName[s.name]) DB.skillByName[s.name] = s; });
+
+  var totals = DB.pets.map(function(p){ return p.stats.total; });
+  DB.maxTotal = Math.max.apply(null, totals);
+  DB.minTotal = Math.min.apply(null, totals);
+  DB.maxSpe = Math.max.apply(null, DB.pets.map(function(p){ return p.stats.spe; }));
 
   /* 进化链：同一 evolution key 可能有多条记录（每个首领化分支一条），按 key 合并：
      stages 按 pet_id 去重（优先保留带等级/条件的），lords 按 pet_id 去重合并。 */
@@ -198,6 +308,109 @@ function familyOf(pet){
   return DB.familyByPet[pet.id] || null;
 }
 function skillOf(name){ return DB.skillByName[name] || null; }
+
+/* ============ 属性克制（步进规则） ============ */
+/* 单系倍率只有 2 / 1 / 0.5。双系守方按步进合并（与 BWIKI 模块自带双系表
+   1836 格全量对齐验证）：每系 +1 步（被克制）/ -1 步（被抵抗），
+   合计 +2 -> ×3、+1 -> ×2、0 -> ×1、-1 -> ×0.5、-2 -> ×0.25。本作无 ×0 免疫。 */
+var STEP_MULT = { "-2": 0.25, "-1": 0.5, "0": 1, "1": 2, "2": 3 };
+function typeMult(atkType, defTypes){
+  if (!DB.chart) return 1;
+  var row = DB.chart[atkType] || {};
+  var step = 0;
+  (defTypes || []).forEach(function(d){
+    var m = row[d];
+    if (m === 2) step += 1;
+    else if (m === 0.5) step -= 1;
+  });
+  return STEP_MULT[step] != null ? STEP_MULT[step] : 1;
+}
+function multClass(m){ return m > 1 ? "mult-super" : (m < 1 ? "mult-resist" : ""); }
+function multLabel(m){
+  if (m >= 3) return "双重克制 ×3";
+  if (m === 2) return "克制 ×2";
+  if (m === 1) return "等倍 ×1";
+  if (m === 0.5) return "抵抗 ×0.5";
+  return "双重抵抗 ×0.25";
+}
+
+/* ============ 精灵技能与选择器 ============ */
+function petSkills(pet){
+  /* learnset 三组去重合并，保留学习顺序，返回技能对象数组 */
+  var seen = {}, out = [];
+  var ls = pet.learnset || { level: [], stone: [], bloodline: [] };
+  var names = [];
+  (ls.level || []).forEach(function(x){ names.push(x.skill); });
+  (ls.stone || []).forEach(function(n){ names.push(n); });
+  (ls.bloodline || []).forEach(function(b){ names.push(b.skill); });
+  names.forEach(function(n){
+    if (seen[n]) return;
+    seen[n] = 1;
+    var sk = skillOf(n);
+    if (sk) out.push(sk);
+  });
+  return out;
+}
+function petAtkTypes(pet){
+  /* 该精灵全部有威力技能的属性集合（配队打击面用，缓存） */
+  if (pet._atkTypes) return pet._atkTypes;
+  var set = {};
+  petSkills(pet).forEach(function(sk){
+    if (sk.power != null && sk.category !== "特性" && sk.type && sk.type !== "无") set[sk.type] = 1;
+  });
+  pet._atkTypes = Object.keys(set);
+  return pet._atkTypes;
+}
+function searchPets(q, limit){
+  q = (q || "").trim().toLowerCase();
+  if (!q) return [];
+  var out = [];
+  for (var i = 0; i < DB.pets.length && out.length < limit; i++) {
+    var p = DB.pets[i];
+    if ((p.name && p.name.toLowerCase().indexOf(q) >= 0) ||
+        (p.species && p.species.toLowerCase().indexOf(q) >= 0) ||
+        (p.pinyin && p.pinyin.toLowerCase().indexOf(q) >= 0) ||
+        (p.no && p.no.indexOf(q) >= 0) || String(p.id) === q) out.push(p);
+  }
+  return out;
+}
+function pickerHTML(prefix, placeholder){
+  return '<div class="picker"><input id="' + prefix + '-q" type="search" placeholder="' +
+    esc(placeholder) + '" autocomplete="off">' +
+    '<div class="pick-list" id="' + prefix + '-res"></div></div>';
+}
+/* 绑定选择器：onPick(pet) 在点选时回调；isDisabled(pet) 返回字符串则该行禁用并显示原因 */
+function bindPicker(prefix, onPick, isDisabled){
+  var input = document.getElementById(prefix + "-q");
+  var box = document.getElementById(prefix + "-res");
+  if (!input || !box) return;
+  function draw(){
+    var list = searchPets(input.value, 24);
+    box.innerHTML = list.map(function(p){
+      var dis = isDisabled ? isDisabled(p) : "";
+      return '<button class="pick-item" data-id="' + p.id + '"' + (dis ? " disabled" : "") + ">" +
+        '<span class="ava">' + imgTag(p.avatar, p.name, true, true) + "</span>" +
+        '<span class="pi-nm">' + esc(p.name) + "</span>" +
+        '<span class="badges">' + p.types.map(badge).join("") + "</span>" +
+        '<span class="pi-sub">' + (dis ? esc(dis) : "No." + esc(p.no) + " · 总和 " + p.stats.total) + "</span></button>";
+    }).join("");
+  }
+  input.addEventListener("input", draw);
+  box.addEventListener("click", function(e){
+    var b = e.target.closest("[data-id]");
+    if (!b || b.disabled) return;
+    var pet = DB.petById[parseInt(b.getAttribute("data-id"), 10)];
+    if (pet) onPick(pet);
+  });
+}
+function miniCard(pet){
+  var st = pet.stats;
+  return '<div class="mini"><div class="ava">' + imgTag(pet.avatar, pet.name, true, false) + "</div>" +
+    '<div><div class="m-nm">' + esc(pet.name) + ' <small style="color:var(--sub);font-size:12px">No.' + esc(pet.no) + "</small></div>" +
+    '<div class="badges">' + pet.types.map(badge).join("") + "</div>" +
+    '<div class="m-stats">体力 ' + st.hp + " · 物攻 " + st.atk + " · 物防 " + st.def +
+    "<br>魔攻 " + st.spa + " · 魔防 " + st.spd + " · 速度 " + st.spe + " · 总和 " + st.total + "</div></div></div>";
+}
 
 /* ============ 列表页 ============ */
 var ui = { q: "", type: "", season: "all", sort: "no" };
@@ -239,7 +452,7 @@ function renderList(){
                   ["hp","体力 ↓"],["atk","物攻 ↓"],["def","物防 ↓"],["spa","魔攻 ↓"],["spd","魔防 ↓"],["spe","速度 ↓"]]
     .map(function(o){ return '<option value="' + o[0] + '"' + (ui.sort === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
 
-  app.innerHTML =
+  app.innerHTML = navHTML("list") +
     '<header class="top"><h1>🐾 精灵图鉴</h1><p>《洛克王国：世界》 · 共 ' + DB.pets.length + ' 只精灵</p></header>' +
     '<div class="searchbar"><input id="q" type="search" placeholder="搜索名字 / 物种 / 拼音 / 编号…" value="' + esc(ui.q) + '"></div>' +
     '<div class="chips" id="chips">' + chips + "</div>" +
@@ -328,7 +541,7 @@ function renderDetail(id){
   var pet = DB.petById[id];
   var app = document.getElementById("app");
   if (!pet) {
-    app.innerHTML = '<a class="backbtn" href="#/">← 返回图鉴</a><div class="errbox">没有找到这只精灵。</div>';
+    app.innerHTML = navHTML("list") + '<a class="backbtn" href="#/">← 返回图鉴</a><div class="errbox">没有找到这只精灵。</div>';
     return;
   }
   var ab = DB.abilityByName[pet.ability];
@@ -372,7 +585,7 @@ function renderDetail(id){
       }).join("") + "</tbody></table></div>";
   }).join("");
 
-  app.innerHTML =
+  app.innerHTML = navHTML("list") +
     '<a class="backbtn" href="#/">← 返回图鉴</a>' +
     '<div class="hero"><div class="portrait">' + imgTag(pet.portrait, pet.name, true, false) + "</div>" +
     "<h2>" + esc(pet.name) + "</h2>" +
@@ -402,10 +615,369 @@ function renderDetail(id){
     '<table class="sk" id="tblStone"><thead><tr><th>技能</th><th>属性</th><th>分类</th><th>威力</th><th>能耗</th></tr></thead><tbody>' +
     skillRows(stoneItems) + "</tbody></table></section>" +
 
-    '<section class="blk"><h3>血脉技能（' + (ls.bloodline || []).length + '）</h3>' + (bloodHtml || '<div class="desc">无</div>') + "</section>";
+    '<section class="blk"><h3>血脉技能（' + (ls.bloodline || []).length + '）</h3>' + (bloodHtml || '<div class="desc">无</div>') + "</section>" +
+
+    '<div style="margin-top:12px;display:flex;gap:8px">' +
+    '<a class="backbtn" style="margin:0;flex:1;text-align:center" href="#/battle?atk=' + pet.id + '">⚔️ 拿它去对战模拟</a>' +
+    '<a class="backbtn" style="margin:0;flex:1;text-align:center" href="#/team?add=' + pet.id + '">🧩 加入我的配队</a></div>';
 
   bindSkillTable(document.getElementById("tblLevel"));
   bindSkillTable(document.getElementById("tblStone"));
+  window.scrollTo(0, 0);
+}
+
+/* ============ 对战模拟 ============ */
+/* 伤害口径（估算）：伤害 = 威力 × (攻击种族值 / 防御种族值) × 克制倍率 × 本系加成
+   物理用 物攻/物防，魔法用 魔攻/魔防；本系加成 = 技能属性与攻方属性一致时 ×1.2。
+   克制倍率查 typechart.json（BWIKI 克制计算器同源数据），双系按步进规则合并。
+   BWIKI 未公开本作完整伤害公式，此处为按种族值口径的估算，不含等级/个体差异。 */
+var battle = { atkId: null, defId: null, skillName: null };
+
+function calcDamage(atkPet, skill, defPet){
+  if (!skill || skill.category === "变化" || skill.power == null) return null;
+  var phys = skill.category === "物理";
+  var A = phys ? atkPet.stats.atk : atkPet.stats.spa;
+  var D = phys ? defPet.stats.def : defPet.stats.spd;
+  var mult = typeMult(skill.type, defPet.types);
+  var stab = atkPet.types.indexOf(skill.type) >= 0 ? 1.2 : 1;
+  var dmg = skill.power * (A / D) * mult * stab;
+  return { dmg: dmg, mult: mult, stab: stab, A: A, D: D, phys: phys,
+           pct: dmg / defPet.stats.hp * 100,
+           eff: skill.energy > 0 ? dmg / skill.energy : null };
+}
+
+function renderBattle(){
+  var app = document.getElementById("app");
+  var atk = battle.atkId ? DB.petById[battle.atkId] : null;
+  var def = battle.defId ? DB.petById[battle.defId] : null;
+
+  var skillHtml = '<div class="desc" style="color:var(--sub)">先选择攻方精灵，这里会列出它能学的全部技能。</div>';
+  if (atk) {
+    var skills = petSkills(atk);
+    if (!battle.skillName || !skills.some(function(s){ return s.name === battle.skillName; })) {
+      var dmgSkills = skills.filter(function(s){ return s.power != null && s.category !== "变化"; });
+      battle.skillName = dmgSkills.length ? dmgSkills.reduce(function(a, b){ return b.power > a.power ? b : a; }).name : (skills[0] ? skills[0].name : null);
+    }
+    skillHtml = '<div class="skill-list">' + skills.map(function(sk){
+      var sub = sk.category + " · " + (sk.power != null ? "威力 " + sk.power : "无威力") + " · 能耗 " + (sk.energy != null ? sk.energy : "—");
+      return '<button class="skill-item' + (sk.name === battle.skillName ? " on" : "") + '" data-skill="' + esc(sk.name) + '">' +
+        '<span class="s-nm">' + esc(sk.name) + "</span>" + badge(sk.type) +
+        '<span class="s-sub">' + esc(sub) + "</span></button>";
+    }).join("") + "</div>";
+  }
+
+  var resultHtml = "";
+  if (!DB.chart) {
+    resultHtml = '<section class="blk"><h3>计算结果</h3><div class="desc">克制表数据（typechart.json）加载失败，暂时无法计算。</div></section>';
+  } else if (atk && def && battle.skillName) {
+    var skill = skillOf(battle.skillName);
+    var r = calcDamage(atk, skill, def);
+    if (!r) {
+      resultHtml = '<section class="blk"><h3>计算结果</h3>' +
+        '<div class="dmg-big">无直接伤害</div>' +
+        '<div class="desc" style="text-align:center">「' + esc(skill.name) + '」是' + esc(skill.category) +
+        '类技能，不直接造成伤害，看它的附加效果：</div>' +
+        '<div class="skill-desc">' + esc(skill.desc || "（暂无描述）") + "</div></section>";
+    } else {
+      var hits = r.pct >= 100 ? "约 1 击" : "约 " + Math.ceil(100 / r.pct) + " 击";
+      resultHtml = '<section class="blk"><h3>计算结果</h3>' +
+        '<div class="dmg-big">' + r.dmg.toFixed(1) + ' <small>点伤害（对 ' + esc(def.name) + "）</small></div>" +
+        '<div class="hpbar"><div class="fill" style="width:' + Math.min(r.pct, 100) + '%"></div></div>' +
+        '<div class="desc">约占 ' + esc(def.name) + " 体力种族值（" + def.stats.hp + "）的 <b>" + r.pct.toFixed(1) + "%</b>，" + hits + " 可以击破（按种族值估算）。</div>" +
+        '<div class="brk">' +
+        "<span>技能威力 " + skill.power + "</span>" +
+        "<span>" + (r.phys ? "物攻 " + r.A + " / 物防 " + r.D : "魔攻 " + r.A + " / 魔防 " + r.D) + " = ×" + (r.A / r.D).toFixed(2) + "</span>" +
+        '<span>克制 <b class="' + multClass(r.mult) + '">' + multLabel(r.mult) + "</b></span>" +
+        "<span>本系加成 " + (r.stab > 1 ? "×1.2（技能与攻方同属性）" : "×1（非本系）") + "</span>" +
+        "<span>能耗 " + skill.energy + (r.eff != null ? " · 每点能耗伤害 " + r.eff.toFixed(1) : " · 零能耗") + "</span>" +
+        "</div>" +
+        (skill.desc ? '<div class="skill-desc">' + esc(skill.name) + "：" + esc(skill.desc) + "</div>" : "") +
+        "</section>";
+    }
+  } else {
+    resultHtml = '<section class="blk"><h3>计算结果</h3><div class="desc" style="color:var(--sub)">选好攻方、技能和守方后，这里会算出预估伤害。</div></section>';
+  }
+
+  app.innerHTML = navHTML("battle") +
+    '<header class="top"><h1>⚔️ 对战模拟</h1><p>选攻方和它的技能，再选守方，估算一发伤害。</p></header>' +
+    '<div class="vs-grid">' +
+    '<section class="blk"><h3>攻方精灵</h3>' + pickerHTML("bkAtk", "搜索攻方：名字 / 拼音 / 编号…") +
+      '<div style="margin-top:10px">' + (atk ? miniCard(atk) : '<div class="desc" style="color:var(--sub)">未选择</div>') + "</div>" +
+      '<h4>攻方技能</h4>' + skillHtml + "</section>" +
+    '<section class="blk"><h3>守方精灵</h3>' + pickerHTML("bkDef", "搜索守方：名字 / 拼音 / 编号…") +
+      '<div style="margin-top:10px">' + (def ? miniCard(def) : '<div class="desc" style="color:var(--sub)">未选择</div>') + "</div></section>" +
+    "</div>" + resultHtml +
+    '<div class="footnote">伤害公式（估算口径）：伤害 = 威力 ×（攻击种族值 ÷ 防御种族值）× 克制倍率 × 本系加成（同属性 ×1.2）。' +
+    '物理技能用物攻/物防，魔法技能用魔攻/魔防。克制倍率来自 BWIKI 克制计算器同源数据（data/typechart.json）：单系 ×2 / ×0.5，双系按步进合并（双重克制 ×3、双重抵抗 ×0.25），本作没有属性免疫（无 ×0）。' +
+    'BWIKI 未公开本作完整伤害公式，这里只按种族值估算，不含等级、个体值与特性增减，仅供配招参考。</div>';
+
+  bindPicker("bkAtk", function(pet){
+    battle.atkId = pet.id; battle.skillName = null; renderBattle();
+  });
+  bindPicker("bkDef", function(pet){
+    battle.defId = pet.id; renderBattle();
+  });
+  var list = app.querySelector(".skill-list");
+  if (list) list.addEventListener("click", function(e){
+    var b = e.target.closest("[data-skill]"); if (!b) return;
+    battle.skillName = b.getAttribute("data-skill");
+    renderBattle();
+  });
+  window.scrollTo(0, 0);
+}
+
+/* ============ 配队评分 ============ */
+function teamAtkTypes(pets){
+  var set = {};
+  pets.forEach(function(p){ petAtkTypes(p).forEach(function(t){ set[t] = 1; }); });
+  return Object.keys(set);
+}
+function bestMult(atkTypes, defTypes){
+  var best = 0;
+  atkTypes.forEach(function(t){
+    var m = typeMult(t, defTypes);
+    if (m > best) best = m;
+  });
+  return best;
+}
+function scoreTeam(mine, foe){
+  /* mine/foe: 精灵对象数组。返回 {total, parts:[{key,label,score,why}], detail:{...}} */
+  var empty = { total: 0, parts: [], detail: {} };
+  if (!mine.length) return empty;
+  var atkTypes = teamAtkTypes(mine);
+
+  /* 打击面覆盖：对 18 种单系守方能打出的最高倍率 */
+  var cover = {}, superList = [], gapList = [];
+  TYPES18.forEach(function(d){
+    var m = bestMult(atkTypes, [d]);
+    cover[d] = m;
+    if (m >= 2) superList.push(d);
+    if (m < 1) gapList.push(d);
+  });
+  var neutralCount = TYPES18.filter(function(d){ return cover[d] === 1; }).length;
+  /* 计分：克制一种记满分、等倍一种记三成、被抵抗记 0 —— 全克制 100、全等倍 30、全被抵抗 0 */
+  var offense = Math.round((superList.length * 100 + neutralCount * 30) / 18);
+  var offenseWhy = "全队技能一共能打出 " + atkTypes.length + " 种属性的打击面，其中对 " +
+    superList.length + " 种属性能克制（×2 起）" +
+    (superList.length ? "：" + superList.join("、") : "") + "。" +
+    (gapList.length ? "短板：对 " + gapList.join("、") + " 只能打出半伤（×0.5），遇到这类对手会很吃力。" : "没有任何属性被全队抵抗，打击面很完整。");
+
+  /* 防御抗性：弱点重叠 + 人均弱点数 */
+  var weakByAtk = {}, totalWeak = 0, resistKinds = 0;
+  TYPES18.forEach(function(a){
+    var c = 0;
+    mine.forEach(function(p){ if (typeMult(a, p.types) > 1) c++; });
+    weakByAtk[a] = c;
+    totalWeak += c;
+    if (c === 0) resistKinds++;
+  });
+  var maxOverlap = Math.max.apply(null, TYPES18.map(function(a){ return weakByAtk[a]; }));
+  var overlapTypes = TYPES18.filter(function(a){ return weakByAtk[a] === maxOverlap && maxOverlap > 0; });
+  var avgWeak = totalWeak / mine.length;
+  var defense = Math.round((1 - maxOverlap / mine.length) * 60 + Math.max(0, 40 - avgWeak * 10));
+  var defenseWhy = "最怕的属性是 " + (maxOverlap ? overlapTypes.join("、") + "，全队有 " + maxOverlap + " 只被它克制" : "无") +
+    "；平均每只精灵有 " + avgWeak.toFixed(1) + " 个弱点属性。" +
+    (maxOverlap >= Math.ceil(mine.length / 2) && mine.length > 1
+      ? "弱点太集中：一发打中弱点的群攻技能就可能同时重创多只，尽量别让半队怕同一种属性。"
+      : "弱点分布还算分散，不容易被一种属性一锅端。");
+
+  /* 种族值与速度（按全图鉴极值归一） */
+  var avgTotal = mine.reduce(function(s, p){ return s + p.stats.total; }, 0) / mine.length;
+  var statsScore = Math.round((avgTotal - DB.minTotal) / (DB.maxTotal - DB.minTotal) * 100);
+  var statsWhy = "全队平均种族值总和 " + Math.round(avgTotal) + "（全图鉴范围 " + DB.minTotal + "～" + DB.maxTotal +
+    "）。这是面板下限参考：进化到最终形态、总和高的精灵通常更耐打也更能打。";
+  var avgSpe = mine.reduce(function(s, p){ return s + p.stats.spe; }, 0) / mine.length;
+  var topSpe = Math.max.apply(null, mine.map(function(p){ return p.stats.spe; }));
+  var speedScore = Math.round((avgSpe / DB.maxSpe) * 70 + (topSpe / DB.maxSpe) * 30);
+  var speedWhy = "全队平均速度 " + Math.round(avgSpe) + "，最快 " + topSpe + "（全图鉴最快 " + DB.maxSpe +
+    "）。速度决定出手顺序：队伍整体太慢，容易在出手前先挨打。";
+
+  var parts = [
+    { key: "offense", label: "🎯 打击面覆盖", score: offense, why: offenseWhy },
+    { key: "defense", label: "🛡️ 防御抗性", score: defense, why: defenseWhy },
+    { key: "stats", label: "💪 种族值总和", score: statsScore, why: statsWhy },
+    { key: "speed", label: "💨 速度线", score: speedScore, why: speedWhy }
+  ];
+  var weights = { offense: 0.35, defense: 0.30, stats: 0.20, speed: 0.15 };
+  var detail = { cover: cover, superList: superList, gapList: gapList, weakByAtk: weakByAtk, atkTypes: atkTypes };
+
+  if (foe && foe.length) {
+    var foeTypes = teamAtkTypes(foe);
+    var myPress = foe.reduce(function(s, p){ return s + bestMult(atkTypes, p.types); }, 0) / foe.length;
+    var foePress = mine.reduce(function(s, p){ return s + bestMult(foeTypes, p.types); }, 0) / mine.length;
+    var vs = Math.round(Math.max(0, Math.min(100, 50 + (myPress - foePress) * 50)));
+    parts.push({ key: "vsfoe", label: "⚔️ 对敌压制", score: vs,
+      why: "我方打敌方平均最高倍率 ×" + myPress.toFixed(2) + "，敌方反打我方平均 ×" + foePress.toFixed(2) + "。" +
+        (myPress >= foePress ? "进攻端占优：尽量先手集火敌方被克制的精灵。" : "进攻端吃亏：敌方更容易克制我方，先想想换阵或补抗性。") });
+    weights = { offense: 0.25, defense: 0.25, stats: 0.15, speed: 0.10, vsfoe: 0.25 };
+    detail.myPress = myPress; detail.foePress = foePress;
+  }
+  var total = Math.round(parts.reduce(function(s, pt){ return s + pt.score * weights[pt.key]; }, 0));
+  return { total: total, parts: parts, detail: detail };
+}
+
+function recommend(mine, foe){
+  /* 遍历全图鉴：补入后总分提升最大的前 5 只，并生成人话理由 */
+  var base = scoreTeam(mine, foe);
+  var inTeam = {};
+  mine.forEach(function(p){ inTeam[p.id] = 1; });
+  var scored = [];
+  DB.pets.forEach(function(cand){
+    if (inTeam[cand.id]) return;
+    var s = scoreTeam(mine.concat([cand]), foe);
+    scored.push({ pet: cand, gain: s.total - base.total, after: s });
+  });
+  scored.sort(function(a, b){ return (b.gain - a.gain) || (b.pet.stats.total - a.pet.stats.total); });
+  return scored.slice(0, 5).map(function(r){
+    var newSuper = r.after.detail.superList.filter(function(d){ return base.detail.superList.indexOf(d) < 0; });
+    var fixedGap = r.after.detail.gapList.filter(function(d){ return base.detail.gapList.indexOf(d) >= 0 && r.after.detail.gapList.indexOf(d) < 0; });
+    var reasons = [];
+    if (newSuper.length) reasons.push("补上后新增超效打击面：" + newSuper.join("、"));
+    if (fixedGap.length) reasons.push("堵住半伤短板：对 " + fixedGap.join("、") + " 不再只能打 ×0.5");
+    if (!reasons.length) {
+      var dw = r.after.parts.filter(function(pt){ return pt.key === "defense"; })[0];
+      var bw = base.parts.filter(function(pt){ return pt.key === "defense"; })[0];
+      if (dw && bw && dw.score > bw.score) reasons.push("它的属性不怕全队最怕的攻击属性，能摊薄弱点重叠");
+    }
+    if (!reasons.length) reasons.push("种族值总和 " + r.pet.stats.total + "、速度 " + r.pet.stats.spe + "，拉升全队面板与速度线");
+    reasons.push("综合评分 " + base.total + " → " + r.after.total);
+    return { pet: r.pet, gain: r.gain, why: reasons.join("；") + "。" };
+  });
+}
+
+/* ============ 配队页 ============ */
+var team = { mine: [], foeOn: false, foe: [] };
+(function loadTeam(){
+  try {
+    var raw = localStorage.getItem("roco-world-team-v1");
+    if (!raw) return;
+    var t = JSON.parse(raw);
+    if (Array.isArray(t.mine)) team.mine = t.mine;   /* id 有效性等 DB 就绪后由 _restore 校验 */
+    if (Array.isArray(t.foe)) team.foe = t.foe;
+    team.foeOn = !!t.foeOn;
+  } catch (e) { /* 忽略损坏的存档 */ }
+})();
+function saveTeam(){
+  try {
+    localStorage.setItem("roco-world-team-v1", JSON.stringify({ mine: team.mine, foeOn: team.foeOn, foe: team.foe }));
+  } catch (e) { /* 存储不可用时静默 */ }
+}
+(function restoreTeam(){
+  /* DB 就绪后（buildIndex 之后）再校验存档里的 id */
+  var check = function(){
+    team.mine = team.mine.filter(function(id){ return DB.petById[id]; });
+    team.foe = team.foe.filter(function(id){ return DB.petById[id]; });
+  };
+  team._restore = check;
+})();
+
+function slotsHTML(ids, kind){
+  var html = "";
+  for (var i = 0; i < 6; i++) {
+    var id = ids[i];
+    if (id == null) { html += '<div class="slot">空位<br>' + (i + 1) + "</div>"; continue; }
+    var p = DB.petById[id];
+    if (!p) { html += '<div class="slot">空位</div>'; continue; }
+    html += '<div class="slot filled"><button class="s-rm" data-rm="' + kind + ":" + id + '" aria-label="移除">×</button>' +
+      '<a href="#/pet/' + p.id + '"><span class="ava">' + imgTag(p.avatar, p.name, true, true) + "</span></a>" +
+      '<span class="s-nm">' + esc(p.name) + "</span>" +
+      '<span class="badges">' + p.types.map(badge).join("") + "</span></div>";
+  }
+  return html;
+}
+
+function renderTeam(){
+  var app = document.getElementById("app");
+  var mine = team.mine.map(function(id){ return DB.petById[id]; }).filter(Boolean);
+  var foe = team.foeOn ? team.foe.map(function(id){ return DB.petById[id]; }).filter(Boolean) : [];
+
+  var scoreHtml = "";
+  if (!DB.chart) {
+    scoreHtml = '<section class="blk"><h3>队伍评分</h3><div class="desc">克制表数据（typechart.json）加载失败，暂时无法评分。</div></section>';
+  } else if (!mine.length) {
+    scoreHtml = '<section class="blk"><h3>队伍评分</h3><div class="desc" style="color:var(--sub)">先从下面搜索加入至少 1 只精灵，这里会给出 0–100 分和逐项解释。</div></section>';
+  } else {
+    var s = scoreTeam(mine, foe);
+    var rows = s.parts.map(function(pt){
+      return '<div class="score-row"><div class="sr-head"><b>' + pt.label + '</b><span class="sr-val">' + pt.score + '</span></div>' +
+        '<div class="bar"><div class="fill" style="width:' + pt.score + '%"></div></div>' +
+        '<div class="why">' + esc(pt.why) + "</div></div>";
+    }).join("");
+    var covLine = TYPES18.map(function(d){
+      var m = s.detail.cover[d];
+      return esc(d) + ' <b class="' + multClass(m) + '">×' + m + "</b>";
+    }).join(" · ");
+    scoreHtml = '<section class="blk"><h3>队伍评分</h3>' +
+      '<div class="score-total"><div class="n">' + s.total + '</div><div class="t">综合评分（0–100）' +
+      (foe.length ? " · 已计入对敌压制" : "") + "</div></div>" + rows +
+      '<h4>全队打击面（对单系守方的最高倍率）</h4><div class="cov-line">' + covLine + "</div></section>";
+
+    if (mine.length < 6) {
+      var recs = recommend(mine, foe);
+      scoreHtml += '<section class="blk"><h3>补位推荐</h3>' +
+        '<div class="desc" style="color:var(--sub);font-size:13px;margin-bottom:4px">从全图鉴里逐只试补，按补上后的评分提升排序。点头像看详情。</div>' +
+        recs.map(function(r){
+          return '<div class="rec-item"><a href="#/pet/' + r.pet.id + '"><span class="ava">' + imgTag(r.pet.avatar, r.pet.name, true, true) + "</span></a>" +
+            '<div><div class="r-nm">' + esc(r.pet.name) +
+            '<span class="badges" style="display:inline-flex;vertical-align:middle;margin-left:6px">' + r.pet.types.map(badge).join("") + "</span>" +
+            '<span class="gain">+' + r.gain + " 分</span></div>" +
+            '<div class="r-why">' + esc(r.why) + "</div></div></div>";
+        }).join("") + "</section>";
+    } else {
+      scoreHtml += '<section class="blk"><h3>补位推荐</h3><div class="desc">队伍已满 6 只。' +
+        (s.detail.gapList.length ? "当前仍有打击面短板：对 " + s.detail.gapList.join("、") + " 只能打 ×0.5，可以考虑换下一只补打击面的精灵。" : "打击面没有 ×0.5 短板，很完整。") +
+        "</div></section>";
+    }
+  }
+
+  var foeHtml = "";
+  if (team.foeOn) {
+    foeHtml = '<section class="blk"><h3>敌方队伍（' + team.foe.length + '/6）</h3>' +
+      '<div class="slots">' + slotsHTML(team.foe, "foe") + "</div>" +
+      '<div style="margin-top:10px">' + pickerHTML("tmFoe", "搜索敌方精灵加入：名字 / 拼音 / 编号…") + "</div></section>";
+  }
+
+  app.innerHTML = navHTML("team") +
+    '<header class="top"><h1>🧩 AI 配队</h1><p>按克制、抗性、种族值和速度给你的队伍打分，并推荐补位。队伍保存在本机浏览器里。</p></header>' +
+    '<section class="blk"><h3>我的队伍（' + team.mine.length + '/6）</h3>' +
+    '<div class="slots">' + slotsHTML(team.mine, "mine") + "</div>" +
+    '<div style="margin-top:10px">' + pickerHTML("tmMine", "搜索精灵加入队伍：名字 / 拼音 / 编号…") + "</div>" +
+    '<div class="seg" style="margin-top:12px"><span style="font-size:13.5px;color:var(--sub)">敌方队伍（可选，填了会多一项「对敌压制」）：</span>' +
+    '<button id="foeOff" class="' + (!team.foeOn ? "on" : "") + '">关</button>' +
+    '<button id="foeOn" class="' + (team.foeOn ? "on" : "") + '">开</button></div></section>' +
+    foeHtml + scoreHtml +
+    '<div class="footnote">评分构成：打击面覆盖（全队技能属性对 18 种守方属性的最高克制倍率）、防御抗性（弱点重叠越少越好）、种族值总和均值（按全图鉴范围归一）、速度线（均速与最快速度）；' +
+    '填了敌方队伍时再加对敌压制（双方互相的平均最高克制倍率之差）。克制倍率来自 BWIKI 克制计算器同源数据，双系按步进合并（双重克制 ×3、双重抵抗 ×0.25），本作无属性免疫。评分是规则估算，帮你看结构短板，不代替实战手感。</div>';
+
+  bindPicker("tmMine", function(pet){
+    if (team.mine.length >= 6 || team.mine.indexOf(pet.id) >= 0) return;
+    team.mine.push(pet.id); saveTeam(); renderTeam();
+  }, function(pet){
+    if (team.mine.indexOf(pet.id) >= 0) return "已在队伍中";
+    if (team.mine.length >= 6) return "队伍已满";
+    return "";
+  });
+  if (team.foeOn) {
+    bindPicker("tmFoe", function(pet){
+      if (team.foe.length >= 6 || team.foe.indexOf(pet.id) >= 0) return;
+      team.foe.push(pet.id); saveTeam(); renderTeam();
+    }, function(pet){
+      if (team.foe.indexOf(pet.id) >= 0) return "已在敌方队伍";
+      if (team.foe.length >= 6) return "敌方已满";
+      return "";
+    });
+  }
+  app.querySelectorAll("[data-rm]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var parts = b.getAttribute("data-rm").split(":");
+      var arr = parts[0] === "mine" ? team.mine : team.foe;
+      var idx = arr.indexOf(parseInt(parts[1], 10));
+      if (idx >= 0) arr.splice(idx, 1);
+      saveTeam(); renderTeam();
+    });
+  });
+  document.getElementById("foeOff").addEventListener("click", function(){ team.foeOn = false; saveTeam(); renderTeam(); });
+  document.getElementById("foeOn").addEventListener("click", function(){ team.foeOn = true; saveTeam(); renderTeam(); });
   window.scrollTo(0, 0);
 }
 
@@ -413,18 +985,29 @@ function renderDetail(id){
 function route(){
   var h = location.hash || "#/";
   var m = h.match(/^#\/pet\/(\d+)/);
-  if (m) { renderDetail(parseInt(m[1], 10)); }
-  else {
-    renderList();
-    if (listScrollY) restoreScroll();
+  if (m) { renderDetail(parseInt(m[1], 10)); return; }
+  if (h.indexOf("#/battle") === 0) {
+    var bm = h.match(/[?&]atk=(\d+)/);
+    if (bm && DB.petById[parseInt(bm[1], 10)]) { battle.atkId = parseInt(bm[1], 10); battle.skillName = null; }
+    renderBattle(); return;
   }
+  if (h.indexOf("#/team") === 0) {
+    var am = h.match(/[?&]add=(\d+)/);
+    if (am) {
+      var addId = parseInt(am[1], 10);
+      if (DB.petById[addId] && team.mine.indexOf(addId) < 0 && team.mine.length < 6) {
+        team.mine.push(addId); saveTeam();
+      }
+    }
+    renderTeam(); return;
+  }
+  renderList();
+  if (listScrollY) restoreScroll();
 }
-window.addEventListener("hashchange", function(){
-  if ((location.hash || "#/") === "#/" || location.hash === "" ) { /* 回列表保留滚动 */ }
-  route();
-});
+window.addEventListener("hashchange", route);
 window.addEventListener("scroll", function(){
-  if (!/^#\/pet\//.test(location.hash || "")) listScrollY = window.scrollY;
+  var h = location.hash || "#/";
+  if (h === "#/" || h === "") listScrollY = window.scrollY;
 }, { passive: true });
 
 function loadJson(url, optional){
@@ -432,7 +1015,7 @@ function loadJson(url, optional){
     if (!r.ok) throw new Error(url + " HTTP " + r.status);
     return r.json();
   }).catch(function(e){
-    if (optional) return {};
+    if (optional) return null;
     throw e;
   });
 }
@@ -440,13 +1023,16 @@ Promise.all([
   loadJson("data/pets.json"),
   loadJson("data/skills.json"),
   loadJson("data/evolutions.json"),
-  loadJson("data/images.json", true)
+  loadJson("data/images.json", true),
+  loadJson("data/typechart.json", true)
 ]).then(function(res){
   DB.pets = res[0];
   DB.skills = res[1];
   DB.chains = (res[2] && res[2].chains) ? res[2].chains : res[2];
   DB.images = res[3] || {};
+  DB.chart = res[4] || null;
   buildIndex();
+  if (team._restore) team._restore();
   route();
 }).catch(function(e){
   document.getElementById("app").innerHTML =
