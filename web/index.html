@@ -199,6 +199,42 @@
   .rec-item .r-nm .gain{color:var(--good); font-size:12.5px; margin-left:6px;}
   .rec-item .r-why{color:#4a4d5e; font-size:12.5px; line-height:1.55; margin-top:2px;}
   .cov-line{font-size:13px; line-height:1.9;}
+
+  /* ---------- 对战页签与 6v6 分析 ---------- */
+  .btabs{display:flex; gap:8px; margin:2px 0 4px;}
+  .btabs button{flex:1; border:1px solid var(--line); background:var(--card); color:var(--sub);
+    border-radius:999px; padding:8px 0; font-size:14.5px; font-weight:600; cursor:pointer;}
+  .btabs button.on{background:var(--ink); border-color:var(--ink); color:#fff;}
+  .verdict{text-align:center; padding:4px 0 2px;}
+  .verdict .v-t{font-size:27px; font-weight:800;}
+  .verdict .v-p{color:var(--sub); font-size:13.5px; margin-top:2px;}
+  .cmp{margin:13px 0;}
+  .cmp-head{display:flex; align-items:baseline; gap:8px; font-size:14px;}
+  .cmp-head .cmp-vs{margin-left:auto; font-size:12.5px; color:var(--sub); white-space:nowrap;}
+  .cmp-bar{display:flex; height:10px; border-radius:99px; overflow:hidden; margin:5px 0 4px; background:#eef0f5;}
+  .cmp-mine{background:var(--accent); height:100%;}
+  .cmp-foe{background:#d98a86; height:100%;}
+  .cmp .why{color:var(--sub); font-size:12.5px; line-height:1.55;}
+  .mx-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  table.mx{border-collapse:separate; border-spacing:3px; font-size:12px; min-width:540px; width:100%;}
+  table.mx th, table.mx td{border-radius:9px; padding:6px 5px; text-align:center; vertical-align:middle;}
+  table.mx thead th{background:#f4f5fa; font-weight:600;}
+  table.mx tbody th{background:#f4f5fa; font-weight:600; text-align:left; position:sticky; left:0; z-index:1;}
+  .mx-nm{display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:78px;}
+  table.mx thead .mx-nm{margin:0 auto;}
+  .mx-c .mx-pct{font-size:15px; font-weight:800; line-height:1.2;}
+  .mx-c .mx-hit{font-size:11px; line-height:1.3;}
+  .mx-c .mx-sk{font-size:10.5px; opacity:.75; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:76px; margin:0 auto;}
+  .mx-hi{background:#fbd9d6; color:#9c2b25;}
+  .mx-mid{background:#fdf0d2; color:#8a5a00;}
+  .mx-lo{background:#eef0f5; color:#6d707e;}
+  .mx-legend{font-size:12px; color:var(--sub); margin-top:6px; line-height:1.7;}
+  .mx-legend b{padding:1px 7px; border-radius:6px; font-weight:600;}
+  .ana p{margin:5px 0 10px; font-size:14px; line-height:1.7; color:#33353f;}
+  .ana h4{margin:14px 0 2px; font-size:14.5px;}
+  .ana h4:first-child{margin-top:0;}
+  .threat-line{font-size:13.5px; line-height:1.6; padding:7px 0; border-bottom:1px solid #f0f1f6;}
+  .threat-line:last-child{border-bottom:0;}
 </style>
 </head>
 <body>
@@ -631,7 +667,7 @@ function renderDetail(id){
    物理用 物攻/物防，魔法用 魔攻/魔防；本系加成 = 技能属性与攻方属性一致时 ×1.2。
    克制倍率查 typechart.json（BWIKI 克制计算器同源数据），双系按步进规则合并。
    BWIKI 未公开本作完整伤害公式，此处为按种族值口径的估算，不含等级/个体差异。 */
-var battle = { atkId: null, defId: null, skillName: null };
+var battle = { atkId: null, defId: null, skillName: null, mode: "pvp" };
 
 function calcDamage(atkPet, skill, defPet){
   if (!skill || skill.category === "变化" || skill.power == null) return null;
@@ -646,7 +682,7 @@ function calcDamage(atkPet, skill, defPet){
            eff: skill.energy > 0 ? dmg / skill.energy : null };
 }
 
-function renderBattle(){
+function renderBattleCalc(){
   var app = document.getElementById("app");
   var atk = battle.atkId ? DB.petById[battle.atkId] : null;
   var def = battle.defId ? DB.petById[battle.defId] : null;
@@ -699,7 +735,8 @@ function renderBattle(){
   }
 
   app.innerHTML = navHTML("battle") +
-    '<header class="top"><h1>⚔️ 对战模拟</h1><p>选攻方和它的技能，再选守方，估算一发伤害。</p></header>' +
+    '<header class="top"><h1>⚔️ 对战模拟</h1><p>6v6 整队 PVP 分析，或单挑伤害计算。</p></header>' +
+    battleTabsHTML("calc") +
     '<div class="vs-grid">' +
     '<section class="blk"><h3>攻方精灵</h3>' + pickerHTML("bkAtk", "搜索攻方：名字 / 拼音 / 编号…") +
       '<div style="margin-top:10px">' + (atk ? miniCard(atk) : '<div class="desc" style="color:var(--sub)">未选择</div>') + "</div>" +
@@ -712,17 +749,370 @@ function renderBattle(){
     'BWIKI 未公开本作完整伤害公式，这里只按种族值估算，不含等级、个体值与特性增减，仅供配招参考。</div>';
 
   bindPicker("bkAtk", function(pet){
-    battle.atkId = pet.id; battle.skillName = null; renderBattle();
+    battle.atkId = pet.id; battle.skillName = null; renderBattleCalc();
   });
   bindPicker("bkDef", function(pet){
-    battle.defId = pet.id; renderBattle();
+    battle.defId = pet.id; renderBattleCalc();
   });
   var list = app.querySelector(".skill-list");
   if (list) list.addEventListener("click", function(e){
     var b = e.target.closest("[data-skill]"); if (!b) return;
     battle.skillName = b.getAttribute("data-skill");
-    renderBattle();
+    renderBattleCalc();
   });
+  bindBattleTabs();
+  window.scrollTo(0, 0);
+}
+
+/* ============ 对战页签与 6v6 PVP 分析 ============ */
+/* 出招口径：每只精灵对每个目标，从其全部可学技能（learnset 三组去重）里按
+   calcDamage 同一公式逐招计算，取伤害最高的一招为「代表招」；变化类等无威力
+   技能不参与。胜负预测由击杀覆盖 / 速度控制 / 种族值总和 / 属性压制四项
+   加权合成（35% / 20% / 20% / 25%），全部数字来自真实计算，不做随机模拟。 */
+function battleTabsHTML(active){
+  return '<div class="btabs">' +
+    '<button data-btab="pvp"' + (active === "pvp" ? ' class="on"' : "") + '>🛡️ 6v6 分析</button>' +
+    '<button data-btab="calc"' + (active === "calc" ? ' class="on"' : "") + '>🎯 1v1 计算</button></div>';
+}
+function bindBattleTabs(){
+  document.querySelectorAll("[data-btab]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var m = b.getAttribute("data-btab");
+      if (battle.mode !== m) { battle.mode = m; renderBattle(); }
+    });
+  });
+}
+function renderBattle(){
+  if (battle.mode === "calc") renderBattleCalc();
+  else renderBattlePvp();
+}
+
+var pvpCache = {};
+function bestHit(atkPet, defPet){
+  /* 攻方对守方的代表招：全部可学技能里伤害最高的一招，无可用招返回 null */
+  var key = atkPet.id + ":" + defPet.id;
+  if (pvpCache[key] !== undefined) return pvpCache[key];
+  var best = null;
+  petSkills(atkPet).forEach(function(sk){
+    var r = calcDamage(atkPet, sk, defPet);
+    if (!r) return;
+    if (!best || r.dmg > best.r.dmg) best = { skill: sk, r: r };
+  });
+  pvpCache[key] = best;
+  return best;
+}
+function hitsLabel(pct){
+  if (pct >= 100) return "1 击";
+  if (pct >= 50) return "2 击";
+  return "3 击+";
+}
+function threatOf(pcts){
+  /* 一只精灵打对方全队的威胁汇总：pcts 为它对每只目标的最佳伤害% 数组 */
+  var t = { maxPct: 0, maxIdx: -1, ko12: 0, ko1: 0, sumCap: 0, sumRaw: 0 };
+  pcts.forEach(function(p, i){
+    t.sumCap += Math.min(p, 100);
+    t.sumRaw += p;
+    if (p > t.maxPct) { t.maxPct = p; t.maxIdx = i; }
+    if (p >= 50) t.ko12++;
+    if (p >= 100) t.ko1++;
+  });
+  return t;
+}
+function share2(a, b){ /* a、b 双方数值 -> 我方份额 0-100 */
+  return (a + b) > 0 ? Math.round(a / (a + b) * 100) : 50;
+}
+
+function analyzePvp(mine, foe){
+  var hitM = mine.map(function(a){ return foe.map(function(d){ return bestHit(a, d); }); });
+  var hitR = foe.map(function(a){ return mine.map(function(d){ return bestHit(a, d); }); });
+  var pctM = hitM.map(function(row){ return row.map(function(h){ return h ? h.r.pct : 0; }); });
+  var pctR = hitR.map(function(row){ return row.map(function(h){ return h ? h.r.pct : 0; }); });
+  var myThreat = pctM.map(threatOf);
+  var foeThreat = pctR.map(threatOf);
+
+  /* 击杀覆盖：对方有几只会被我方至少一人 2 击内带走（≥50%），反之亦然 */
+  var koCoverMine = 0, koCoverFoe = 0, oneHitMine = 0, oneHitFoe = 0;
+  foe.forEach(function(_, j){
+    var best = 0;
+    mine.forEach(function(_, i){ if (pctM[i][j] > best) best = pctM[i][j]; });
+    if (best >= 50) koCoverMine++;
+    if (best >= 100) oneHitMine++;
+  });
+  mine.forEach(function(_, i){
+    var best = 0;
+    foe.forEach(function(_, j){ if (pctR[j][i] > best) best = pctR[j][i]; });
+    if (best >= 50) koCoverFoe++;
+    if (best >= 100) oneHitFoe++;
+  });
+  var killShare = Math.round(50 + ((koCoverMine / foe.length) - (koCoverFoe / mine.length)) * 50);
+
+  /* 速度控制：均速份额 + 速度线逐位先手（双方速度从高到低对位比较） */
+  var avgSpeM = mine.reduce(function(s, p){ return s + p.stats.spe; }, 0) / mine.length;
+  var avgSpeF = foe.reduce(function(s, p){ return s + p.stats.spe; }, 0) / foe.length;
+  var speM = mine.map(function(p){ return p.stats.spe; }).sort(function(a, b){ return b - a; });
+  var speF = foe.map(function(p){ return p.stats.spe; }).sort(function(a, b){ return b - a; });
+  var speWin = 0, speLose = 0;
+  for (var k = 0; k < Math.min(speM.length, speF.length); k++) {
+    if (speM[k] > speF[k]) speWin++;
+    else if (speM[k] < speF[k]) speLose++;
+  }
+  var speedShare = share2(avgSpeM, avgSpeF);
+
+  /* 种族值：平均总和份额 */
+  var avgTotM = mine.reduce(function(s, p){ return s + p.stats.total; }, 0) / mine.length;
+  var avgTotF = foe.reduce(function(s, p){ return s + p.stats.total; }, 0) / foe.length;
+  var sumTotM = mine.reduce(function(s, p){ return s + p.stats.total; }, 0);
+  var sumTotF = foe.reduce(function(s, p){ return s + p.stats.total; }, 0);
+  var statsShare = share2(avgTotM, avgTotF);
+
+  /* 属性压制：与配队页「对敌压制」同一口径（全队技能属性对每只对手的最高倍率均值） */
+  var myTypes = teamAtkTypes(mine), foeTypes = teamAtkTypes(foe);
+  var myPress = foe.reduce(function(s, p){ return s + bestMult(myTypes, p.types); }, 0) / foe.length;
+  var foePress = mine.reduce(function(s, p){ return s + bestMult(foeTypes, p.types); }, 0) / mine.length;
+  var pressShare = share2(myPress, foePress);
+
+  var tendency = Math.round(killShare * 0.35 + speedShare * 0.20 + statsShare * 0.20 + pressShare * 0.25);
+  var verdict = tendency >= 58 ? "我方优势" : (tendency <= 42 ? "敌方优势" : "均势");
+
+  /* 王牌 / 最大威胁：先比能 1–2 击带走的只数，再比总威胁（各目标伤害%封顶 100 求和） */
+  function pickAce(threats){
+    var bi = 0;
+    threats.forEach(function(t, i){
+      var b = threats[bi];
+      if (t.ko12 > b.ko12 || (t.ko12 === b.ko12 && t.sumCap > b.sumCap) ||
+          (t.ko12 === b.ko12 && t.sumCap === b.sumCap && t.sumRaw > b.sumRaw)) bi = i;
+    });
+    return bi;
+  }
+  var aceIdx = pickAce(myThreat);
+  var threatIdx = pickAce(foeThreat);
+
+  /* 应对建议：对每只高威胁敌方（能 1–2 击带走我方至少 1 只，或最高一击 ≥80%），
+     选我方最佳应对者：优先能反手 2 击内带走它的，其次看互打的伤害差。 */
+  var counters = [];
+  foe.forEach(function(f, j){
+    var th = foeThreat[j];
+    if (!(th.ko12 >= 1 || th.maxPct >= 80)) return;
+    var bi = -1, bs = -1e9;
+    mine.forEach(function(_, i){
+      var score = (pctM[i][j] >= 50 ? 1000 : 0) + pctM[i][j] - pctR[j][i];
+      if (score > bs) { bs = score; bi = i; }
+    });
+    counters.push({ foeIdx: j, mineIdx: bi, myPct: pctM[bi][j], itsPct: pctR[j][bi],
+                    mySkill: hitM[bi][j] ? hitM[bi][j].skill.name : null,
+                    itsSkill: hitR[j][bi] ? hitR[j][bi].skill.name : null, th: th });
+  });
+
+  /* 首发建议：速度与覆盖综合（能 1–2 击威胁的只数 ×25 + 速度种族值） */
+  var leadIdx = 0, leadScore = -1;
+  mine.forEach(function(p, i){
+    var s = myThreat[i].ko12 * 25 + p.stats.spe;
+    if (s > leadScore) { leadScore = s; leadIdx = i; }
+  });
+
+  return { hitM: hitM, hitR: hitR, pctM: pctM, pctR: pctR, myThreat: myThreat, foeThreat: foeThreat,
+    koCoverMine: koCoverMine, koCoverFoe: koCoverFoe, oneHitMine: oneHitMine, oneHitFoe: oneHitFoe,
+    killShare: killShare, avgSpeM: avgSpeM, avgSpeF: avgSpeF, speWin: speWin, speLose: speLose, speedShare: speedShare,
+    avgTotM: avgTotM, avgTotF: avgTotF, sumTotM: sumTotM, sumTotF: sumTotF, statsShare: statsShare,
+    myPress: myPress, foePress: foePress, pressShare: pressShare,
+    tendency: tendency, verdict: verdict, aceIdx: aceIdx, threatIdx: threatIdx,
+    counters: counters, leadIdx: leadIdx };
+}
+
+function pvpCmpRow(label, mineTxt, foeTxt, share, why){
+  return '<div class="cmp"><div class="cmp-head"><b>' + label + '</b><span class="cmp-vs">我 ' +
+    esc(mineTxt) + " · 敌 " + esc(foeTxt) + '</span></div>' +
+    '<div class="cmp-bar"><div class="cmp-mine" style="width:' + share + '%"></div>' +
+    '<div class="cmp-foe" style="width:' + (100 - share) + '%"></div></div>' +
+    '<div class="why">' + esc(why) + "</div></div>";
+}
+
+function pvpAnalysisHTML(mine, foe){
+  var A = analyzePvp(mine, foe);
+  var vColor = A.verdict === "我方优势" ? "var(--good)" : (A.verdict === "敌方优势" ? "var(--bad)" : "var(--warn)");
+
+  var leadItems = [];
+  if (A.killShare >= 55) leadItems.push("击杀覆盖");
+  if (A.pressShare >= 55) leadItems.push("属性压制");
+  if (A.speedShare >= 55) leadItems.push("速度控制");
+  if (A.statsShare >= 55) leadItems.push("种族值");
+  var lagItems = [];
+  if (A.killShare <= 45) lagItems.push("击杀覆盖");
+  if (A.pressShare <= 45) lagItems.push("属性压制");
+  if (A.speedShare <= 45) lagItems.push("速度控制");
+  if (A.statsShare <= 45) lagItems.push("种族值");
+  var overall = "按四项加权，我方倾向 " + A.tendency + "%，" +
+    (A.verdict === "均势" ? "双方在伯仲之间，这场主要看临场换宠与先手处理" :
+     A.verdict === "我方优势" ? "整体是我方占优的对局" : "整体是敌方占优的对局") + "。" +
+    (leadItems.length ? "我方赢在：" + leadItems.join("、") + "。" : "") +
+    (lagItems.length ? "短板在：" + lagItems.join("、") + "，开局要避开正面消耗。" : "");
+
+  var html = '<section class="blk"><h3>胜负预测</h3>' +
+    '<div class="verdict"><div class="v-t" style="color:' + vColor + '">' + A.verdict + '</div>' +
+    '<div class="v-p">我方倾向 ' + A.tendency + "% · " + mine.length + " 只 vs " + foe.length + " 只 · 按下方四项加权估算</div></div>" +
+    pvpCmpRow("💥 击杀覆盖",
+      "能带走 " + A.koCoverMine + "/" + foe.length + " 只", "能带走 " + A.koCoverFoe + "/" + mine.length + " 只",
+      A.killShare,
+      "我方有 " + A.koCoverMine + " 只敌方精灵会被我方至少一人 2 击内带走（其中 " + A.oneHitMine + " 只会被 1 击秒杀）；" +
+      "反过来我方有 " + A.koCoverFoe + " 只处于敌方 2 击斩杀线内（其中 " + A.oneHitFoe + " 只会被 1 击秒杀）。斩杀线覆盖越广，换宠压力越大。") +
+    pvpCmpRow("💨 速度控制",
+      "均速 " + Math.round(A.avgSpeM) + " · 先手 " + A.speWin + " 位", "均速 " + Math.round(A.avgSpeF) + " · 先手 " + A.speLose + " 位",
+      A.speedShare,
+      "双方速度从高到低逐位对位，我方抢下 " + A.speWin + " 个先手位、丢掉 " + A.speLose + " 个。" +
+      (A.avgSpeM >= A.avgSpeF ? "全队均速占优，多数回合能先出手压血线。" : "全队均速吃亏，要防被先手压血线甚至先手带走。")) +
+    pvpCmpRow("💪 种族值总和",
+      "平均 " + Math.round(A.avgTotM) + " · 全队 " + A.sumTotM, "平均 " + Math.round(A.avgTotF) + " · 全队 " + A.sumTotF,
+      A.statsShare,
+      "这是纯面板对比：我方平均种族值总和 " + Math.round(A.avgTotM) + "，敌方 " + Math.round(A.avgTotF) + "。" +
+      (A.avgTotM >= A.avgTotF ? "面板不吃亏，硬碰硬有底气。" : "面板处于下风，更要靠克制和斩杀线打伤害，别拼消耗。")) +
+    pvpCmpRow("⚡ 属性压制",
+      "平均最高 ×" + A.myPress.toFixed(2), "平均最高 ×" + A.foePress.toFixed(2),
+      A.pressShare,
+      "口径与配队页「对敌压制」相同：我方全队技能属性打敌方每只的最高克制倍率平均 ×" + A.myPress.toFixed(2) +
+      "，敌方反打我方平均 ×" + A.foePress.toFixed(2) + "。" +
+      (A.myPress >= A.foePress ? "属性面对位占优，出招更容易打出克制伤害。" : "属性面对位吃亏，对方更容易克制我方，选位时先避开被克制的对位。")) +
+    "</section>";
+
+  /* 对位矩阵 */
+  var head = '<tr><th style="text-align:left">我方 ＼ 敌方</th>' + foe.map(function(f){
+    return '<th><span class="ava" style="display:block;width:34px;height:34px;margin:0 auto;border-radius:8px;background:#eceef4;overflow:hidden">' +
+      imgTag(f.avatar, f.name, true, true) + '</span><span class="mx-nm">' + esc(f.name) + "</span></th>";
+  }).join("") + "</tr>";
+  var rows = mine.map(function(m, i){
+    var cells = foe.map(function(_, j){
+      var h = A.hitM[i][j];
+      if (!h) return '<td class="mx-c mx-lo"><div class="mx-pct">—</div><div class="mx-hit">无攻击招</div></td>';
+      var pct = h.r.pct;
+      var cls = pct >= 100 ? "mx-hi" : (pct >= 50 ? "mx-mid" : "mx-lo");
+      return '<td class="mx-c ' + cls + '" title="' + esc(h.skill.name) + "（" + esc(h.skill.type) + "·" + esc(h.skill.category) + '）">' +
+        '<div class="mx-pct">' + pct.toFixed(0) + '%</div><div class="mx-hit">' + hitsLabel(pct) +
+        '</div><div class="mx-sk">' + esc(h.skill.name) + "</div></td>";
+    }).join("");
+    return '<tr><th><span class="mx-nm">' + esc(m.name) + '</span><span style="color:var(--sub);font-weight:400;font-size:11px">速 ' +
+      m.stats.spe + " · 总 " + m.stats.total + "</span></th>" + cells + "</tr>";
+  }).join("");
+  html += '<section class="blk"><h3>对位矩阵（我方最佳一击）</h3>' +
+    '<div class="mx-wrap"><table class="mx"><thead>' + head + "</thead><tbody>" + rows + "</tbody></table></div>" +
+    '<div class="mx-legend">每格 = 我方该只用代表招打敌方该只的伤害占其体力%：<b class="mx-hi">≥100% 一击带走</b> ' +
+    '<b class="mx-mid">50–99% 两击带走</b> <b class="mx-lo">&lt;50% 要磨三击以上</b>。表格可左右滑动。</div></section>';
+
+  /* 反向小结：敌方每只对我方的最大威胁 */
+  var order = foe.map(function(_, j){ return j; }).sort(function(a, b){
+    return (A.foeThreat[b].ko12 - A.foeThreat[a].ko12) || (A.foeThreat[b].maxPct - A.foeThreat[a].maxPct);
+  });
+  var threatLines = order.map(function(j){
+    var th = A.foeThreat[j];
+    var tgt = th.maxIdx >= 0 ? mine[th.maxIdx] : null;
+    var h = th.maxIdx >= 0 ? A.hitR[j][th.maxIdx] : null;
+    return '<div class="threat-line"><b>' + esc(foe[j].name) + "</b>：" +
+      (tgt ? "最高一击打我方 " + esc(tgt.name) + " <b>" + th.maxPct.toFixed(0) + "%</b>" +
+        (h ? "（代表招「" + esc(h.skill.name) + "」）" : "") + "；" : "没有可用的攻击招；") +
+      "能 1–2 击带走我方 <b>" + th.ko12 + "</b> 只" + (th.ko1 ? "（其中 1 击秒杀 " + th.ko1 + " 只）" : "") + "。</div>";
+  }).join("");
+  html += '<section class="blk"><h3>敌方威胁小结（按威胁从高到低）</h3>' + threatLines + "</section>";
+
+  /* 文字分析 */
+  var ace = mine[A.aceIdx], aceTh = A.myThreat[A.aceIdx];
+  var aceTargets = foe.filter(function(_, j){ return A.pctM[A.aceIdx][j] >= 50; })
+    .map(function(f){ return f.name; });
+  var aceText = "「" + ace.name + "」是我方火力核心：它对敌方全队的总威胁最高" +
+    (aceTargets.length ? "，能 1–2 击带走 " + aceTargets.join("、") + " 共 " + aceTargets.length + " 只" :
+      "，虽然没有稳吃的对位，但每只都能磨掉可观血量") +
+    "。围绕它打集火，先兑掉它能秒的目标，别让它先手被换掉。";
+
+  var thPet = foe[A.threatIdx], thTh = A.foeThreat[A.threatIdx];
+  var thTargets = mine.filter(function(_, i){ return A.pctR[A.threatIdx][i] >= 50; })
+    .map(function(p){ return p.name; });
+  var threatText = "敌方最危险的是「" + thPet.name + "」" +
+    (thTargets.length ? "：它能 1–2 击威胁我方 " + thTargets.join("、") + " 共 " + thTargets.length + " 只" :
+      "：它单发最高能打我方 " + (thTh.maxIdx >= 0 ? mine[thTh.maxIdx].name : "") + " " + thTh.maxPct.toFixed(0) + "%") +
+    "。它上场时优先用下面的应对者对位，别让它舒服地连续出手。";
+
+  var counterHtml = "";
+  if (A.counters.length) {
+    counterHtml = A.counters.map(function(c){
+      return "<p>· 对 <b>" + esc(foe[c.foeIdx].name) + "</b>（能 1–2 击带走我方 " + c.th.ko12 + " 只）：派 <b>" +
+        esc(mine[c.mineIdx].name) + "</b> 对位——它用「" + esc(c.mySkill || "代表招") + "」反手能打 " +
+        c.myPct.toFixed(0) + "%" + (c.myPct >= 100 ? "，直接 1 击带走" : c.myPct >= 50 ? "，2 击带走" : "，虽然打不穿但这是我方最划算的对位") +
+        "；同时它挨对方「" + esc(c.itsSkill || "代表招") + "」只掉 " + c.itsPct.toFixed(0) + "%，是我方里最扛得住的选择。</p>";
+    }).join("");
+  } else {
+    counterHtml = "<p>敌方没有能 1–2 击带走我方任何一只的高威胁精灵，正常轮换即可，不用专门留人盯防。</p>";
+  }
+
+  var lead = mine[A.leadIdx], leadTh = A.myThreat[A.leadIdx];
+  var leadRank = mine.slice().sort(function(a, b){ return b.stats.spe - a.stats.spe; }).indexOf(lead) + 1;
+  var leadText = "首发推荐「" + lead.name + "」：速度 " + lead.stats.spe + "（全队第 " + leadRank + "）" +
+    (leadTh.ko12 ? "，且开局就能 1–2 击威胁敌方 " + leadTh.ko12 + " 只" : "，且对敌方全队都有稳定输出") +
+    "。先手压一轮血线，能逼对方先交轮换，把节奏握在自己手里。";
+
+  html += '<section class="blk ana"><h3>📝 分析师点评</h3>' +
+    "<h4>总体判断</h4><p>" + esc(overall) + "</p>" +
+    "<h4>🌟 我方王牌</h4><p>" + esc(aceText) + "</p>" +
+    "<h4>⚠️ 最大威胁</h4><p>" + esc(threatText) + "</p>" +
+    "<h4>🎯 应对建议</h4>" + counterHtml +
+    "<h4>🚀 首发建议</h4><p>" + esc(leadText) + "</p></section>";
+  return html;
+}
+
+function renderBattlePvp(){
+  var app = document.getElementById("app");
+  var mine = team.mine.map(function(id){ return DB.petById[id]; }).filter(Boolean);
+  var foe = team.foe.map(function(id){ return DB.petById[id]; }).filter(Boolean);
+
+  var body = '<section class="blk"><h3>队伍选择（与配队页共用同一份队伍）</h3>' +
+    '<h4 style="margin-top:2px">我方队伍（' + team.mine.length + '/6）</h4>' +
+    '<div class="slots">' + slotsHTML(team.mine, "mine") + "</div>" +
+    '<div style="margin-top:10px">' + pickerHTML("pvMine", "搜索我方精灵加入：名字 / 拼音 / 编号…") + "</div>" +
+    "<h4>敌方队伍（" + team.foe.length + '/6）</h4>' +
+    '<div class="slots">' + slotsHTML(team.foe, "foe") + "</div>" +
+    '<div style="margin-top:10px">' + pickerHTML("pvFoe", "搜索敌方精灵加入：名字 / 拼音 / 编号…") + "</div>" +
+    ((team.mine.length < 6 || team.foe.length < 6)
+      ? '<div class="footnote">队伍不满 6 只也能分析（当前 ' + team.mine.length + " vs " + team.foe.length + "），按现有只数计算；补满后预测更准。</div>" : "") +
+    "</section>";
+
+  if (!DB.chart) {
+    body += '<section class="blk"><h3>6v6 分析</h3><div class="desc">克制表数据（typechart.json）加载失败，暂时无法分析。</div></section>';
+  } else if (!mine.length || !foe.length) {
+    body += '<section class="blk"><h3>6v6 分析</h3><div class="desc" style="color:var(--sub)">我方和敌方各选至少 1 只，这里会生成对位矩阵、胜负预测和文字分析。在配队页组好的队伍会自动带过来。</div></section>';
+  } else {
+    body += pvpAnalysisHTML(mine, foe);
+  }
+  body += '<div class="footnote">6v6 分析口径：每只精灵对每个目标的出招，取它全部可学技能（等级 / 技能石 / 血脉三组去重）中按 1v1 计算同一公式' +
+    '（伤害 = 威力 × 攻防种族值比 × 克制倍率 × 本系加成 1.2）算出的最高伤害一招为代表招；变化类等无威力技能不参与。' +
+    '胜负预测 = 击杀覆盖 35% + 速度控制 20% + 种族值总和 20% + 属性压制 25% 加权合成的倾向百分比，属性压制与配队页「对敌压制」同口径。' +
+    '全部为按种族值的规则估算，不含等级、个体值、特性与临场换宠，仅供赛前参考。队伍数据与配队页互通，保存在本机浏览器里。</div>';
+
+  app.innerHTML = navHTML("battle") +
+    '<header class="top"><h1>⚔️ 对战模拟</h1><p>6v6 整队 PVP 分析，或单挑伤害计算。</p></header>' +
+    battleTabsHTML("pvp") + body;
+
+  bindPicker("pvMine", function(pet){
+    if (team.mine.length >= 6 || team.mine.indexOf(pet.id) >= 0) return;
+    team.mine.push(pet.id); saveTeam(); renderBattlePvp();
+  }, function(pet){
+    if (team.mine.indexOf(pet.id) >= 0) return "已在队伍中";
+    if (team.mine.length >= 6) return "队伍已满";
+    return "";
+  });
+  bindPicker("pvFoe", function(pet){
+    if (team.foe.length >= 6 || team.foe.indexOf(pet.id) >= 0) return;
+    team.foe.push(pet.id); saveTeam(); renderBattlePvp();
+  }, function(pet){
+    if (team.foe.indexOf(pet.id) >= 0) return "已在敌方队伍";
+    if (team.foe.length >= 6) return "敌方已满";
+    return "";
+  });
+  app.querySelectorAll("[data-rm]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var parts = b.getAttribute("data-rm").split(":");
+      var arr = parts[0] === "mine" ? team.mine : team.foe;
+      var idx = arr.indexOf(parseInt(parts[1], 10));
+      if (idx >= 0) arr.splice(idx, 1);
+      saveTeam(); renderBattlePvp();
+    });
+  });
+  bindBattleTabs();
   window.scrollTo(0, 0);
 }
 
@@ -988,7 +1378,7 @@ function route(){
   if (m) { renderDetail(parseInt(m[1], 10)); return; }
   if (h.indexOf("#/battle") === 0) {
     var bm = h.match(/[?&]atk=(\d+)/);
-    if (bm && DB.petById[parseInt(bm[1], 10)]) { battle.atkId = parseInt(bm[1], 10); battle.skillName = null; }
+    if (bm && DB.petById[parseInt(bm[1], 10)]) { battle.atkId = parseInt(bm[1], 10); battle.skillName = null; battle.mode = "calc"; }
     renderBattle(); return;
   }
   if (h.indexOf("#/team") === 0) {
