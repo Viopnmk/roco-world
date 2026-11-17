@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>洛克王国：世界 · 精灵图鉴</title>
+<style>
+  :root{
+    --bg:#f4f5f9; --card:#ffffff; --ink:#23242b; --sub:#7a7d8c; --line:#e6e7ee;
+    --accent:#5b6cff; --accent-soft:#eef0ff; --radius:14px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:15px; line-height:1.5;}
+  .wrap{max-width:960px; margin:0 auto; padding:0 12px 40px;}
+  a{color:inherit; text-decoration:none;}
+
+  /* ---------- 列表页 ---------- */
+  header.top{padding:20px 2px 10px;}
+  header.top h1{font-size:22px; margin:0 0 2px;}
+  header.top p{margin:0; color:var(--sub); font-size:13px;}
+  .searchbar{position:sticky; top:0; z-index:20; background:var(--bg); padding:10px 0 6px;}
+  .searchbar input{width:100%; padding:11px 14px; font-size:16px; border:1px solid var(--line);
+    border-radius:12px; background:var(--card); outline:none; color:var(--ink);}
+  .searchbar input:focus{border-color:var(--accent);}
+  .chips{display:flex; gap:6px; overflow-x:auto; padding:6px 0 2px; scrollbar-width:none;}
+  .chips::-webkit-scrollbar{display:none;}
+  .chip{flex:0 0 auto; border:1px solid var(--line); background:var(--card); color:var(--ink);
+    border-radius:999px; padding:5px 12px; font-size:13px; cursor:pointer;}
+  .chip.on{border-color:transparent; font-weight:600;}
+  .filterrow{display:flex; gap:8px; align-items:center; padding:8px 0 2px; flex-wrap:wrap;}
+  .filterrow select{flex:1; min-width:120px; padding:8px 10px; font-size:14px; border:1px solid var(--line);
+    border-radius:10px; background:var(--card); color:var(--ink); outline:none;}
+  .count{color:var(--sub); font-size:13px; padding:8px 2px;}
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  @media (min-width:640px){ .grid{grid-template-columns:repeat(4,1fr);} }
+  @media (min-width:900px){ .grid{grid-template-columns:repeat(6,1fr);} }
+  .petcard{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:10px 8px 9px; text-align:center; display:block;}
+  .petcard:active{background:var(--accent-soft);}
+  .petcard .ava{width:72px; height:72px; margin:0 auto; border-radius:12px; background:#f0f1f6;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .petcard .ava img{width:100%; height:100%; object-fit:contain; display:block;}
+  .ava .ph{font-size:26px; font-weight:700; color:#b9bcce;}
+  .petcard .no{color:var(--sub); font-size:11px; margin-top:6px;}
+  .petcard .nm{font-weight:600; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .petcard .tot{color:var(--sub); font-size:12px; margin-top:2px;}
+  .badges{display:flex; gap:4px; justify-content:center; margin-top:5px; flex-wrap:wrap;}
+  .badge{font-size:11px; line-height:1; padding:4px 8px; border-radius:999px; font-weight:600;}
+  .empty{padding:48px 0; text-align:center; color:var(--sub);}
+
+  /* ---------- 详情页 ---------- */
+  .backbtn{display:inline-block; margin:14px 0 4px; padding:7px 14px; background:var(--card);
+    border:1px solid var(--line); border-radius:999px; font-size:14px;}
+  .hero{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px; margin-top:10px; text-align:center;}
+  .hero .portrait{max-width:320px; margin:0 auto;}
+  .hero .portrait img{width:100%; height:auto; display:block;}
+  .hero .portrait .ph{font-size:64px; font-weight:700; color:#c6c9da; padding:60px 0;}
+  .hero h2{margin:10px 0 2px; font-size:24px;}
+  .hero .meta{color:var(--sub); font-size:13px;}
+  .hero .badges{margin-top:8px;}
+  .hero .badge{font-size:12px; padding:5px 10px;}
+  section.blk{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px 16px; margin-top:12px;}
+  section.blk h3{margin:0 0 10px; font-size:16px;}
+  .stat-row{display:flex; align-items:center; gap:8px; margin:5px 0; font-size:13px;}
+  .stat-row .lb{flex:0 0 44px; color:var(--sub);}
+  .stat-row .bar{flex:1; height:10px; background:#eef0f5; border-radius:99px; overflow:hidden;}
+  .stat-row .fill{height:100%; border-radius:99px; background:var(--accent);}
+  .stat-row .vl{flex:0 0 34px; text-align:right; font-weight:600;}
+  .stat-row.total .lb,.stat-row.total .vl{color:var(--ink); font-weight:700;}
+  .stat-row.total .fill{background:#ff9f43;}
+  .kv{display:flex; flex-wrap:wrap; gap:6px 18px; font-size:14px;}
+  .kv div span{color:var(--sub); margin-right:6px;}
+  .desc{font-size:14px; color:#3c3e4a;}
+  .ability-name{font-weight:700; font-size:15px;}
+  .evo-row{display:flex; align-items:flex-start; gap:2px; overflow-x:auto; padding:4px 0; scrollbar-width:none;}
+  .evo-row::-webkit-scrollbar{display:none;}
+  .evo-item{flex:0 0 auto; width:84px; text-align:center; padding:8px 4px; border-radius:12px; display:block;}
+  .evo-item.cur{background:var(--accent-soft); outline:2px solid var(--accent);}
+  .evo-item .ava{width:60px; height:60px; margin:0 auto; border-radius:10px; background:#f0f1f6;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .evo-item .ava img{width:100%; height:100%; object-fit:contain; display:block;}
+  .evo-item .nm{font-size:12px; font-weight:600; margin-top:4px; line-height:1.3;}
+  .evo-item .cond{font-size:11px; color:var(--sub); line-height:1.35;}
+  .evo-arrow{flex:0 0 auto; align-self:center; color:#b9bcce; font-size:16px; padding:0 1px;}
+  .evo-label{font-size:13px; color:var(--sub); margin:8px 0 2px;}
+  table.sk{width:100%; border-collapse:collapse; font-size:13px;}
+  table.sk th{ text-align:left; color:var(--sub); font-weight:500; font-size:12px;
+    padding:4px 6px; border-bottom:1px solid var(--line);}
+  table.sk td{padding:7px 6px; border-bottom:1px solid #f0f1f6; vertical-align:top;}
+  table.sk tr.srow{cursor:pointer;}
+  table.sk tr.srow:active{background:var(--accent-soft);}
+  table.sk tr.drow td{background:#fafbff; color:#4a4d5e; font-size:12.5px; padding:2px 6px 10px;}
+  .sk-type{font-size:11px; padding:3px 7px; border-radius:999px; font-weight:600; white-space:nowrap;}
+  .pw{font-weight:600;}
+  .blood-group{margin-bottom:10px;}
+  .blood-group .gt{font-size:13px; font-weight:700; margin-bottom:4px;}
+  .errbox{margin:40px auto; max-width:420px; background:#fff; border:1px solid #f3c2c2; color:#a33;
+    border-radius:var(--radius); padding:20px; text-align:center;}
+  .loading{padding:60px 0; text-align:center; color:var(--sub);}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><div class="loading">正在加载图鉴数据…</div></div>
+
+<script>
+"use strict";
+/* ============ 基础工具 ============ */
+var TYPE_COLORS = {
+  "普通":"#A8A77A","火":"#EE8130","水":"#6390F0","草":"#7AC74C","电":"#F7D02C","冰":"#96D9D6",
+  "地":"#E2BF65","龙":"#7357FF","毒":"#A33EA1","虫":"#A6B91A","武":"#C22E28","翼":"#A98FF3",
+  "萌":"#D685AD","幽灵":"#735797","恶":"#705746","机械":"#B7B7CE","幻":"#F95587","光":"#F2C94C",
+  "无":"#C9C9C9"
+};
+var TYPE_DARK_TEXT = {"电":1,"冰":1,"地":1,"机械":1,"光":1,"无":1};
+var TYPES18 = ["普通","火","水","草","电","冰","地","龙","毒","虫","武","翼","萌","幽灵","恶","机械","幻","光"];
+var STAT_LABELS = [["hp","体力"],["atk","物攻"],["def","物防"],["spa","魔攻"],["spd","魔防"],["spe","速度"]];
+var FILEPATH = "https://wiki.biligame.com/nrc/Special:FilePath/";
+
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function badge(type){
+  var bg = TYPE_COLORS[type] || "#C9C9C9";
+  var fg = TYPE_DARK_TEXT[type] ? "#333" : "#fff";
+  return '<span class="badge" style="background:' + bg + ";color:" + fg + '">' + esc(type) + "</span>";
+}
+function imgUrl(fn, thumb){
+  var rec = DB.images[fn];
+  if (rec) return thumb && rec.thumb ? rec.thumb : rec.url;
+  return FILEPATH + encodeURIComponent(fn);
+}
+/* 图片失败回退：直链 -> FilePath -> 首字占位 */
+function imgErr(el){
+  var step = el.getAttribute("data-step") || "0";
+  if (step === "0") {
+    el.setAttribute("data-step", "1");
+    el.src = FILEPATH + encodeURIComponent(el.getAttribute("data-fn") || "");
+  } else {
+    var box = el.parentNode;
+    if (box) box.innerHTML = '<div class="ph">' + esc(el.getAttribute("data-init") || "?") + "</div>";
+  }
+}
+function imgTag(fn, name, thumb, lazy){
+  var init = (name || "?").charAt(0);
+  return '<img src="' + esc(imgUrl(fn, thumb)) + '" alt="' + esc(name) + '"' +
+    (lazy ? ' loading="lazy"' : "") +
+    ' data-fn="' + esc(fn) + '" data-init="' + esc(init) + '" onerror="imgErr(this)">';
+}
+
+/* ============ 数据 ============ */
+var DB = { pets: [], skills: [], chains: [], images: {},
+           petById: {}, skillByName: {}, abilityByName: {}, familyByKey: {}, familyByPet: {} };
+
+function buildIndex(){
+  DB.pets.forEach(function(p){ DB.petById[p.id] = p; });
+  DB.skills.forEach(function(s){
+    if (s.category === "特性") {
+      if (!DB.abilityByName[s.name]) DB.abilityByName[s.name] = s;
+    } else if (!DB.skillByName[s.name]) {
+      DB.skillByName[s.name] = s;
+    }
+  });
+  /* 特性同名兜底：个别技能名只在特性表里出现时也允许查到 */
+  DB.skills.forEach(function(s){ if (!DB.skillByName[s.name]) DB.skillByName[s.name] = s; });
+
+  /* 进化链：同一 evolution key 可能有多条记录（每个首领化分支一条），按 key 合并：
+     stages 按 pet_id 去重（优先保留带等级/条件的），lords 按 pet_id 去重合并。 */
+  var fam = {};
+  DB.chains.forEach(function(ch){
+    var f = fam[ch.key];
+    if (!f) { f = fam[ch.key] = { key: ch.key, name: ch.name, stages: {}, lords: {} }; }
+    (ch.stages || []).forEach(function(s){
+      var old = f.stages[s.pet_id];
+      if (!old || ((s.level != null || s.condition) && old.level == null && !old.condition)) f.stages[s.pet_id] = s;
+    });
+    (ch.lords || []).forEach(function(s){ if (!f.lords[s.pet_id]) f.lords[s.pet_id] = s; });
+  });
+  Object.keys(fam).forEach(function(k){
+    var f = fam[k];
+    f.stageList = Object.keys(f.stages).map(function(id){ return f.stages[id]; })
+      .sort(function(a, b){ return (a.stage - b.stage) || (a.pet_id - b.pet_id); });
+    f.lordList = Object.keys(f.lords).map(function(id){ return f.lords[id]; });
+    DB.familyByKey[k] = f;
+    f.stageList.concat(f.lordList).forEach(function(s){
+      if (!DB.familyByPet[s.pet_id]) DB.familyByPet[s.pet_id] = f;
+    });
+  });
+}
+function familyOf(pet){
+  if (pet.evolution_id && DB.familyByKey[pet.evolution_id]) return DB.familyByKey[pet.evolution_id];
+  return DB.familyByPet[pet.id] || null;
+}
+function skillOf(name){ return DB.skillByName[name] || null; }
+
+/* ============ 列表页 ============ */
+var ui = { q: "", type: "", season: "all", sort: "no" };
+
+function filteredPets(){
+  var q = ui.q.trim().toLowerCase();
+  var list = DB.pets.filter(function(p){
+    if (ui.type && p.types.indexOf(ui.type) < 0) return false;
+    if (ui.season === "none" && p.season) return false;
+    if (ui.season !== "all" && ui.season !== "none" && p.season !== ui.season) return false;
+    if (q) {
+      var hit = (p.name && p.name.toLowerCase().indexOf(q) >= 0) ||
+                (p.species && p.species.toLowerCase().indexOf(q) >= 0) ||
+                (p.pinyin && p.pinyin.toLowerCase().indexOf(q) >= 0) ||
+                (p.no && p.no.indexOf(q) >= 0) ||
+                String(p.id) === q;
+      if (!hit) return false;
+    }
+    return true;
+  });
+  var s = ui.sort;
+  if (s === "no") list.sort(function(a, b){ return a.id - b.id; });
+  else if (s === "total-desc") list.sort(function(a, b){ return b.stats.total - a.stats.total; });
+  else if (s === "total-asc") list.sort(function(a, b){ return a.stats.total - b.stats.total; });
+  else list.sort(function(a, b){ return (b.stats[s] || 0) - (a.stats[s] || 0); });
+  return list;
+}
+
+function renderList(){
+  var app = document.getElementById("app");
+  var chips = TYPES18.map(function(t){
+    var on = ui.type === t;
+    var style = on ? ' style="background:' + TYPE_COLORS[t] + ";color:" + (TYPE_DARK_TEXT[t] ? "#333" : "#fff") + '"' : "";
+    return '<button class="chip' + (on ? " on" : "") + '"' + style + ' data-type="' + esc(t) + '">' + esc(t) + "</button>";
+  }).join("");
+  var seasonOpts = [["all","全部赛季"],["none","无赛季"],["S1","S1"],["S2","S2"],["S3","S3"],["S4","S4"],["S5","S5"]]
+    .map(function(o){ return '<option value="' + o[0] + '"' + (ui.season === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
+  var sortOpts = [["no","图鉴编号"],["total-desc","总和 ↓"],["total-asc","总和 ↑"],
+                  ["hp","体力 ↓"],["atk","物攻 ↓"],["def","物防 ↓"],["spa","魔攻 ↓"],["spd","魔防 ↓"],["spe","速度 ↓"]]
+    .map(function(o){ return '<option value="' + o[0] + '"' + (ui.sort === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
+
+  app.innerHTML =
+    '<header class="top"><h1>🐾 精灵图鉴</h1><p>《洛克王国：世界》 · 共 ' + DB.pets.length + ' 只精灵</p></header>' +
+    '<div class="searchbar"><input id="q" type="search" placeholder="搜索名字 / 物种 / 拼音 / 编号…" value="' + esc(ui.q) + '"></div>' +
+    '<div class="chips" id="chips">' + chips + "</div>" +
+    '<div class="filterrow"><select id="seasonSel">' + seasonOpts + '</select><select id="sortSel">' + sortOpts + "</select></div>" +
+    '<div class="count" id="count"></div><div class="grid" id="grid"></div><div id="noresult"></div>';
+
+  document.getElementById("q").addEventListener("input", function(e){ ui.q = e.target.value; renderGrid(); });
+  document.getElementById("chips").addEventListener("click", function(e){
+    var b = e.target.closest("[data-type]"); if (!b) return;
+    var t = b.getAttribute("data-type");
+    ui.type = (ui.type === t) ? "" : t;
+    renderList(); restoreScroll();
+  });
+  document.getElementById("seasonSel").addEventListener("change", function(e){ ui.season = e.target.value; renderGrid(); });
+  document.getElementById("sortSel").addEventListener("change", function(e){ ui.sort = e.target.value; renderGrid(); });
+  renderGrid();
+}
+var listScrollY = 0;
+function restoreScroll(){ window.scrollTo(0, listScrollY); }
+
+function renderGrid(){
+  var list = filteredPets();
+  document.getElementById("count").textContent = "共 " + list.length + " 只";
+  var grid = document.getElementById("grid");
+  var frag = document.createDocumentFragment();
+  var tmp = document.createElement("div");
+  list.forEach(function(p){
+    tmp.innerHTML = '<a class="petcard" href="#/pet/' + p.id + '">' +
+      '<div class="ava">' + imgTag(p.avatar, p.name, true, true) + "</div>" +
+      '<div class="no">No.' + esc(p.no) + "</div>" +
+      '<div class="nm">' + esc(p.name) + "</div>" +
+      '<div class="badges">' + p.types.map(badge).join("") + "</div>" +
+      '<div class="tot">总和 ' + p.stats.total + "</div></a>";
+    frag.appendChild(tmp.firstChild);
+  });
+  grid.innerHTML = "";
+  grid.appendChild(frag);
+  document.getElementById("noresult").innerHTML =
+    list.length ? "" : '<div class="empty">没有符合条件的精灵，换个筛选试试。</div>';
+}
+
+/* ============ 详情页 ============ */
+function evoItem(s, curId){
+  var pet = DB.petById[s.pet_id];
+  var name = pet ? pet.name : s.name;
+  var ava = pet ? pet.avatar : "";
+  var cond = "";
+  if (s.level != null) cond = "Lv." + s.level + " 进化";
+  if (s.condition) cond = (cond ? cond + " · " : "") + s.condition;
+  if (s.item) cond = (cond ? cond + " · " : "") + "信物：" + s.item;
+  return '<a class="evo-item' + (s.pet_id === curId ? " cur" : "") + '" href="#/pet/' + s.pet_id + '">' +
+    '<div class="ava">' + (ava ? imgTag(ava, name, true, true) : '<div class="ph">' + esc(name.charAt(0)) + "</div>") + "</div>" +
+    '<div class="nm">' + esc(name) + "</div>" +
+    (cond ? '<div class="cond">' + esc(cond) + "</div>" : "") + "</a>";
+}
+function skillRows(items){
+  /* items: [{lv?, name}] -> 可展开行（点一行展开/收起描述） */
+  var html = "";
+  items.forEach(function(it, i){
+    var sk = skillOf(it.name);
+    var type = sk ? sk.type : "—";
+    var cat = sk ? sk.category : "—";
+    var pw = sk && sk.power != null ? sk.power : "—";
+    var en = sk && sk.energy != null ? sk.energy : "—";
+    html += '<tr class="srow" data-i="' + i + '">' +
+      (it.lv != null ? "<td>" + it.lv + "</td>" : "") +
+      "<td><b>" + esc(it.name) + "</b></td>" +
+      "<td>" + (TYPE_COLORS[type] ? badge(type) : esc(type)) + "</td>" +
+      "<td>" + esc(cat) + "</td>" +
+      '<td class="pw">' + pw + "</td><td>" + en + "</td></tr>" +
+      '<tr class="drow" data-d="' + i + '" style="display:none"><td colspan="' + (it.lv != null ? 6 : 5) + '">' +
+      esc(sk ? (sk.desc || "（暂无描述）") : "（技能数据缺失）") + "</td></tr>";
+  });
+  return html;
+}
+function bindSkillTable(tbl){
+  if (!tbl) return;
+  tbl.addEventListener("click", function(e){
+    var tr = e.target.closest("tr.srow"); if (!tr) return;
+    var d = tbl.querySelector('tr[data-d="' + tr.getAttribute("data-i") + '"]');
+    if (d) d.style.display = d.style.display === "none" ? "" : "none";
+  });
+}
+
+function renderDetail(id){
+  var pet = DB.petById[id];
+  var app = document.getElementById("app");
+  if (!pet) {
+    app.innerHTML = '<a class="backbtn" href="#/">← 返回图鉴</a><div class="errbox">没有找到这只精灵。</div>';
+    return;
+  }
+  var ab = DB.abilityByName[pet.ability];
+  var fam = familyOf(pet);
+  var statHtml = STAT_LABELS.map(function(sl){
+    var v = pet.stats[sl[0]] || 0;
+    var w = Math.min(v / 200 * 100, 100);
+    return '<div class="stat-row"><span class="lb">' + sl[1] + '</span><div class="bar"><div class="fill" style="width:' + w + '%"></div></div><span class="vl">' + v + "</span></div>";
+  }).join("") +
+    '<div class="stat-row total"><span class="lb">总和</span><div class="bar"><div class="fill" style="width:' +
+    Math.min(pet.stats.total / 800 * 100, 100) + '%"></div></div><span class="vl">' + pet.stats.total + "</span></div>";
+
+  var evoHtml = "";
+  if (fam) {
+    var row = fam.stageList.map(function(s){ return evoItem(s, pet.id); }).join('<div class="evo-arrow">→</div>');
+    evoHtml = '<div class="evo-row">' + row + "</div>";
+    if (fam.lordList.length) {
+      evoHtml += '<div class="evo-label">首领化分支</div><div class="evo-row">' +
+        fam.lordList.map(function(s){ return evoItem(s, pet.id); }).join("") + "</div>";
+    }
+  } else {
+    evoHtml = '<div class="desc">暂无进化链数据。</div>';
+  }
+
+  var ls = pet.learnset || { level: [], stone: [], bloodline: [] };
+  var levelItems = (ls.level || []).map(function(x){ return { lv: x.lv, name: x.skill }; });
+  var stoneItems = (ls.stone || []).map(function(n){ return { name: n }; });
+  var bloodGroups = {};
+  (ls.bloodline || []).forEach(function(b){
+    (bloodGroups[b.type] = bloodGroups[b.type] || []).push({ name: b.skill });
+  });
+  var bloodHtml = Object.keys(bloodGroups).map(function(t){
+    return '<div class="blood-group"><div class="gt">' + badge(t) + ' 血脉</div>' +
+      '<table class="sk"><tbody>' +
+      bloodGroups[t].map(function(it){
+        var sk = skillOf(it.name);
+        return "<tr><td><b>" + esc(it.name) + "</b></td><td>" + esc(sk ? sk.category : "—") +
+          '</td><td class="pw">' + (sk && sk.power != null ? sk.power : "—") + "</td><td>" +
+          (sk && sk.energy != null ? sk.energy : "—") + "</td></tr>" +
+          '<tr class="drow"><td colspan="4">' + esc(sk ? (sk.desc || "") : "") + "</td></tr>";
+      }).join("") + "</tbody></table></div>";
+  }).join("");
+
+  app.innerHTML =
+    '<a class="backbtn" href="#/">← 返回图鉴</a>' +
+    '<div class="hero"><div class="portrait">' + imgTag(pet.portrait, pet.name, true, false) + "</div>" +
+    "<h2>" + esc(pet.name) + "</h2>" +
+    '<div class="meta">No.' + esc(pet.no) + " · " + esc(pet.species) + " · 阶段 " + pet.stage +
+      (pet.season ? " · " + esc(pet.season) + " 赛季" : "") + "</div>" +
+    '<div class="badges">' + pet.types.map(badge).join("") + "</div></div>" +
+
+    '<section class="blk"><h3>种族值</h3>' + statHtml + "</section>" +
+
+    '<section class="blk"><h3>特性</h3><div class="ability-name">' + esc(pet.ability) + "</div>" +
+    '<div class="desc">' + esc(ab ? (ab.desc || "") : "（暂无特性描述）") + "</div></section>" +
+
+    '<section class="blk"><h3>图鉴</h3><div class="kv">' +
+    "<div><span>身高</span>" + esc(pet.height || "—") + " m</div>" +
+    "<div><span>体重</span>" + esc(pet.weight || "—") + " kg</div>" +
+    "<div><span>栖息地</span>" + esc(pet.habitat || "—") + "</div></div>" +
+    (pet.desc ? '<div class="desc" style="margin-top:8px">' + esc(pet.desc) + "</div>" : "") + "</section>" +
+
+    '<section class="blk"><h3>进化链</h3>' + evoHtml + "</section>" +
+
+    '<section class="blk"><h3>等级技能（' + levelItems.length + '）</h3>' +
+    '<table class="sk" id="tblLevel"><thead><tr><th>等级</th><th>技能</th><th>属性</th><th>分类</th><th>威力</th><th>能耗</th></tr></thead><tbody>' +
+    skillRows(levelItems) + "</tbody></table>" +
+    '<div class="desc" style="margin-top:6px;font-size:12px;color:var(--sub)">点任意一行展开技能描述。</div></section>' +
+
+    '<section class="blk"><h3>技能石（' + stoneItems.length + '）</h3>' +
+    '<table class="sk" id="tblStone"><thead><tr><th>技能</th><th>属性</th><th>分类</th><th>威力</th><th>能耗</th></tr></thead><tbody>' +
+    skillRows(stoneItems) + "</tbody></table></section>" +
+
+    '<section class="blk"><h3>血脉技能（' + (ls.bloodline || []).length + '）</h3>' + (bloodHtml || '<div class="desc">无</div>') + "</section>";
+
+  bindSkillTable(document.getElementById("tblLevel"));
+  bindSkillTable(document.getElementById("tblStone"));
+  window.scrollTo(0, 0);
+}
+
+/* ============ 路由与启动 ============ */
+function route(){
+  var h = location.hash || "#/";
+  var m = h.match(/^#\/pet\/(\d+)/);
+  if (m) { renderDetail(parseInt(m[1], 10)); }
+  else {
+    renderList();
+    if (listScrollY) restoreScroll();
+  }
+}
+window.addEventListener("hashchange", function(){
+  if ((location.hash || "#/") === "#/" || location.hash === "" ) { /* 回列表保留滚动 */ }
+  route();
+});
+window.addEventListener("scroll", function(){
+  if (!/^#\/pet\//.test(location.hash || "")) listScrollY = window.scrollY;
+}, { passive: true });
+
+function loadJson(url, optional){
+  return fetch(url).then(function(r){
+    if (!r.ok) throw new Error(url + " HTTP " + r.status);
+    return r.json();
+  }).catch(function(e){
+    if (optional) return {};
+    throw e;
+  });
+}
+Promise.all([
+  loadJson("data/pets.json"),
+  loadJson("data/skills.json"),
+  loadJson("data/evolutions.json"),
+  loadJson("data/images.json", true)
+]).then(function(res){
+  DB.pets = res[0];
+  DB.skills = res[1];
+  DB.chains = (res[2] && res[2].chains) ? res[2].chains : res[2];
+  DB.images = res[3] || {};
+  buildIndex();
+  route();
+}).catch(function(e){
+  document.getElementById("app").innerHTML =
+    '<div class="errbox">图鉴数据加载失败，请检查网络后刷新重试。<br><small>' + esc(e.message || e) + "</small></div>";
+});
+</script>
+</body>
+</html>
