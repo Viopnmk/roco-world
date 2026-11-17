@@ -235,6 +235,23 @@
   .ana h4:first-child{margin-top:0;}
   .threat-line{font-size:13.5px; line-height:1.6; padding:7px 0; border-bottom:1px solid #f0f1f6;}
   .threat-line:last-child{border-bottom:0;}
+
+  /* ---------- 培养页 ---------- */
+  .train-skills{display:grid; grid-template-columns:1fr; gap:10px;}
+  @media (min-width:640px){ .train-skills{grid-template-columns:1fr 1fr;} }
+  .tskill{background:#fafbfe; border:1px solid var(--line); border-radius:12px; padding:10px 12px;}
+  .tskill .ts-head{display:flex; align-items:center; gap:7px; flex-wrap:wrap;}
+  .tskill .ts-nm{font-weight:700; font-size:15.5px;}
+  .tskill .ts-meta{color:var(--sub); font-size:12.5px; margin-top:3px;}
+  .tskill .ts-why{font-size:12.5px; color:#4a4d5e; line-height:1.55; margin-top:5px;}
+  .src-tag{font-size:11px; padding:3px 8px; border-radius:999px; font-weight:600; background:#eef0ff; color:#4353c9; white-space:nowrap;}
+  .src-tag.stone{background:#fdf0d2; color:#8a5a00;}
+  .src-tag.blood{background:#fde8e4; color:#a03d2a;}
+  .nat-main{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .nat-nm{font-size:19px; font-weight:800;}
+  .nat-plus{color:var(--good); font-weight:700;}
+  .nat-minus{color:var(--bad); font-weight:700;}
+  .train-note{font-size:13px; color:#4a4d5e; line-height:1.6; margin-top:4px;}
 </style>
 </head>
 <body>
@@ -291,11 +308,12 @@ function navHTML(active){
     return '<a href="' + href + '"' + (active === key ? ' class="on"' : "") + ">" + label + "</a>";
   }
   return '<nav class="topnav">' + item("list", "#/", "📖 图鉴") +
-    item("battle", "#/battle", "⚔️ 对战") + item("team", "#/team", "🧩 配队") + "</nav>";
+    item("battle", "#/battle", "⚔️ 对战") + item("team", "#/team", "🧩 配队") +
+    item("train", "#/train", "🧬 培养") + "</nav>";
 }
 
 /* ============ 数据 ============ */
-var DB = { pets: [], skills: [], chains: [], images: {}, chart: null,
+var DB = { pets: [], skills: [], chains: [], images: {}, chart: null, natures: [],
            petById: {}, skillByName: {}, abilityByName: {}, familyByKey: {}, familyByPet: {},
            maxTotal: 1, minTotal: 0, maxSpe: 1 };
 
@@ -653,9 +671,10 @@ function renderDetail(id){
 
     '<section class="blk"><h3>血脉技能（' + (ls.bloodline || []).length + '）</h3>' + (bloodHtml || '<div class="desc">无</div>') + "</section>" +
 
-    '<div style="margin-top:12px;display:flex;gap:8px">' +
-    '<a class="backbtn" style="margin:0;flex:1;text-align:center" href="#/battle?atk=' + pet.id + '">⚔️ 拿它去对战模拟</a>' +
-    '<a class="backbtn" style="margin:0;flex:1;text-align:center" href="#/team?add=' + pet.id + '">🧩 加入我的配队</a></div>';
+    '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">' +
+    '<a class="backbtn" style="margin:0;flex:1 1 100px;text-align:center" href="#/battle?atk=' + pet.id + '">⚔️ 拿它去对战模拟</a>' +
+    '<a class="backbtn" style="margin:0;flex:1 1 100px;text-align:center" href="#/team?add=' + pet.id + '">🧩 加入我的配队</a>' +
+    '<a class="backbtn" style="margin:0;flex:1 1 100px;text-align:center" href="#/train?pet=' + pet.id + '">🧬 看培养方案</a></div>';
 
   bindSkillTable(document.getElementById("tblLevel"));
   bindSkillTable(document.getElementById("tblStone"));
@@ -1371,6 +1390,274 @@ function renderTeam(){
   window.scrollTo(0, 0);
 }
 
+/* ============ 培养方案（#/train） ============ */
+/* 推荐模型（本站规则生成、非官方攻略，全部引用真实数据）：
+   - 携带技能：候选 = learnset 三组（等级/技能石/血脉）去重并集。攻击招按
+     「有效威力 = 威力 × 本系加成 1.2 × 攻项匹配度（该招对应攻项 ÷ 双攻较高项）」
+     排序，先保 1–2 招本系主攻；第 3 招补打击面（能 ×2 打中「克制本精灵的属性」
+     记 3 分/个、新覆盖属性记 1 分/个）；第 4 招优先 desc 带回复/护盾/强化等
+     关键词的变化类辅助招，没有合适的用次优攻击招补齐。
+   - 性格：按种族值画像先定 +/− 组合，再去 natures.json 查名（数据来自 BWIKI
+     模块:Natures/data，共 30 种，每种一项 +10%、一项 −10%，含生命项）。
+     高速输出（速度 ≥95 且主攻 ≥90）→ +速度 −废攻；慢速输出（速度 <70）→
+     +主攻 −速度；中速输出 → +主攻 −废攻；坦克（双攻都 <95 且双防/体力突出）
+     → +较高防 −较低攻。主推与备选各一。
+   - 血脉：候选 = learnset.bloodline 每条（条目自带血脉系别），按其技能属性的
+     反打价值（×2 克制几个威胁属性）×3 + 新增打击面数 + 威力/100 打分。
+     改血脉只多学一个该系技能（15 级解锁），不改变自身属性与被克制关系。
+   - 个体值：按画像给主攻/速度/生存打分取前三项。 */
+var train = { petId: null };
+var STATUS_WORDS = ["回复", "恢复", "治疗", "回血", "护盾", "减伤", "强化", "提升", "增益", "聚能", "吸血", "免疫", "净化", "降低"];
+var STAT_NAME = { hp: "生命", atk: "物攻", def: "物防", spa: "魔攻", spd: "魔防", spe: "速度" };
+
+function petPool(pet){
+  /* learnset 三组去重并集，保留来源（等级 > 技能石 > 血脉的顺序标注） */
+  var seen = {}, out = [];
+  var ls = pet.learnset || { level: [], stone: [], bloodline: [] };
+  function add(name, src, bloodType){
+    if (!name || seen[name]) return;
+    seen[name] = 1;
+    var sk = skillOf(name);
+    if (!sk || sk.category === "特性") return;
+    out.push({ skill: sk, src: src, bloodType: bloodType || null });
+  }
+  (ls.level || []).forEach(function(x){ add(x.skill, "level"); });
+  (ls.stone || []).forEach(function(n){ add(n, "stone"); });
+  (ls.bloodline || []).forEach(function(b){ add(b.skill, "blood", b.type); });
+  return out;
+}
+function effPower(pet, sk){
+  if (sk.power == null || (sk.category !== "物理" && sk.category !== "魔法")) return 0;
+  var main = Math.max(pet.stats.atk, pet.stats.spa);
+  var mine = sk.category === "物理" ? pet.stats.atk : pet.stats.spa;
+  var match = main > 0 ? mine / main : 1;
+  var stab = pet.types.indexOf(sk.type) >= 0 ? 1.2 : 1;
+  return sk.power * stab * match;
+}
+function natureOf(plus, minus){
+  for (var i = 0; i < DB.natures.length; i++) {
+    var n = DB.natures[i];
+    if (n.plus === plus && n.minus === minus) return n;
+  }
+  return null;
+}
+
+function buildCard(pet){
+  var st = pet.stats;
+  var pool = petPool(pet);
+  var mainSide = st.atk >= st.spa ? "物理" : "魔法";
+  var mainKey = st.atk >= st.spa ? "atk" : "spa";
+  var offKey = mainKey === "atk" ? "spa" : "atk";
+  var threats = TYPES18.filter(function(a){ return typeMult(a, pet.types) > 1; });
+
+  /* ---- 携带技能 ×4 ---- */
+  var atkPool = pool.filter(function(e){
+    return e.skill.power != null && (e.skill.category === "物理" || e.skill.category === "魔法");
+  }).map(function(e){ return { e: e, eff: effPower(pet, e.skill) }; })
+    .sort(function(a, b){ return b.eff - a.eff; });
+  var moves = [], usedName = {};
+  function take(entry, why){
+    moves.push({ skill: entry.e.skill, src: entry.e.src, bloodType: entry.e.bloodType, why: why });
+    usedName[entry.e.skill.name] = 1;
+  }
+  function free(list){ return list.filter(function(x){ return !usedName[x.e.skill.name]; }); }
+
+  free(atkPool).filter(function(x){
+    return pet.types.indexOf(x.e.skill.type) >= 0 && x.e.skill.category === mainSide;
+  }).slice(0, 2).forEach(function(x, i){
+    take(x, i === 0
+      ? "本系" + mainSide + "主攻：威力 " + x.e.skill.power + "，吃本系加成 ×1.2，有效威力 " + Math.round(x.eff) + "，是它输出的核心"
+      : "第二招本系输出：威力 " + x.e.skill.power + "、能耗 ★" + (x.e.skill.energy != null ? x.e.skill.energy : "—") + "，与主攻招错开能耗，保证本系火力不断档");
+  });
+  if (moves.length < 2) {
+    free(atkPool).slice(0, 2 - moves.length).forEach(function(x){
+      take(x, "本系" + mainSide + "招不够，先用有效威力最高的攻击招顶上：威力 " + x.e.skill.power + "、有效威力 " + Math.round(x.eff));
+    });
+  }
+  if (moves.length < 4) { /* 第 3 招：补打击面 / 反打弱点 */
+    var covered = {};
+    moves.forEach(function(m){
+      TYPES18.forEach(function(d){ if (typeMult(m.skill.type, [d]) >= 2) covered[d] = 1; });
+    });
+    var bestCov = null;
+    free(atkPool).forEach(function(x){
+      var t = x.e.skill.type;
+      var counter = threats.filter(function(a){ return typeMult(t, [a]) >= 2; });
+      var fresh = TYPES18.filter(function(d){ return typeMult(t, [d]) >= 2 && !covered[d]; });
+      var score = counter.length * 3 + fresh.length + x.eff / 100;
+      if (!bestCov || score > bestCov.score) bestCov = { x: x, score: score, counter: counter, fresh: fresh };
+    });
+    if (bestCov && (bestCov.counter.length || bestCov.fresh.length)) {
+      var bits = [];
+      if (bestCov.counter.length) bits.push("反打弱点：" + bestCov.x.e.skill.type + "系 ×2 克制 " + bestCov.counter.join("、") + "，正是克制" + pet.types.join("/") + "系的属性");
+      if (bestCov.fresh.length) bits.push("补打击面：新覆盖 " + bestCov.fresh.join("、"));
+      take(bestCov.x, bits.join("；"));
+    }
+  }
+  if (moves.length < 4) { /* 第 4 招：状态/辅助 */
+    var bestStatus = null;
+    pool.forEach(function(e){
+      if (usedName[e.skill.name] || e.skill.category !== "变化") return;
+      var hits = STATUS_WORDS.filter(function(w){ return (e.skill.desc || "").indexOf(w) >= 0; });
+      if (hits.length && (!bestStatus || hits.length > bestStatus.hits.length)) bestStatus = { e: e, hits: hits };
+    });
+    if (bestStatus) {
+      var d0 = (bestStatus.e.skill.desc || "").split(/[。；]/)[0];
+      take({ e: bestStatus.e }, "辅助位：带「" + bestStatus.hits.join("、") + "」效果——" + d0);
+    }
+  }
+  while (moves.length < 4) {
+    var rest = free(atkPool);
+    if (!rest.length) break;
+    take(rest[0], "输出补位：威力 " + rest[0].e.skill.power + "，有效威力 " + Math.round(rest[0].eff) + "，是剩余攻击招里最能打的一招");
+  }
+
+  /* ---- 性格推荐 ---- */
+  var isTank = st.atk < 95 && st.spa < 95 && (st.def >= 100 || st.spd >= 100 || st.hp >= 120);
+  function natPick(plus, minus, why){
+    var n = natureOf(plus, minus);
+    return n ? { name: n.name, plus: plus, minus: minus, why: why } : null;
+  }
+  var natMain = null, natAlt = null;
+  if (isTank) {
+    var hiDef = st.def >= st.spd ? "def" : "spd";
+    var loAtk = st.atk <= st.spa ? "atk" : "spa";
+    natMain = natPick(hiDef, loAtk, "它双攻都不高（物攻 " + st.atk + " / 魔攻 " + st.spa + "），靠" + STAT_NAME[hiDef] + " " + st[hiDef] + " 和体力 " + st.hp + " 站场：加" + STAT_NAME[hiDef] + "让它更扛揍，减掉" + STAT_NAME[loAtk] + "（" + st[loAtk] + "）几乎没损失");
+    natAlt = natPick("hp", loAtk, "备选加生命：把体力 " + st.hp + " 再堆高更耐久，一样减掉用不上的" + STAT_NAME[loAtk]);
+  } else if (st.spe >= 95 && st[mainKey] >= 90) {
+    natMain = natPick("spe", offKey, "速度 " + st.spe + "、" + STAT_NAME[mainKey] + " " + st[mainKey] + "，是高速输出型：加速度抢先手，减掉用不上的" + STAT_NAME[offKey] + "（只有 " + st[offKey] + "）");
+    natAlt = natPick(mainKey, offKey, "备选加" + STAT_NAME[mainKey] + "堆一击伤害，同样减" + STAT_NAME[offKey] + "，适合不缺先手的场合");
+  } else if (st.spe < 70) {
+    natMain = natPick(mainKey, "spe", "速度只有 " + st.spe + "，抢先手没指望，干脆加" + STAT_NAME[mainKey] + "（" + st[mainKey] + "）堆一击伤害，减速度不心疼");
+    natAlt = natPick(mainKey, offKey, "备选同样加" + STAT_NAME[mainKey] + "，但减" + STAT_NAME[offKey] + "保住速度，怕被同速线压制时用这个");
+  } else {
+    natMain = natPick(mainKey, offKey, "中速输出型：主攻" + STAT_NAME[mainKey] + " " + st[mainKey] + " 是饭碗，先把它堆满，减掉几乎不用的" + STAT_NAME[offKey] + "（" + st[offKey] + "）");
+    natAlt = natPick("spe", offKey, "备选加速度（现在 " + st.spe + "），抢一档先手，一样减" + STAT_NAME[offKey] + "，适合速度线吃紧的队伍");
+  }
+
+  /* ---- 改血脉推荐 ---- */
+  var poolTypes = petAtkTypes(pet);
+  var bloods = [];
+  ((pet.learnset && pet.learnset.bloodline) || []).forEach(function(b){
+    var sk = skillOf(b.skill);
+    if (!sk || sk.category === "特性") return;
+    var t = b.type || sk.type;
+    var counter = threats.filter(function(a){ return typeMult(t, [a]) >= 2; });
+    var fresh = TYPES18.filter(function(d){ return typeMult(t, [d]) >= 2 && bestMult(poolTypes, [d]) < 2; });
+    var score = counter.length * 3 + fresh.length + (sk.power || 0) / 100 +
+      (pet.types.indexOf(t) >= 0 ? 0.5 : 0);
+    bloods.push({ type: t, skill: sk, score: score, counter: counter, fresh: fresh });
+  });
+  bloods.sort(function(a, b){ return b.score - a.score; });
+  var bloodTop = bloods.slice(0, 2).map(function(b, i){
+    var bits = [];
+    if (b.counter.length) bits.push(b.type + "系 ×2 克制 " + b.counter.join("、") + "——全是克制" + pet.types.join("/") + "系的属性，对位时能反手打回去");
+    if (b.fresh.length) bits.push("补上新打击面 " + b.fresh.slice(0, 4).join("、") + (b.fresh.length > 4 ? " 等 " + b.fresh.length + " 种" : ""));
+    if (pet.types.indexOf(b.type) >= 0) bits.push("与本系相同，解锁的技能吃本系加成 ×1.2");
+    if (!bits.length) bits.push("在它的血脉技能里综合价值最高（" + b.skill.category + (b.skill.power != null ? " · 威力 " + b.skill.power : "") + "）");
+    return { type: b.type, skill: b.skill, why: bits.join("；") };
+  });
+
+  /* ---- 个体值优先 ---- */
+  var ivScore = { atk: 0, spa: 0, spe: 0, hp: 0, def: 0, spd: 0 };
+  ivScore[mainKey] = 100;
+  ivScore.spe = st.spe >= 90 ? 90 : st.spe >= 70 ? 60 : st.spe >= 50 ? 35 : 15;
+  ivScore.hp = st.hp >= 120 ? 70 : st.hp >= 95 ? 55 : 40;
+  ivScore.def = st.def >= 110 ? 50 : st.def >= 90 ? 30 : 10;
+  ivScore.spd = st.spd >= 110 ? 50 : st.spd >= 90 ? 30 : 10;
+  if (isTank) { ivScore.def += 30; ivScore.spd += 30; ivScore.hp += 10; }
+  var ivWhy = {};
+  ivWhy[mainKey] = "主攻项，决定输出上限";
+  ivWhy[offKey] = "副攻项，基本不用";
+  ivWhy.spe = "速度 " + st.spe + "，决定出手顺序";
+  ivWhy.hp = "体力 " + st.hp + "，站场资本";
+  ivWhy.def = "物防 " + st.def + "，扛物理伤害";
+  ivWhy.spd = "魔防 " + st.spd + "，扛魔法伤害";
+  var ivOrder = ["atk", "spa", "spe", "hp", "def", "spd"];
+  var ivs = ivOrder.slice().sort(function(a, b){
+    return (ivScore[b] - ivScore[a]) || (ivOrder.indexOf(a) - ivOrder.indexOf(b));
+  }).slice(0, 3).map(function(k){ return { key: k, label: STAT_NAME[k], why: ivWhy[k] }; });
+
+  return { moves: moves, natMain: natMain, natAlt: natAlt, bloods: bloodTop, ivs: ivs, isTank: isTank };
+}
+
+function srcTagOf(m){
+  if (m.src === "stone") return '<span class="src-tag stone">技能石</span>';
+  if (m.src === "blood") return '<span class="src-tag blood">' + esc(m.bloodType || "") + "血脉</span>";
+  return '<span class="src-tag">等级</span>';
+}
+function natLineHTML(n, tag){
+  if (!n) return "";
+  return '<div class="nat-main"><span class="nat-nm">' + esc(n.name) + "</span>" +
+    '<span class="nat-plus">' + STAT_NAME[n.plus] + " +10%</span>" +
+    '<span style="color:var(--sub)">/</span>' +
+    '<span class="nat-minus">' + STAT_NAME[n.minus] + " −10%</span>" +
+    (tag ? '<span class="src-tag">' + tag + "</span>" : "") + "</div>" +
+    '<div class="train-note">' + esc(n.why) + "</div>";
+}
+function trainCardHTML(pet){
+  var c = buildCard(pet);
+  var head = '<section class="blk"><div class="mini"><div class="ava">' + imgTag(pet.avatar, pet.name, true, false) + "</div>" +
+    '<div><div class="m-nm">' + esc(pet.name) + ' <small style="color:var(--sub);font-size:12px">No.' + esc(pet.no) + "</small></div>" +
+    '<div class="badges">' + pet.types.map(badge).join("") + "</div>" +
+    '<div class="m-stats">体力 ' + pet.stats.hp + " · 物攻 " + pet.stats.atk + " · 物防 " + pet.stats.def +
+    "<br>魔攻 " + pet.stats.spa + " · 魔防 " + pet.stats.spd + " · 速度 " + pet.stats.spe + " · 总和 " + pet.stats.total +
+    "<br>特性：" + esc(pet.ability) + "</div></div></div>" +
+    '<div style="margin-top:8px;font-size:13px"><a href="#/pet/' + pet.id + '">→ 看图鉴详情</a></div></section>';
+
+  var movesHtml = c.moves.length ? '<div class="train-skills">' + c.moves.map(function(m){
+    var sk = m.skill;
+    return '<div class="tskill"><div class="ts-head">' + badge(sk.type) + '<span class="ts-nm">' + esc(sk.name) + "</span>" + srcTagOf(m) + "</div>" +
+      '<div class="ts-meta">' + esc(sk.category) + " · " + (sk.power != null ? "威力 " + sk.power : "状态/辅助") +
+      " · 能耗 ★" + (sk.energy != null ? sk.energy : "—") + '</div>' +
+      '<div class="ts-why">' + esc(m.why) + "</div></div>";
+  }).join("") + "</div>" : '<div class="desc">这只精灵暂时没有可推荐的技能数据。</div>';
+
+  var natHtml = c.natMain
+    ? natLineHTML(c.natMain, "主推") + (c.natAlt ? '<div style="margin-top:10px">' + natLineHTML(c.natAlt, "备选") + "</div>" : "")
+    : '<div class="desc">性格数据（natures.json）加载失败，暂时无法推荐。</div>';
+
+  var bloodHtml = c.bloods.length ? c.bloods.map(function(b, i){
+    return '<div class="threat-line"><b>' + (i === 0 ? "首选" : "备选") + "：" + esc(b.type) + "系血脉</b> → 解锁技能「" + esc(b.skill.name) + "」（" +
+      esc(b.skill.type) + "系 · " + esc(b.skill.category) + (b.skill.power != null ? " · 威力 " + b.skill.power : "") + " · 能耗 ★" + (b.skill.energy != null ? b.skill.energy : "—") + "）" +
+      '<div class="train-note">' + esc(b.why) + "</div></div>";
+  }).join("") : '<div class="desc">暂无血脉技能数据。</div>';
+
+  return head +
+    '<section class="blk"><h3>🎒 携带技能推荐（' + c.moves.length + '）</h3>' + movesHtml + "</section>" +
+    '<section class="blk"><h3>🧭 性格推荐</h3>' + natHtml + "</section>" +
+    '<section class="blk"><h3>🩸 改血脉推荐</h3>' + bloodHtml +
+    '<div class="footnote">改血脉只会让精灵在 15 级多学一个该系血脉技能，不改变精灵自身属性，也不会改变它被克制的关系。</div></section>' +
+    '<section class="blk"><h3>📈 个体值优先</h3><div class="brk">' +
+    c.ivs.map(function(v){ return "<span><b>" + v.label + "</b> · " + esc(v.why) + "</span>"; }).join("") + "</div></section>";
+}
+
+function renderTrain(){
+  var app = document.getElementById("app");
+  var pet = train.petId ? DB.petById[train.petId] : null;
+  var cardHtml;
+  if (!pet) {
+    cardHtml = '<section class="blk"><div class="desc" style="color:var(--sub)">从上面选一只精灵，这里会生成它的培养方案卡：携带技能 ×4、性格推荐、改血脉推荐和个体值优先，全部由本站模型按它的种族值与可学技能现算。</div></section>';
+  } else if (!DB.chart) {
+    cardHtml = '<section class="blk"><div class="desc">克制表数据（typechart.json）加载失败，暂时无法生成培养方案。</div></section>';
+  } else {
+    cardHtml = trainCardHTML(pet);
+  }
+  app.innerHTML = navHTML("train") +
+    '<header class="top"><h1>🧬 培养方案</h1><p>选一只精灵，按它的种族值和可学技能生成配招、性格与血脉建议。</p></header>' +
+    '<section class="blk"><h3>选择精灵</h3>' + pickerHTML("trPick", "搜索精灵：名字 / 拼音 / 编号…") +
+    (pet ? '<div style="margin-top:10px">' + miniCard(pet) + "</div>" : "") + "</section>" +
+    cardHtml +
+    '<div class="footnote">培养方案由本站推荐模型按规则生成，不是官方攻略，仅供参考：携带技能从该精灵的可学技能池（等级 / 技能石 / 血脉三组去重）里，按有效威力（威力 × 本系加成 1.2 × 物/魔攻与主攻项的匹配度）、打击面补盲与辅助价值挑选；' +
+    '性格按种族值画像匹配性格表（性格数据来自 BWIKI「模块:Natures/data」，共 30 种，每种一项 +10%、一项 −10%，含生命项）；血脉按其解锁技能的反打弱点与补打击面价值排序。' +
+    '全部只按种族值估算，不含个体值差异与实战环境。</div>';
+  bindPicker("trPick", function(p){
+    train.petId = p.id;
+    renderTrain();
+  });
+  window.scrollTo(0, 0);
+}
+
 /* ============ 路由与启动 ============ */
 function route(){
   var h = location.hash || "#/";
@@ -1390,6 +1677,11 @@ function route(){
       }
     }
     renderTeam(); return;
+  }
+  if (h.indexOf("#/train") === 0) {
+    var pm = h.match(/[?&]pet=(\d+)/);
+    if (pm && DB.petById[parseInt(pm[1], 10)]) train.petId = parseInt(pm[1], 10);
+    renderTrain(); return;
   }
   renderList();
   if (listScrollY) restoreScroll();
@@ -1414,13 +1706,15 @@ Promise.all([
   loadJson("data/skills.json"),
   loadJson("data/evolutions.json"),
   loadJson("data/images.json", true),
-  loadJson("data/typechart.json", true)
+  loadJson("data/typechart.json", true),
+  loadJson("data/natures.json", true)
 ]).then(function(res){
   DB.pets = res[0];
   DB.skills = res[1];
   DB.chains = (res[2] && res[2].chains) ? res[2].chains : res[2];
   DB.images = res[3] || {};
   DB.chart = res[4] || null;
+  DB.natures = res[5] || [];
   buildIndex();
   if (team._restore) team._restore();
   route();

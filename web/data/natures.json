@@ -1,0 +1,152 @@
+[
+ {
+  "name": "大胆",
+  "plus": "atk",
+  "minus": "def"
+ },
+ {
+  "name": "固执",
+  "plus": "atk",
+  "minus": "spa"
+ },
+ {
+  "name": "调皮",
+  "plus": "atk",
+  "minus": "spd"
+ },
+ {
+  "name": "勇敢",
+  "plus": "atk",
+  "minus": "spe"
+ },
+ {
+  "name": "逞强",
+  "plus": "atk",
+  "minus": "hp"
+ },
+ {
+  "name": "稳重",
+  "plus": "def",
+  "minus": "atk"
+ },
+ {
+  "name": "天真",
+  "plus": "def",
+  "minus": "spa"
+ },
+ {
+  "name": "懒散",
+  "plus": "def",
+  "minus": "spd"
+ },
+ {
+  "name": "悠闲",
+  "plus": "def",
+  "minus": "spe"
+ },
+ {
+  "name": "坦率",
+  "plus": "def",
+  "minus": "hp"
+ },
+ {
+  "name": "聪明",
+  "plus": "spa",
+  "minus": "atk"
+ },
+ {
+  "name": "专注",
+  "plus": "spa",
+  "minus": "def"
+ },
+ {
+  "name": "偏执",
+  "plus": "spa",
+  "minus": "spd"
+ },
+ {
+  "name": "冷静",
+  "plus": "spa",
+  "minus": "spe"
+ },
+ {
+  "name": "理性",
+  "plus": "spa",
+  "minus": "hp"
+ },
+ {
+  "name": "警惕",
+  "plus": "spd",
+  "minus": "atk"
+ },
+ {
+  "name": "温顺",
+  "plus": "spd",
+  "minus": "def"
+ },
+ {
+  "name": "害羞",
+  "plus": "spd",
+  "minus": "spa"
+ },
+ {
+  "name": "慎重",
+  "plus": "spd",
+  "minus": "spe"
+ },
+ {
+  "name": "焦虑",
+  "plus": "spd",
+  "minus": "hp"
+ },
+ {
+  "name": "胆小",
+  "plus": "spe",
+  "minus": "atk"
+ },
+ {
+  "name": "急躁",
+  "plus": "spe",
+  "minus": "def"
+ },
+ {
+  "name": "开朗",
+  "plus": "spe",
+  "minus": "spa"
+ },
+ {
+  "name": "莽撞",
+  "plus": "spe",
+  "minus": "spd"
+ },
+ {
+  "name": "热情",
+  "plus": "spe",
+  "minus": "hp"
+ },
+ {
+  "name": "沉默",
+  "plus": "hp",
+  "minus": "atk"
+ },
+ {
+  "name": "忧郁",
+  "plus": "hp",
+  "minus": "def"
+ },
+ {
+  "name": "平和",
+  "plus": "hp",
+  "minus": "spa"
+ },
+ {
+  "name": "粗心",
+  "plus": "hp",
+  "minus": "spd"
+ },
+ {
+  "name": "踏实",
+  "plus": "hp",
+  "minus": "spe"
+ }
+]
