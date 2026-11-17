@@ -90,4 +90,11 @@ python3 -m http.server 8000
 - [x] 第 1 期：数据管道
 - [x] 第 2 期：图鉴本体（列表、搜索、详情）
 - [x] 第 3 期：对战与 AI 配队
-- [ ] 第 4 期：正式切换，老站转备份
+- [x] 第 4 期：正式切换，老站转备份
+
+## 线上部署（第 4 期）
+
+- 正式站：**https://roco-world.pages.dev**（Cloudflare Pages，项目名 `roco-world`，2026-11-17 上线）
+- 部署方式：Cloudflare Pages 连接本仓库 GitHub，推送 `main` 分支后自动部署。构建设置：Framework preset = None、Build command = 空、Build output directory = `web`、Production branch = `main`。
+- 数据更新：每周五约 10:14 的自动复查任务已改指本仓库——查到 BWIKI nrc 有新精灵时按管道重建数据、推送本仓库，两站（新站自动部署）随之更新。
+- 老站 https://roco-kingdom-73v.pages.dev 保留作备份，不再更新。
