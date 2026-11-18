@@ -297,6 +297,8 @@
     border-radius:999px; padding:8px 10px; font-size:13.5px; font-weight:600; cursor:pointer;}
   .sq-actions button.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
   .sq-detail{margin-top:12px; border-top:1px solid #f0f1f6; padding-top:10px;}
+  .sq-link{font-size:13px; line-height:1.6; color:#3c3f52; background:#f6f7ff; border:1px solid #e3e6fb; border-radius:10px; padding:8px 10px; margin-top:6px;}
+  .sq-quote{font-size:12px; color:var(--sub); margin-top:2px;}
   .role-tag{font-size:11px; padding:3px 8px; border-radius:999px; font-weight:600; background:#fdf0d2; color:#8a5a00; white-space:nowrap;}
   .sq-mem .r-why a{color:var(--accent); font-weight:600;}
   .sq-notice{background:#eafaf0; border:1px solid #bfe8cd; color:#1e6b3c; border-radius:12px;
@@ -441,7 +443,8 @@ function multLabel(m){
 
 /* ============ 精灵技能与选择器 ============ */
 function petSkills(pet){
-  /* learnset 三组去重合并，保留学习顺序，返回技能对象数组 */
+  /* learnset 三组去重合并，保留学习顺序，返回技能对象数组（结果缓存） */
+  if (pet._skl) return pet._skl;
   var seen = {}, out = [];
   var ls = pet.learnset || { level: [], stone: [], bloodline: [] };
   var names = [];
@@ -454,6 +457,7 @@ function petSkills(pet){
     var sk = skillOf(n);
     if (sk) out.push(sk);
   });
+  pet._skl = out;
   return out;
 }
 function petAtkTypes(pet){
@@ -2004,6 +2008,412 @@ function buildTankSquad(){
   return st.members;
 }
 
+
+/* ============ 配合模型（第 7 期）：证据表 + 配合分 + 配合链 ============ */
+/* 以下名单全部来自对 skills.json 全部 861 条 desc 的语义扫描（见 README
+   「配合模式统计」），不是外部攻略：
+   - 星陨印记：幻系有一整套挂印记招（超维投射/星轨裂变挂 2–4 层），消费端有
+     特性坠星（每层威力+20%）、观星、守望星与多维击打（每层连击+1）等；
+   - 奉献：虫系为核心的队伍共享增益池，产出 18 条、消费端是虫群/啃咬；
+   - 能量：富养化/养分回流给场下全队回能，加大功率给接棒者 +8，另有一族
+     「入场前蓄势」特性（地脉/结晶水/散热/盘根木/慢热型）靠队友行动充能；
+   - 吸血：蝙蝠/贪婪/撕裂等吸血招 + 渴求/贪得无厌/盛宴等吸血特性，跨系分布；
+   - 首领形态：进化链 lords 共 68 只。配合链的每条出处（特性/技能名）都由
+     下面的判定函数从该精灵的真实数据里取出，页面断言会逐条复核。 */
+var MARK_APPLY_SKILLS = ["超维投射", "星轨裂变", "星链", "超新星馈赠", "二律背反", "心灵洞悉", "空间压迫", "量子涨落", "冥想", "错乱", "奇点"];
+var MARK_APPLY_TRAITS = ["吸积盘", "乌龟塔理论", "月牙雪糕"];
+var MARK_USE_TRAITS = ["坠星", "观星", "守望星", "与星星同行", "宇宙之眼", "和弦共振"];
+var MARK_USE_SKILLS = ["多维击打", "天体吸积", "星痕", "四维降解"];
+var OFFER_MAKE_TRAITS = ["花精灵", "振奋虫心", "坚韧铠甲", "虫草多糖", "扫拖一体"];
+var OFFER_MAKE_SKILLS = ["夏蛰", "虫群智慧", "虫结阵", "信息素", "振翅", "飞断", "虫群过境", "虫茧"];
+var OFFER_USE_SKILLS = ["虫群", "啃咬"];
+var ENERGY_FEED_SKILLS = ["富养化", "养分回流", "加大功率"];
+var CHARGE_TRAITS = { "地脉": "地", "地脉馈赠": "地", "结晶水": "冰", "散热": "火", "盘根木": "草", "慢热型": null };
+var DRAIN_TRAITS = ["渴求", "贪得无厌", "盛宴", "异类"];
+var DRAIN_SKILLS = ["蝙蝠", "贪婪", "撕裂", "暗突袭", "等价交换", "困兽", "汲取", "龙之利爪"];
+
+function petSkillNameSet(pet){
+  if (pet._skn) return pet._skn;
+  var s = {};
+  petSkills(pet).forEach(function(sk){ s[sk.name] = 1; });
+  pet._skn = s;
+  return s;
+}
+/* 证据条目 {n: 名称, k: "技能"|"特性"}：技能必须在该精灵 learnset 里、
+   特性必须就是该精灵的特性字段，判定天然成立 */
+function evList(pet, skillNames, traitNames){
+  var have = petSkillNameSet(pet), out = [];
+  skillNames.forEach(function(n){ if (have[n]) out.push({ n: n, k: "技能" }); });
+  if (pet.ability && traitNames.indexOf(pet.ability) >= 0) out.push({ n: pet.ability, k: "特性" });
+  return out;
+}
+function markApplyOf(pet){ return evList(pet, MARK_APPLY_SKILLS, MARK_APPLY_TRAITS); }
+function markUseOf(pet){ return evList(pet, MARK_USE_SKILLS, MARK_USE_TRAITS); }
+function offerMakeOf(pet){ return evList(pet, OFFER_MAKE_SKILLS, OFFER_MAKE_TRAITS); }
+function offerUseOf(pet){ return evList(pet, OFFER_USE_SKILLS, []); }
+function energyFeedOf(pet){ return evList(pet, ENERGY_FEED_SKILLS, []); }
+function drainOf(pet){ return evList(pet, DRAIN_SKILLS, DRAIN_TRAITS); }
+function chargeTypeOf(pet){
+  if (!pet.ability || !Object.prototype.hasOwnProperty.call(CHARGE_TRAITS, pet.ability)) return undefined;
+  return CHARGE_TRAITS[pet.ability];
+}
+function bigMovesOf(pet, minE){
+  return petSkills(pet).filter(function(sk){
+    return sk.power != null && (sk.energy || 0) >= minE;
+  }).sort(function(a, b){ return (b.energy - a.energy) || (b.power - a.power); });
+}
+/* 展示用大招：能耗 ≥30 的招（如抛石★30）是数据异常值——只有这种招的
+   精灵不算大招手；展示与选人只取能耗 ≤10 里最贵的一招，没有则返回 null */
+function displayBigMove(pet, minE){
+  var list = bigMovesOf(pet, minE);
+  for (var i = 0; i < list.length; i++) if ((list[i].energy || 0) <= 10) return list[i];
+  return null;
+}
+function stPets(st){ return st.members.map(function(m){ return m.pet; }); }
+function evNames(list){ return list.map(function(e){ return "「" + e.n + "」"; }).join("、"); }
+
+/* 配合标志位（缓存）：配合分与各构建器共用，避免重复扫技能池 */
+function petFlags(pet){
+  if (pet._flg) return pet._flg;
+  var f = {
+    apply: markApplyOf(pet).length > 0, use: markUseOf(pet).length > 0,
+    off: offerMakeOf(pet).length > 0, offUse: offerUseOf(pet).length > 0,
+    feed: energyFeedOf(pet).length > 0, big7: bigMovesOf(pet, 7).length > 0,
+    drainN: drainOf(pet).length, charge: chargeTypeOf(pet)
+  };
+  pet._flg = f;
+  return f;
+}
+/* 配合分：候选与已选成员之间存在可验证的配合关系时加分（与配合链同源） */
+function synergyBonus(cand, memberPets){
+  var b = 0, cf = petFlags(cand);
+  var mApply = false, mUse = false, mOff = false, mOffUse = false, mBig = false, mFeed = false;
+  memberPets.forEach(function(p){
+    var f = petFlags(p);
+    if (f.apply) mApply = true;
+    if (f.use) mUse = true;
+    if (f.off) mOff = true;
+    if (f.offUse) mOffUse = true;
+    if (f.big7) mBig = true;
+    if (f.feed) mFeed = true;
+  });
+  if (cf.apply && mUse) b += 70;
+  if (cf.use && mApply) b += 70;
+  if (cf.off && mOffUse) b += 60;
+  if (cf.offUse && mOff) b += 60;
+  if (cf.off) b += 12;
+  if (cf.feed && mBig) b += 50;
+  if (cf.big7 && mFeed) b += 50;
+  if (cf.charge !== undefined) {
+    if (cf.charge === null) b += 30;
+    else if (memberPets.some(function(p){ return petAtkTypes(p).indexOf(cf.charge) >= 0; })) b += 40;
+  }
+  if (cf.drainN >= 2) b += 15;
+  return b;
+}
+
+function makeLink(kind, aPet, ev, bPet, text){
+  var src = ev.k === "特性" ? DB.abilityByName[ev.n] : skillOf(ev.n);
+  return { kind: kind, a: aPet.name, via: ev.n, viaKind: ev.k,
+    b: bPet ? bPet.name : "全队", text: text, quote: descFirst(src ? src.desc : "") };
+}
+function setterEvObj(pet, w){
+  for (var i = 0; i < w.setterSkills.length; i++)
+    if (petHasSkill(pet, w.setterSkills[i])) return { n: w.setterSkills[i], k: "技能" };
+  for (var j = 0; j < w.setterAbilities.length; j++)
+    if (pet.ability === w.setterAbilities[j]) return { n: w.setterAbilities[j], k: "特性" };
+  return null;
+}
+function beneEvObj(pet, w){
+  for (var i = 0; i < w.beneAbilities.length; i++)
+    if (pet.ability === w.beneAbilities[i]) return { n: w.beneAbilities[i], k: "特性" };
+  for (var j = 0; j < w.beneSkills.length; j++)
+    if (petHasSkill(pet, w.beneSkills[j])) return { n: w.beneSkills[j], k: "技能" };
+  return null;
+}
+
+/* 配合链：从一支已组好的队伍里提取可验证的配合关系（每套取 2–4 条）。
+   每条的 via 都由上面的判定函数从成员真实数据里取出，断言会逐条复核：
+   viaKind=特性 ⇒ 该精灵 ability 字段；viaKind=技能 ⇒ 在其 learnset 里。 */
+function squadLinks(def, members){
+  var pets = members.map(function(m){ return m.pet; });
+  var found = [];
+  function push(kind, aPet, ev, bPet, text){ if (ev) found.push(makeLink(kind, aPet, ev, bPet, text)); }
+  /* 天气：天气手 → 受益者 */
+  if (def.weather) {
+    var w = null;
+    WEATHER_DEFS.forEach(function(x){ if (x.weather === def.weather) w = x; });
+    if (w) {
+      var setter = null;
+      pets.forEach(function(p){ if (!setter && setterEvObj(p, w)) setter = p; });
+      if (setter) {
+        var sev = setterEvObj(setter, w);
+        pets.forEach(function(p){
+          if (p === setter) return;
+          var be = beneEvObj(p, w);
+          if (be) push("weather", setter, sev, p,
+            "把天气改成" + def.weather + "，" + p.name + "的" + be.k + "「" + be.n + "」随之生效，天气在场它就一直受益");
+        });
+      }
+    }
+  }
+  /* 印记：施加者 → 消费者（特性消费优先） */
+  var markPairs = [];
+  pets.forEach(function(a){
+    var ap = markApplyOf(a);
+    if (!ap.length) return;
+    pets.forEach(function(b){
+      if (b === a) return;
+      var us = markUseOf(b);
+      if (!us.length) return;
+      var uev = us.filter(function(e){ return e.k === "特性"; })[0] || us[0];
+      markPairs.push({ a: a, aev: ap[0], b: b, uev: uev, trait: uev.k === "特性" ? 1 : 0 });
+    });
+  });
+  markPairs.sort(function(x, y){ return y.trait - x.trait; });
+  markPairs.forEach(function(pr){
+    push("mark", pr.a, pr.aev, pr.b,
+      "先给敌方叠上星陨印记，" + pr.b.name + "的" + pr.uev.k + "「" + pr.uev.n + "」按印记层数放大收益——层数叠得越高，引爆越疼");
+  });
+  /* 奉献：产出者 → 消费者；没有消费者时 → 全队共享池 */
+  var offerConsumers = pets.filter(function(p){ return offerUseOf(p).length > 0; });
+  pets.forEach(function(a){
+    var mk = offerMakeOf(a);
+    if (!mk.length) return;
+    if (offerConsumers.length) {
+      offerConsumers.forEach(function(b){
+        if (b === a) return;
+        push("offering", a, mk[0], b,
+          "攒出的奉献会增益" + b.name + "的「" + offerUseOf(b)[0].n + "」这类受奉献影响的技能（威力/连击等），产出位打得越勤它越强");
+      });
+    } else {
+      push("offering", a, mk[0], null,
+        "产出的奉献进入全队共享池，随机增益队友技能（威力/连击/吸血/减能耗等），全队轮换上场都能吃到");
+    }
+  });
+  /* 能量：供能者 → 高能耗大招持有者 */
+  pets.forEach(function(a){
+    var fd = energyFeedOf(a);
+    if (!fd.length) return;
+    pets.forEach(function(b){
+      if (b === a) return;
+      var big = displayBigMove(b, 7);
+      if (!big) return;
+      push("energy", a, fd[0], b,
+        "给场下/接棒的队友补能量，" + b.name + "的大招「" + big.name + "」（能耗★" + big.energy + "、威力 " + big.power + "）不怕断档");
+    });
+  });
+  /* 能量（奉献减能耗）：假寐 → 大招持有者 */
+  pets.forEach(function(a){
+    if (!petSkillNameSet(a)["假寐"]) return;
+    pets.forEach(function(b){
+      if (b === a) return;
+      var big = displayBigMove(b, 5);
+      if (!big) return;
+      push("energy", a, { n: "假寐", k: "技能" }, b,
+        "让己方队伍获得奉献：能耗-2，" + b.name + "的大招「" + big.name + "」（能耗★" + big.energy + "）连发压力大减");
+    });
+  });
+  /* 蓄势：入场前蓄能/蓄血特性 ← 全队的对应系别技能喂养 */
+  pets.forEach(function(p){
+    var ct = chargeTypeOf(p);
+    if (ct === undefined) return;
+    var feeders = pets.filter(function(q){
+      return q !== p && (ct === null || petAtkTypes(q).indexOf(ct) >= 0);
+    });
+    if (!feeders.length) return;
+    push("charge", p, { n: p.ability, k: "特性" }, null,
+      ct === null
+        ? "它还没入场就在蓄能：全队每成功应对 1 次，它入场前就回复 5 能量——队友打得越稳，它入场越满格"
+        : "它还没入场就在蓄势：全队每用 1 次" + ct + "系技能都在为它充能/回血（队里有 " + feeders.length + " 只会" + ct + "系技能），入场就是满状态");
+  });
+  /* 吸血：自身连锁（吸血状态来源 + 吸血输出招同体） */
+  pets.forEach(function(p){
+    var dr = drainOf(p);
+    if (dr.length < 2) return;
+    var stateEv = dr.filter(function(e){ return e.n === "贪婪" || e.n === "等价交换" || e.k === "特性"; })[0];
+    var atkEv = dr.filter(function(e){ return e !== stateEv && e.k === "技能"; })[0];
+    if (!stateEv || !atkEv) return;
+    push("drain", p, stateEv, p,
+      "自身连锁：先靠" + stateEv.k + "「" + stateEv.n + "」挂上吸血，再用「" + atkEv.n + "」输出——打出的伤害按比例回血，越打越能扛");
+  });
+  /* 交接治疗：茶多酚 → 全队 */
+  pets.forEach(function(p){
+    if (p.ability === "茶多酚")
+      push("heal", p, { n: "茶多酚", k: "特性" }, null,
+        "它离场时，接棒入场的队友回复 20% 生命——轮换交接不掉血，残血位换下去、满血位顶上来");
+  });
+  var prio = { weather: 0, mark: 1, offering: 2, energy: 3, charge: 4, drain: 5, heal: 6 };
+  var themeKind = { mark: "mark", offering: "offering", vampire: "drain", energy: "energy" }[def.id] || null;
+  function effPrio(L){
+    var p = prio[L.kind];
+    if (themeKind && L.kind === themeKind) p -= 10;
+    if (def.id === "energy" && L.kind === "charge") p -= 9;
+    return p;
+  }
+  found.sort(function(x, y){ return effPrio(x) - effPrio(y); });
+  var seen = {}, perKind = {}, out = [];
+  found.forEach(function(L){
+    var key = L.a + "|" + L.via + "|" + L.b;
+    if (seen[key]) return;
+    if ((perKind[L.kind] || 0) >= 2) return;
+    if (out.length >= 4) return;
+    seen[key] = 1; perKind[L.kind] = (perKind[L.kind] || 0) + 1;
+    out.push(L);
+  });
+  return out;
+}
+
+/* ---- 第 7 期新流派构建器 ---- */
+function buildMarkSquad(){
+  var st = newSquadState();
+  var consumers = DB.pets.filter(function(p){ return markUseOf(p).length > 0; });
+  var core = greedyPick(st, consumers, function(p){
+    return p.stats.total + markUseOf(p).length * 25 + markApplyOf(p).length * 20 + synergyBonus(p, stPets(st));
+  });
+  if (core) squadAdd(st, core, "🌠 引爆核心",
+    "消费端拉满：它自己就能" + (markApplyOf(core).length ? "挂印记（" + evNames(markApplyOf(core).slice(0, 2)) + "）又能" : "") +
+    "按层数引爆（" + evNames(markUseOf(core).slice(0, 3)) + "），队友叠的每层星陨印记都算它的弹药。总和 " + core.stats.total + "。");
+  var appliers = DB.pets.filter(function(p){ return markApplyOf(p).length >= 2; });
+  for (var i = 0; i < 2; i++) {
+    var ap = greedyPick(st, appliers, function(p){
+      return markApplyOf(p).length * 30 + p.stats.total * 0.5 + synergyBonus(p, stPets(st));
+    });
+    if (!ap) break;
+    squadAdd(st, ap, "🔖 挂印记",
+      "一场能叠多层星陨印记：" + evNames(markApplyOf(ap).slice(0, 3)) + "，负责把敌方身上的层数铺满，给引爆位递弹药。总和 " + ap.stats.total + "。");
+  }
+  var use2 = greedyPick(st, consumers, function(p){
+    return p.stats.total * 0.8 + markUseOf(p).length * 25 + synergyBonus(p, stPets(st));
+  });
+  if (use2) squadAdd(st, use2, "✨ 印记受益",
+    "第二个吃印记的位置：" + evNames(markUseOf(use2).slice(0, 2)) + "让它在印记层数高时收益翻倍，与引爆核心错开收割窗口。总和 " + use2.stats.total + "。");
+  var out = greedyPick(st, DB.pets.filter(function(p){ return p.types.indexOf("幻") >= 0; }), function(p){
+    return outScore(p) + synergyBonus(p, stPets(st));
+  });
+  if (out) squadAdd(st, out, "⚔️ 核心输出", outputWhy(out, "幻系输出"));
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
+function buildOfferingSquad(){
+  var st = newSquadState();
+  var pool = DB.pets.filter(function(p){ return offerMakeOf(p).length > 0 || offerUseOf(p).length > 0; });
+  for (var i = 0; i < 4; i++) {
+    var p = greedyPick(st, pool, function(x){
+      return offerMakeOf(x).length * 25 + offerUseOf(x).length * 35 + x.stats.total * 0.45 + synergyBonus(x, stPets(st));
+    });
+    if (!p) break;
+    var mk = offerMakeOf(p), us = offerUseOf(p);
+    var role = us.length && mk.length ? "🪲 产出兼受益" : (mk.length ? "🪲 奉献产出" : "🎁 奉献受益");
+    var why = "";
+    if (mk.length) why += "能攒奉献：" + evNames(mk.slice(0, 3)) + "；";
+    if (us.length) why += "能吃奉献：" + evNames(us) + "会被奉献增益；";
+    why += "总和 " + p.stats.total + "。奉献是全队共享池，它在场越久，全队技能越强。";
+    squadAdd(st, p, role, why);
+  }
+  var out = greedyPick(st, DB.pets.filter(function(p){ return p.types.indexOf("虫") >= 0; }), function(p){
+    return outScore(p) + synergyBonus(p, stPets(st));
+  });
+  if (out) squadAdd(st, out, "⚔️ 核心输出", outputWhy(out, "虫系输出"));
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
+function buildVampireSquad(){
+  var st = newSquadState();
+  var rich = DB.pets.filter(function(p){ return drainOf(p).length >= 2; });
+  for (var i = 0; i < 4; i++) {
+    var p = greedyPick(st, rich, function(x){
+      return drainOf(x).length * 60 + outScore(x) * 0.55 + synergyBonus(x, stPets(st));
+    });
+    if (!p) break;
+    squadAdd(st, p, i === 0 ? "🧛 吸血核心" : "🩸 吸血输出",
+      "带 " + drainOf(p).length + " 个吸血来源（" + evNames(drainOf(p).slice(0, 3)) + "），" +
+      (p.stats.atk >= p.stats.spa ? "物攻 " + p.stats.atk : "魔攻 " + p.stats.spa) + "、总和 " + p.stats.total + "——打出去的伤害按比例变回自己的血。");
+  }
+  var wall = greedyPick(st, rich, function(p){ return duraOf(p); });
+  if (wall) squadAdd(st, wall, "🛡️ 吸血坦克",
+    "吸血位里最能扛：体力 " + wall.stats.hp + "、双防 " + wall.stats.def + "/" + wall.stats.spd +
+    "，再带 " + drainOf(wall).length + " 个吸血来源，站场越久血越满。");
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
+function buildEnergySquad(){
+  var st = newSquadState();
+  var feeders = DB.pets.filter(function(p){ return energyFeedOf(p).length > 0; });
+  var fd = greedyPick(st, feeders, function(p){
+    return p.stats.total + energyFeedOf(p).length * 30 + synergyBonus(p, stPets(st));
+  });
+  if (fd) {
+    var fsk = skillOf(energyFeedOf(fd)[0].n);
+    squadAdd(st, fd, "🔋 供能手",
+      "会「" + energyFeedOf(fd)[0].n + "」——" + descFirst(fsk ? fsk.desc : "") + "全队的能量水龙头，总和 " + fd.stats.total + "。");
+  }
+  var chargers = DB.pets.filter(function(p){ return chargeTypeOf(p) !== undefined; });
+  var ace = greedyPick(st, chargers, function(p){
+    return p.stats.total + synergyBonus(p, stPets(st));
+  });
+  if (ace) {
+    var ab = DB.abilityByName[ace.ability];
+    squadAdd(st, ace, "⚡ 蓄能王牌",
+      "特性「" + ace.ability + "」——" + descFirst(ab ? ab.desc : "") + "队友在前面打，它在场下把能量蓄满，入场就是大招起手。总和 " + ace.stats.total + "。");
+  }
+  var spenders = DB.pets.filter(function(p){ return !!displayBigMove(p, 7); });
+  for (var i = 0; i < 2; i++) {
+    var sp = greedyPick(st, spenders, function(p){
+      var big = displayBigMove(p, 7);
+      return (big ? big.energy : 0) * 12 + outScore(p) * 0.5 + synergyBonus(p, stPets(st));
+    });
+    if (!sp) break;
+    var big = displayBigMove(sp, 7);
+    squadAdd(st, sp, "💥 大招手",
+      "握着全队最贵的大招「" + big.name + "」（能耗★" + big.energy + "、威力 " + big.power + "）——平时放不起，靠这队的供能链才能连发。总和 " + sp.stats.total + "。");
+  }
+  var fd2 = greedyPick(st, feeders, function(p){ return p.stats.total * 0.8 + synergyBonus(p, stPets(st)); });
+  if (fd2) squadAdd(st, fd2, "🔋 供能手",
+    "第二路供能：「" + energyFeedOf(fd2)[0].n + "」保证能量链不断档，总和 " + fd2.stats.total + "。");
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
+function lordPets(){
+  var seen = {}, out = [];
+  DB.chains.forEach(function(ch){
+    (ch.lords || []).forEach(function(l){
+      if (seen[l.pet_id]) return;
+      seen[l.pet_id] = 1;
+      var p = DB.petById[l.pet_id];
+      if (p) out.push(p);
+    });
+  });
+  return out;
+}
+function lordEntryOf(pet){
+  var f = familyOf(pet);
+  if (!f || !f.lordList) return null;
+  for (var i = 0; i < f.lordList.length; i++)
+    if (f.lordList[i].pet_id === pet.id) return f.lordList[i];
+  return null;
+}
+function buildLordSquad(){
+  var st = newSquadState();
+  var pool = lordPets();
+  for (var i = 0; i < 6; i++) {
+    var p = greedyPick(st, pool, function(x){
+      return x.stats.total + synergyBonus(x, stPets(st)) * 1.2;
+    });
+    if (!p) break;
+    var le = lordEntryOf(p);
+    squadAdd(st, p, i === 0 ? "👑 首领王牌" : "👑 首领",
+      "首领形态" + (le && le.item ? "（信物「" + le.item + "」）" : "") + "：总和 " + p.stats.total +
+      "、特性「" + p.ability + "」，是全图鉴面板最顶上的一档，光种族值就能压对面一头。");
+  }
+  fillBlind(st, 6 - st.members.length);
+  return st.members;
+}
+
 function squadPlaybook(def, members, met){
   var pets = members.map(function(m){ return m.pet; });
   var names = function(rolePart){
@@ -2027,6 +2437,22 @@ function squadPlaybook(def, members, met){
     txt = "六只平均耐久（体力+物防+魔防）" + Math.round(met.avgDura) + "，打法是拖：主坦吃伤害、续航位不断回血，" +
       "把比赛拖到对方能耗和血量见底，再用两只耐久输出收残局。全队打击面覆盖 " + met.superCount + "/18 种属性，不怕被单一属性通吃。";
   }
+  if (def.id === "mark") {
+    txt = "先让挂印记位把星陨印记叠满（超维投射、二律背反一挂就是 2–4 层），再换引爆核心收割：层数越高，多维击打的连击数和坠星的威力加成越夸张。" +
+      "注意别让印记被驱散——层数清零这队就断档，挂印记位要轮换着续层。全队打击面覆盖 " + met.superCount + "/18 种属性。";
+  } else if (def.id === "offering") {
+    txt = "奉献是全队共享的增益池：产出位（虫群智慧、夏蛰一次给 2 次）先手攒奉献，受益位的虫群、啃咬这类技能会被奉献持续增益。" +
+      "产出位轮换上场保持奉献不断档，打得越久全队技能越强，是越拖越肥的阵容。全队打击面覆盖 " + met.superCount + "/18 种属性。";
+  } else if (def.id === "vampire") {
+    txt = "吸血位打伤害就是回血：先挂吸血状态（贪婪/等价交换），再用蝙蝠、撕裂边打边回；血线越低，困兽、盛宴这类机制越强。" +
+      "这队不怕消耗战，怕高爆发一波带走——遇到爆发队先用补盲位处理对面核心。全队打击面覆盖 " + met.superCount + "/18 种属性。";
+  } else if (def.id === "energy") {
+    txt = "供能手在场下给全队回能量，蓄能王牌靠队友的行动在入场前就蓄满，大招手进场直接放大招（能耗★7–10）——正常队伍放一次都费劲的大招，这队能连着放。" +
+      "能量链就是命门：优先保护供能手，它倒了大招就哑火。";
+  } else if (def.id === "lord") {
+    txt = "六只全是首领形态，平均总和 " + Math.round(met.avgTotal) + "，打法就是面板压制：轮换硬吃伤害再反打，谁上场都是对面的难题。" +
+      "它们之间还自带配合链（见上方 🔗），不是六个散装大个子。全队打击面覆盖 " + met.superCount + "/18 种属性。";
+  }
   var weakTxt = met.weakTops.length
     ? "⚠ 注意弱点：" + met.weakTops.join("、") + "系——全队有 " + met.weakMax + "/6 只被它 ×2 克制，遇到" +
       met.weakTops[0] + "系输出先用补盲位或坦克位顶上，别让它连续收割。"
@@ -2040,6 +2466,11 @@ function buildSquads(){
     return { id: w.id, name: w.name, emoji: w.emoji, tag: "天气 · " + w.weather, weather: w.weather,
       members: buildWeatherSquad(w) };
   });
+  defs.push({ id: "mark", name: "印记队", emoji: "🌠", tag: "机制 · 星陨印记", members: buildMarkSquad() });
+  defs.push({ id: "offering", name: "奉献队", emoji: "🪲", tag: "机制 · 奉献", members: buildOfferingSquad() });
+  defs.push({ id: "vampire", name: "吸血队", emoji: "🧛", tag: "机制 · 吸血", members: buildVampireSquad() });
+  defs.push({ id: "energy", name: "能量队", emoji: "🔋", tag: "机制 · 能量引擎", members: buildEnergySquad() });
+  defs.push({ id: "lord", name: "首领队", emoji: "👑", tag: "首领 · 形态压制", members: buildLordSquad() });
   defs.push({ id: "fire", name: "火系队", emoji: "🔥", tag: "单系 · 火", members: buildFireSquad() });
   defs.push({ id: "speed", name: "高速队", emoji: "💨", tag: "速度线 · 先手", members: buildSpeedSquad() });
   defs.push({ id: "tank", name: "坦克队", emoji: "🛡️", tag: "耐久 · 续航", members: buildTankSquad() });
@@ -2051,6 +2482,11 @@ function buildSquads(){
     thunder: "惊雷改天气为雷鸣，电系挂引电打连锁。",
     fire: "四只火系正面压上，坦克顶前排、补盲堵短板。",
     speed: "全员速度线拉满，靠先手和先制招抢回合。",
+    mark: "幻系挂星陨印记叠层，引爆位按层数收割。",
+    offering: "虫系攒奉献喂全队，越打越肥的共享增益池。",
+    vampire: "跨属性吸血阵容：边打边回，专治消耗战。",
+    energy: "场下供能 + 蓄能王牌，让 ★10 大招连着放。",
+    lord: "六只首领形态组队，面板压制还自带配合链。",
     tank: "六只大肉带续航，把比赛拖进持久战。"
   };
   defs.forEach(function(d){
@@ -2062,6 +2498,7 @@ function buildSquads(){
     var avgDura = pets.reduce(function(x, p){ return x + duraOf(p); }, 0) / pets.length;
     var fastest = pets.slice().sort(function(a, b){ return b.stats.spe - a.stats.spe; })[0];
     d.score = s; d.blurb = blurbs[d.id] || "";
+    d.links = squadLinks(d, d.members);
     d.met = { superCount: s.detail.superList.length, weakMax: weakMax,
       weakTops: TYPES18.filter(function(a){ return wc[a] === weakMax && weakMax > 0; }),
       avgSpe: avgSpe, avgDura: avgDura, fastest: fastest,
@@ -2100,7 +2537,15 @@ function squadCardHTML(d){
         '<span class="role-tag" style="margin-left:6px">' + esc(m.role) + "</span></div>" +
         '<div class="r-why">' + esc(m.why) + ' <a href="#/train?pet=' + m.pet.id + '">🧬 培养</a></div></div></div>';
     }).join("");
-    html += '<div class="sq-detail">' + mems +
+    var linksHtml = "";
+    if (d.links && d.links.length) {
+      linksHtml = '<h4 style="margin:12px 0 2px">🔗 配合链</h4>' + d.links.map(function(L){
+        return '<div class="sq-link"><b>' + esc(L.a) + '</b> 的' + L.viaKind + '「' + esc(L.via) + '」→ <b>' +
+          esc(L.b === L.a ? "自身连锁" : L.b) + '</b>：' + esc(L.text) +
+          '<div class="sq-quote">出处原文：' + esc(L.quote) + '</div></div>';
+      }).join("");
+    }
+    html += '<div class="sq-detail">' + mems + linksHtml +
       '<h4 style="margin:12px 0 2px">队伍评分（与配队页同口径）</h4>' + rows +
       '<div class="cov-line">打击面覆盖 <b>' + d.met.superCount + "/18</b> 种属性能 ×2 克制 · 平均速度 <b>" +
       Math.round(d.met.avgSpe) + "</b> · 弱点 TOP：" +
@@ -2121,11 +2566,12 @@ function renderSquads(){
     body = (squads.notice ? '<div class="sq-notice">' + esc(squads.notice) + "</div>" : "") +
       list.map(squadCardHTML).join("") +
       '<div class="footnote">阵容由本站模型按数据规则自动生成、供参考：天气队依据 skills.json 里技能/特性描述原文的天气机制证据组队（开天气招 + 受益条目均为真实数据）；' +
-      '其余流派按属性池深度、速度线、耐久与续航技能等规则贪心选人，同一进化家族只取一只。评分与配队页 scoreTeam 同口径。' +
-      '注：本作不存在「晴天」天气；「霞光梦境」天气虽有开天气招（筑梦），但全库没有引用它收益的技能/特性，证据不足，未组队。</div>';
+      '机制队（印记 / 奉献 / 吸血 / 能量 / 首领）依据配合证据组队：印记的施加与消费、奉献的产出与受益、能量的供给与高能耗大招、吸血来源、首领形态，都能在 desc 原文里查到；其余流派按属性池深度、速度线、耐久与续航技能等规则贪心选人，同一进化家族只取一只。评分与配队页 scoreTeam 同口径。' +
+      '注：本作不存在「晴天」天气；「霞光梦境」天气虽有开天气招（筑梦），但全库没有引用它收益的技能/特性，证据不足，未组队。' +
+      '系别增幅特性全库每系仅 1–3 种、持有者为个位数，数据不够厚，未单独组系别增幅队；先手 / 迅捷招持有者占全图鉴 86%，与高速队无法区分，也未单独成队。</div>';
   }
   app.innerHTML = navHTML("squads") +
-    '<header class="top"><h1>🏆 阵容推荐</h1><p>模型按流派自动组好的 6 只队伍：天气队、单系队、高速队、坦克队。看中哪套，一键设为我方队伍去打 6v6 分析。</p></header>' +
+    '<header class="top"><h1>🏆 阵容推荐</h1><p>模型按流派自动组好的 6 只队伍：天气队、机制队（印记 / 奉献 / 吸血 / 能量 / 首领）、单系队、高速队、坦克队。展开详情看 🔗 配合链——谁喂谁、谁引爆谁，条条有技能 / 特性原文为据。看中哪套，一键设为我方队伍去打 6v6 分析。</p></header>' +
     body;
 
   app.querySelectorAll("[data-sq-open]").forEach(function(b){
