@@ -1739,7 +1739,7 @@ var WEATHER_DEFS = [
   { id: "thunder", name: "雷鸣队", weather: "雷鸣", type: "电", setterSkills: ["惊雷"], setterAbilities: [],
     beneAbilities: ["电子音乐"], beneSkills: [], emoji: "⛈️" }
 ];
-var squads = { cache: null, openId: "", notice: "" };
+var squads = { cache: null, openId: "", notice: "", rot: null, rotState: "idle", rotList: [] };
 
 function descFirst(desc){
   var d = String(desc || "");
@@ -2556,22 +2556,114 @@ function squadCardHTML(d){
   return html + "</section>";
 }
 
+/* ============ 阵容轮换（第 8 期）：页面只渲染 rotation.json ============
+ * 本轮 3 套阵容由 tools/gen_rotation.mjs 每 48 小时离线生成（定时任务调用），
+ * 页面 fetch data/rotation.json 渲染；生成口径、战术池与避重复规则见 README。
+ * 原 12 套固定阵容已下架，构建器仍保留在文件中供生成器复用。 */
+function fmtDT(iso){
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) return String(iso || "");
+  function p(n){ return (n < 10 ? "0" : "") + n; }
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+}
+function loadRotation(){
+  loadJson("data/rotation.json", true).then(function(j){
+    if (j && Array.isArray(j.squads) && j.squads.length) {
+      var ok = j.squads.filter(function(s){
+        return s.members && s.members.length === 6 &&
+          s.members.every(function(m){ return DB.petById[m.id]; });
+      });
+      if (ok.length) {
+        squads.rot = j; squads.rotList = ok; squads.rotState = "ok";
+      } else squads.rotState = "error";
+    } else squads.rotState = "error";
+    if ((location.hash || "").indexOf("#/squads") === 0) renderSquads();
+  });
+}
+function rotationCardHTML(d){
+  var pets = d.members.map(function(m){ return DB.petById[m.id]; });
+  var s = scoreTeam(pets, null);
+  var wc = weakCounts(pets);
+  var weakMax = Math.max.apply(null, TYPES18.map(function(a){ return wc[a]; }));
+  var weakTops = TYPES18.filter(function(a){ return wc[a] === weakMax && weakMax > 0; });
+  var avgSpe = Math.round(pets.reduce(function(x, p){ return x + p.stats.spe; }, 0) / pets.length);
+  var open = squads.openId === d.id;
+  var avas = d.members.map(function(m){
+    var pet = DB.petById[m.id];
+    return '<a href="#/pet/' + m.id + '"><span class="ava">' + imgTag(pet.avatar, pet.name, true, true) + "</span>" +
+      '<div class="sq-nm">' + esc(pet.name) + "</div></a>";
+  }).join("");
+  var html = '<section class="blk"><div class="sq-head"><h3>' + d.emoji + " " + esc(d.title) + "</h3>" +
+    '<span class="sq-tag">' + esc(d.tag) + "</span>" +
+    '<span class="sq-score">综合 <b>' + s.total + "</b> 分</span></div>" +
+    '<div class="sq-avas">' + avas + "</div>" +
+    '<div class="sq-blurb">' + esc(d.intro) + "</div>" +
+    '<div class="sq-actions">' +
+    '<button data-sq-open="' + d.id + '">' + (open ? "收起详情 ▲" : "展开详情 ▼") + "</button>" +
+    '<button class="primary" data-sq-set="' + d.id + '">设为我方队伍</button>' +
+    '<button data-sq-battle="' + d.id + '">去对战分析</button></div>';
+  if (open) {
+    var rows = s.parts.map(function(pt){
+      return '<div class="score-row"><div class="sr-head"><b>' + pt.label + '</b><span class="sr-val">' + pt.score + "</span></div>" +
+        '<div class="bar"><div class="fill" style="width:' + pt.score + '%"></div></div></div>';
+    }).join("");
+    var mems = d.members.map(function(m){
+      var pet = DB.petById[m.id];
+      return '<div class="rec-item sq-mem"><a href="#/pet/' + m.id + '"><span class="ava">' + imgTag(pet.avatar, pet.name, true, true) + "</span></a>" +
+        '<div><div class="r-nm">' + esc(pet.name) +
+        '<span class="badges" style="display:inline-flex;vertical-align:middle;margin-left:6px">' + pet.types.map(badge).join("") + "</span>" +
+        '<span class="role-tag" style="margin-left:6px">' + esc(m.role) + "</span></div>" +
+        '<div class="r-why">' + esc(m.why) + ' <a href="#/train?pet=' + m.id + '">🧬 培养</a></div></div></div>';
+    }).join("");
+    var linksHtml = "";
+    if (d.links && d.links.length) {
+      linksHtml = '<h4 style="margin:12px 0 2px">🔗 配合链（技能联动）</h4>' + d.links.map(function(L){
+        return '<div class="sq-link"><b>' + esc(L.a) + "</b> 的" + L.viaKind + "「" + esc(L.via) + "」→ <b>" +
+          esc(L.b === L.a ? "自身连锁" : L.b) + "</b>：" + esc(L.text) +
+          '<div class="sq-quote">出处原文：' + esc(L.quote) + "</div></div>";
+      }).join("");
+    }
+    var prosHtml = (d.pros || []).map(function(t){
+      return '<div class="sq-blurb">✅ ' + esc(t) + "</div>";
+    }).join("");
+    var consHtml = (d.cons || []).map(function(t){
+      return '<div class="sq-blurb">⚠ ' + esc(t) + "</div>";
+    }).join("");
+    html += '<div class="sq-detail">' + mems + linksHtml +
+      '<h4 style="margin:12px 0 2px">队伍评分（与配队页同口径）</h4>' + rows +
+      '<div class="cov-line">打击面覆盖 <b>' + s.detail.superList.length + "/18</b> 种属性能 ×2 克制 · 平均速度 <b>" +
+      avgSpe + "</b> · 弱点 TOP：" +
+      (weakTops.length ? weakTops.map(function(t){ return esc(t) + "系（" + weakMax + " 只被克）"; }).join("、") : "无集中弱点") + "</div>" +
+      '<h4 style="margin:12px 0 2px">优势</h4>' + prosHtml +
+      '<h4 style="margin:12px 0 2px">弱点</h4>' + consHtml + "</div>";
+  }
+  return html + "</section>";
+}
+
 function renderSquads(){
   var app = document.getElementById("app");
   var body;
   if (!DB.chart) {
     body = '<section class="blk"><h3>阵容推荐</h3><div class="desc">克制表数据（typechart.json）加载失败，暂时无法生成阵容。</div></section>';
+  } else if (squads.rotState === "idle" || squads.rotState === "loading") {
+    if (squads.rotState === "idle") { squads.rotState = "loading"; loadRotation(); }
+    body = '<section class="blk"><h3>阵容推荐</h3><div class="desc">正在加载本轮阵容…</div></section>';
+  } else if (squads.rotState === "error") {
+    body = '<section class="blk"><h3>阵容推荐</h3><div class="desc">本轮阵容数据（rotation.json）暂时没加载出来，可能是网络问题或新一轮还在生成中。请稍后点下面按钮重试，或过一会儿再来。</div>' +
+      '<div class="sq-actions"><button data-sq-retry="1">重新加载</button></div></section>';
   } else {
-    var list = buildSquads();
-    body = (squads.notice ? '<div class="sq-notice">' + esc(squads.notice) + "</div>" : "") +
-      list.map(squadCardHTML).join("") +
-      '<div class="footnote">阵容由本站模型按数据规则自动生成、供参考：天气队依据 skills.json 里技能/特性描述原文的天气机制证据组队（开天气招 + 受益条目均为真实数据）；' +
-      '机制队（印记 / 奉献 / 吸血 / 能量 / 首领）依据配合证据组队：印记的施加与消费、奉献的产出与受益、能量的供给与高能耗大招、吸血来源、首领形态，都能在 desc 原文里查到；其余流派按属性池深度、速度线、耐久与续航技能等规则贪心选人，同一进化家族只取一只。评分与配队页 scoreTeam 同口径。' +
-      '注：本作不存在「晴天」天气；「霞光梦境」天气虽有开天气招（筑梦），但全库没有引用它收益的技能/特性，证据不足，未组队。' +
-      '系别增幅特性全库每系仅 1–3 种、持有者为个位数，数据不够厚，未单独组系别增幅队；先手 / 迅捷招持有者占全图鉴 86%，与高速队无法区分，也未单独成队。</div>';
+    var rot = squads.rot;
+    var info = '<div class="sq-notice">🔄 第 ' + rot.round + ' 轮阵容 · 生成于 ' + fmtDT(rot.generatedAt) +
+      ' · 下次自动更新 ' + fmtDT(rot.nextAt) + '（每 48 小时一轮，与上一轮阵容尽量不重样）</div>';
+    body = (squads.notice ? '<div class="sq-notice">' + esc(squads.notice) + "</div>" : "") + info +
+      squads.rotList.map(rotationCardHTML).join("") +
+      '<div class="footnote">阵容由本站模型按数据规则自动生成、每 48 小时轮换一轮（生成器 tools/gen_rotation.mjs，由定时任务调用，不依赖打开网页）：每轮从 18 个战术里选 3 个互不相同的战术，' +
+      '各战术多次构建后取综合分最高的一版（质量门槛 ≥58 分，强度优先）；与上一轮每套阵容重合不超过 2 只、本轮 3 套之间也互不重样。战术池含天气队、机制队（印记 / 奉献 / 吸血 / 能量 / 首领）与自由混搭（火草 / 地武 / 消耗控制 / 高速爆发 / 联防反击 / 属性互补）等，' +
+      '不再局限于纯属性队。配合链里出现的每个特性 / 技能都出自该精灵的真实数据（特性字段或可学技能池），引文为 desc 原文，可在图鉴里逐条查证。评分与配队页 scoreTeam 同口径。' +
+      '注：本作不存在「晴天」天气；「霞光梦境」天气全库没有引用它收益的技能 / 特性，证据不足，未纳入天气战术。</div>';
   }
   app.innerHTML = navHTML("squads") +
-    '<header class="top"><h1>🏆 阵容推荐</h1><p>模型按流派自动组好的 6 只队伍：天气队、机制队（印记 / 奉献 / 吸血 / 能量 / 首领）、单系队、高速队、坦克队。展开详情看 🔗 配合链——谁喂谁、谁引爆谁，条条有技能 / 特性原文为据。看中哪套，一键设为我方队伍去打 6v6 分析。</p></header>' +
+    '<header class="top"><h1>🏆 阵容推荐</h1><p>每 48 小时自动轮换的 3 套模型阵容：从 662 只精灵里按战术（天气 / 机制 / 自由混搭）现组现评，强度优先、轮轮不重样。展开详情看成员分工与 🔗 配合链——谁喂谁、谁引爆谁，条条有技能 / 特性原文为据。看中哪套，一键设为我方队伍去打 6v6 分析。</p></header>' +
     body;
 
   app.querySelectorAll("[data-sq-open]").forEach(function(b){
@@ -2582,9 +2674,9 @@ function renderSquads(){
     });
   });
   function applySquad(id){
-    var d = buildSquads().filter(function(x){ return x.id === id; })[0];
+    var d = squads.rotList.filter(function(x){ return x.id === id; })[0];
     if (!d) return null;
-    team.mine = d.members.map(function(m){ return m.pet.id; });
+    team.mine = d.members.map(function(m){ return m.id; });
     saveTeam();
     return d;
   }
@@ -2592,7 +2684,7 @@ function renderSquads(){
     b.addEventListener("click", function(){
       var d = applySquad(b.getAttribute("data-sq-set"));
       if (d) {
-        squads.notice = "已把「" + d.name + "」设为我方队伍（" + team.mine.length + " 只），去对战页选好敌方就能做 6v6 分析，或在配队页继续微调。";
+        squads.notice = "已把「" + d.title + "」设为我方队伍（" + team.mine.length + " 只），去对战页选好敌方就能做 6v6 分析，或在配队页继续微调。";
         squads.openId = d.id;
         renderSquads();
       }
@@ -2602,6 +2694,12 @@ function renderSquads(){
     b.addEventListener("click", function(){
       var d = applySquad(b.getAttribute("data-sq-battle"));
       if (d) { battle.mode = "pvp"; location.hash = "#/battle"; }
+    });
+  });
+  app.querySelectorAll("[data-sq-retry]").forEach(function(b){
+    b.addEventListener("click", function(){
+      squads.rotState = "idle";
+      renderSquads();
     });
   });
   window.scrollTo(0, 0);
