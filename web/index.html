@@ -299,6 +299,7 @@
   .sq-detail{margin-top:12px; border-top:1px solid #f0f1f6; padding-top:10px;}
   .sq-link{font-size:13px; line-height:1.6; color:#3c3f52; background:#f6f7ff; border:1px solid #e3e6fb; border-radius:10px; padding:8px 10px; margin-top:6px;}
   .sq-quote{font-size:12px; color:var(--sub); margin-top:2px;}
+  .sq-note{font-size:12px; line-height:1.5; color:#8a5a00; background:#fff7e0; border:1px solid #f0dfae; border-radius:8px; padding:4px 8px; margin-top:4px;}
   .pb-lead{display:flex; gap:10px; align-items:flex-start; background:#fff8ec; border:1px solid #f3e3bd; border-radius:10px; padding:8px 10px; margin-top:6px;}
   .pb-lead .ava, .pb-ms .ava{flex:none;}
   .pb-phases{margin-top:8px; display:flex; flex-direction:column; gap:6px;}
@@ -1965,14 +1966,23 @@ function buildSpeedSquad(){
 }
 
 function isSustainSkill(sk){
-  /* 续航招口径（真回复）：变化类，且描述为回复生命/体力或吸血。
-     不算的：满图鉴普及的「减伤应对」姿态招（几乎人手一打、不区分队伍），
-     以及只回复能量的「回复」（须与生命/体力同现才算）。 */
+  /* 续航招口径（真回复）：变化类，且描述为给自己/己方回复生命/体力或吸血。
+     不算的：满图鉴普及的「减伤应对」姿态招（几乎人手一打、不区分队伍）；
+     只回复能量的「回复」（须与生命/体力同现才算）；以及回复对象是敌方的
+     反制招——如「伪造账单」（若敌方本回合回复生命，改为失去2倍）：它惩罚
+     敌方回复、本身不给自己回任何生命（第 11 期审计 A-2）。
+     判据按分句验：分句须含回复类词 + 生命/体力，且回复对象不是敌方、
+     效果不是「改为失去」。 */
   if (sk.category !== "变化") return false;
   var d = sk.desc || "";
   if (d.indexOf("吸血") >= 0) return true;
-  var healWord = d.indexOf("回复") >= 0 || d.indexOf("恢复") >= 0 || d.indexOf("回血") >= 0 || d.indexOf("治疗") >= 0;
-  return healWord && (d.indexOf("生命") >= 0 || d.indexOf("体力") >= 0);
+  return d.split(/[。；]/).some(function(seg){
+    if (!/(回复|恢复|回血|治疗)/.test(seg)) return false;
+    if (!/(生命|体力)/.test(seg)) return false;
+    if (/敌方/.test(seg) && !/(自己|己方|我方)/.test(seg)) return false;
+    if (/改为失去/.test(seg)) return false;
+    return true;
+  });
 }
 function sustainSkillsOf(pet){
   return petSkills(pet).filter(isSustainSkill);
@@ -2144,6 +2154,43 @@ function beneEvObj(pet, w){
   return null;
 }
 
+/* ---- desc 原文工具（第 12 期）：链文案只许照 desc 公式写 ---- */
+/* desc 里包含 keyword 的第一个分句（。；切分），找不到返回 "" */
+function descSegWith(desc, keyword){
+  var segs = String(desc || "").split(/[。；]/);
+  for (var i = 0; i < segs.length; i++) if (segs[i].indexOf(keyword) >= 0) return segs[i];
+  return "";
+}
+/* 施加段：含 keyword 的分句；若分句是「条件：效果」结构且前缀是条件，
+   只取效果部分（条件由 condPhraseOf 单独注入文案） */
+function applySegOf(desc, keyword){
+  var seg = descSegWith(desc, keyword);
+  if (!seg) return "";
+  var ci = seg.lastIndexOf("：");
+  if (ci >= 0 && ci < seg.length - 1 && /应对|入场|脱离|天气|若|当/.test(seg.slice(0, ci)))
+    seg = seg.slice(ci + 1);
+  return seg;
+}
+/* 从含 keyword 的分句里提取触发条件短语（应对攻击/入场时/脱离时/天气为X时）。
+   只看第一个含 keyword 的分句：多效果 desc 里与本链无关的条件段不算
+   （如「夏蛰」的奉献产出是无条件的，应对防御只是额外奖励段）。 */
+function condPhraseOf(desc, keyword){
+  var segs = String(desc || "").split(/[。；]/);
+  var seg = "";
+  for (var i = 0; i < segs.length; i++){ if (!keyword || segs[i].indexOf(keyword) >= 0){ seg = segs[i]; break; } }
+  if (!seg) seg = segs[0] || "";
+  var m = seg.match(/应对(攻击|防御|技能)/); if (m) return "应对" + m[1] + "时";
+  if (seg.indexOf("入场时") >= 0) return "入场时";
+  if (/脱离/.test(seg)) return "脱离时";
+  var wm = seg.match(/天气为([^，。；：]{1,6})时/); if (wm) return "天气为" + wm[1] + "时";
+  return "";
+}
+/* 条目（{n,k}）的 desc 原文 */
+function entryDescOf(ev){
+  var src = ev.k === "特性" ? DB.abilityByName[ev.n] : skillOf(ev.n);
+  return src ? (src.desc || "") : "";
+}
+
 /* 配合链：从一支已组好的队伍里提取可验证的配合关系（每套取 2–4 条）。
    每条的 via 都由上面的判定函数从成员真实数据里取出，断言会逐条复核：
    viaKind=特性 ⇒ 该精灵 ability 字段；viaKind=技能 ⇒ 在其 learnset 里。 */
@@ -2184,24 +2231,55 @@ function squadLinks(def, members){
   });
   markPairs.sort(function(x, y){ return y.trait - x.trait; });
   markPairs.forEach(function(pr){
+    /* 第 12 期（审计二 S-2/S-3）：文案按双方 desc 公式写——施加段、消费段
+       都引 desc 里含「星陨印记」的原文分句；发起方带条件（应对攻击等）
+       必须注入文案；删泛化「引爆越疼」（无消费者 desc 明文消耗/引爆）。 */
+    var aDesc = entryDescOf(pr.aev), uDesc = entryDescOf(pr.uev);
+    var applySeg = applySegOf(aDesc, "星陨印记") || descFirst(aDesc);
+    var useSeg = descSegWith(uDesc, "星陨印记") || descFirst(uDesc);
+    var cond = condPhraseOf(aDesc, "星陨印记");
+    var shieldM = aDesc.match(/减伤(\d+)%/);
     push("mark", pr.a, pr.aev, pr.b,
-      "先给敌方叠上星陨印记，" + pr.b.name + "的" + pr.uev.k + "「" + pr.uev.n + "」按印记层数放大收益——层数叠得越高，引爆越疼");
+      "给敌方叠星陨印记：" + pr.a.name + "的" + pr.aev.k + "「" + pr.aev.n + "」" +
+      (cond ? "在" + cond + "使" : "使") + applySeg +
+      (shieldM ? "（「" + pr.aev.n + "」本体带减伤" + shieldM[1] + "%，是防御招）" : "") +
+      "；" + pr.b.name + "的" + pr.uev.k + "「" + pr.uev.n + "」按 desc 公式吃层数——" + useSeg +
+      "。印记记在被施加的那只敌方身上，" + pr.b.name + "攻击同一只时才按层数生效");
   });
-  /* 奉献：产出者 → 消费者；没有消费者时 → 全队共享池 */
+  /* 奉献：产出者 → 明文消费者。第 12 期（审计二 C-0/C-1）：消费资格只认
+     desc 明文「会受奉献影响」的技能；单次型来源（desc「获得1次奉献」，
+     含假寐）每套最多 1 条消费链，文案写明单次口径；没有明文消费者时
+     → 全队池并注明消费待核验。假寐本身也是产出者（1 次：能耗-2）。 */
   var offerConsumers = pets.filter(function(p){ return offerUseOf(p).length > 0; });
+  var singleOfferUsed = {};
+  var poolOfferEmitted = false;
   pets.forEach(function(a){
-    var mk = offerMakeOf(a);
-    if (!mk.length) return;
-    if (offerConsumers.length) {
-      offerConsumers.forEach(function(b){
-        if (b === a) return;
-        push("offering", a, mk[0], b,
-          "攒出的奉献会增益" + b.name + "的「" + offerUseOf(b)[0].n + "」这类受奉献影响的技能（威力/连击等），产出位打得越勤它越强");
-      });
-    } else {
-      push("offering", a, mk[0], null,
-        "产出的奉献进入全队共享池，随机增益队友技能（威力/连击/吸血/减能耗等），全队轮换上场都能吃到");
-    }
+    var makers = offerMakeOf(a).slice();
+    if (petSkillNameSet(a)["假寐"]) makers.push({ n: "假寐", k: "技能" });
+    makers.forEach(function(mev){
+      var mDesc = entryDescOf(mev);
+      var single = /获得1次奉献/.test(mDesc);
+      var consumers = offerConsumers.filter(function(b){ return b !== a; });
+      if (consumers.length) {
+        consumers.forEach(function(b){
+          if (single && singleOfferUsed[a.name + "|" + mev.n]) return;
+          var uev = offerUseOf(b)[0];
+          var uSeg = descSegWith(entryDescOf(uev), "奉献");
+          push("offering", a, mev, b,
+            a.name + "的" + mev.k + "「" + mev.n + "」产出奉献——" + descFirst(mDesc) +
+            b.name + "的技能「" + uev.n + "」desc 明文会受奉献影响" + (uSeg ? "（" + uSeg + "）" : "") +
+            (single ? "；这份奉献是单次的，留给最关键的一发" : ""));
+          if (single) singleOfferUsed[a.name + "|" + mev.n] = 1;
+        });
+      } else if (!poolOfferEmitted) {
+        /* 无明文消费者时的全队池链是队伍级资源说明：每套最多 1 条，
+           免得多个产出者各占一条把真正的配对链挤掉 */
+        poolOfferEmitted = true;
+        push("offering", a, mev, null,
+          a.name + "的" + mev.k + "「" + mev.n + "」产出奉献——" + descFirst(mDesc) +
+          "队里没有 desc 明文「会受奉献影响」的技能，这份奉献由谁消费、何时消费待核验，先攒着留给最关键的一发");
+      }
+    });
   });
   /* 能量：供能者 → 高能耗大招持有者 */
   pets.forEach(function(a){
@@ -2212,18 +2290,8 @@ function squadLinks(def, members){
       var big = displayBigMove(b, 7);
       if (!big) return;
       push("energy", a, fd[0], b,
-        "给场下/接棒的队友补能量，" + b.name + "的大招「" + big.name + "」（能耗★" + big.energy + "、威力 " + big.power + "）不怕断档");
-    });
-  });
-  /* 能量（奉献减能耗）：假寐 → 大招持有者 */
-  pets.forEach(function(a){
-    if (!petSkillNameSet(a)["假寐"]) return;
-    pets.forEach(function(b){
-      if (b === a) return;
-      var big = displayBigMove(b, 5);
-      if (!big) return;
-      push("energy", a, { n: "假寐", k: "技能" }, b,
-        "让己方队伍获得奉献：能耗-2，" + b.name + "的大招「" + big.name + "」（能耗★" + big.energy + "）连发压力大减");
+        "给场下/接棒的队友补能量，" + b.name + "的大招「" + big.name + "」（能耗★" + big.energy + "、威力 " + big.power + "）不怕断档" +
+        (fd[0].n === "加大功率" ? "（加大功率要自己脱离才触发，每次只给接棒入场的那一只补 8 点能量）" : ""));
     });
   });
   /* 蓄势：入场前蓄能/蓄血特性 ← 全队的对应系别技能喂养 */
@@ -2246,8 +2314,15 @@ function squadLinks(def, members){
     var stateEv = dr.filter(function(e){ return e.n === "贪婪" || e.n === "等价交换" || e.k === "特性"; })[0];
     var atkEv = dr.filter(function(e){ return e !== stateEv && e.k === "技能"; })[0];
     if (!stateEv || !atkEv) return;
+    /* 第 12 期（审计二 C-2）：只陈述各自 desc 事实，不声称叠加收益
+       （叠加方式 desc 无明文，标待核验）；输出招带蓄力须注明。 */
+    var sDesc = entryDescOf(stateEv), aDesc2 = entryDescOf(atkEv);
+    var atkSeg = descSegWith(aDesc2, "吸血");
     push("drain", p, stateEv, p,
-      "自身连锁：先靠" + stateEv.k + "「" + stateEv.n + "」挂上吸血，再用「" + atkEv.n + "」输出——打出的伤害按比例回血，越打越能扛");
+      "自身条目并列（各自按 desc 生效）：" + stateEv.k + "「" + stateEv.n + "」——" + descFirst(sDesc) +
+      "输出招「" + atkEv.n + "」" + (atkSeg ? "本身也带吸血——" + atkSeg : "负责输出") +
+      (/蓄力/.test(aDesc2) ? "（「" + atkEv.n + "」需蓄力一回合才能出手）" : "") +
+      "。两处吸血如何叠加 desc 无明文，不叠算收益，待核验");
   });
   /* 交接治疗：茶多酚 → 全队 */
   pets.forEach(function(p){
@@ -2283,9 +2358,9 @@ function buildMarkSquad(){
   var core = greedyPick(st, consumers, function(p){
     return p.stats.total + markUseOf(p).length * 25 + markApplyOf(p).length * 20 + synergyBonus(p, stPets(st));
   });
-  if (core) squadAdd(st, core, "🌠 引爆核心",
+  if (core) squadAdd(st, core, "🌠 印记核心",
     "消费端拉满：它自己就能" + (markApplyOf(core).length ? "挂印记（" + evNames(markApplyOf(core).slice(0, 2)) + "）又能" : "") +
-    "按层数引爆（" + evNames(markUseOf(core).slice(0, 3)) + "），队友叠的每层星陨印记都算它的弹药。总和 " + core.stats.total + "。");
+    "按各自 desc 公式吃层数（" + evNames(markUseOf(core).slice(0, 3)) + "），队友叠的每层星陨印记都算它的弹药。总和 " + core.stats.total + "。");
   var appliers = DB.pets.filter(function(p){ return markApplyOf(p).length >= 2; });
   for (var i = 0; i < 2; i++) {
     var ap = greedyPick(st, appliers, function(p){
@@ -2293,13 +2368,13 @@ function buildMarkSquad(){
     });
     if (!ap) break;
     squadAdd(st, ap, "🔖 挂印记",
-      "一场能叠多层星陨印记：" + evNames(markApplyOf(ap).slice(0, 3)) + "，负责把敌方身上的层数铺满，给引爆位递弹药。总和 " + ap.stats.total + "。");
+      "一场能叠多层星陨印记：" + evNames(markApplyOf(ap).slice(0, 3)) + "，负责把敌方身上的层数铺满，给消费位递弹药。总和 " + ap.stats.total + "。");
   }
   var use2 = greedyPick(st, consumers, function(p){
     return p.stats.total * 0.8 + markUseOf(p).length * 25 + synergyBonus(p, stPets(st));
   });
   if (use2) squadAdd(st, use2, "✨ 印记受益",
-    "第二个吃印记的位置：" + evNames(markUseOf(use2).slice(0, 2)) + "让它在印记层数高时收益翻倍，与引爆核心错开收割窗口。总和 " + use2.stats.total + "。");
+    "第二个吃印记的位置：" + evNames(markUseOf(use2).slice(0, 2)) + "让它在印记层数高时按 desc 公式放大收益，与印记核心错开收割窗口。总和 " + use2.stats.total + "。");
   var out = greedyPick(st, DB.pets.filter(function(p){ return p.types.indexOf("幻") >= 0; }), function(p){
     return outScore(p) + synergyBonus(p, stPets(st));
   });
@@ -2450,7 +2525,7 @@ function squadPlaybook(def, members, met){
       "把比赛拖到对方能耗和血量见底，再用两只耐久输出收残局。全队打击面覆盖 " + met.superCount + "/18 种属性，不怕被单一属性通吃。";
   }
   if (def.id === "mark") {
-    txt = "先让挂印记位把星陨印记叠满（超维投射、二律背反一挂就是 2–4 层），再换引爆核心收割：层数越高，多维击打的连击数和坠星的威力加成越夸张。" +
+    txt = "先让挂印记位把星陨印记叠满（超维投射、二律背反一挂就是 2–4 层），再换印记核心收割：层数越高，多维击打的连击数和坠星的威力加成越夸张。" +
       "注意别让印记被驱散——层数清零这队就断档，挂印记位要轮换着续层。全队打击面覆盖 " + met.superCount + "/18 种属性。";
   } else if (def.id === "offering") {
     txt = "奉献是全队共享的增益池：产出位（虫群智慧、夏蛰一次给 2 次）先手攒奉献，受益位的虫群、啃咬这类技能会被奉献持续增益。" +
@@ -2494,7 +2569,7 @@ function buildSquads(){
     thunder: "惊雷改天气为雷鸣，电系挂引电打连锁。",
     fire: "四只火系正面压上，坦克顶前排、补盲堵短板。",
     speed: "全员速度线拉满，靠先手和先制招抢回合。",
-    mark: "幻系挂星陨印记叠层，引爆位按层数收割。",
+    mark: "幻系挂星陨印记叠层，消费位按各自 desc 公式吃层数收割。",
     offering: "虫系攒奉献喂全队，越打越肥的共享增益池。",
     vampire: "跨属性吸血阵容：边打边回，专治消耗战。",
     energy: "场下供能 + 蓄能王牌，让 ★10 大招连着放。",
@@ -2621,11 +2696,17 @@ function rotationCardHTML(d){
     }).join("");
     var mems = d.members.map(function(m){
       var pet = DB.petById[m.id];
+      var abDesc = pet.ability ? (DB.abilityByName[pet.ability] || {}).desc || "" : "";
       return '<div class="rec-item sq-mem"><a href="#/pet/' + m.id + '"><span class="ava">' + imgTag(pet.avatar, pet.name, true, true) + "</span></a>" +
         '<div><div class="r-nm">' + esc(pet.name) +
         '<span class="badges" style="display:inline-flex;vertical-align:middle;margin-left:6px">' + pet.types.map(badge).join("") + "</span>" +
         '<span class="role-tag" style="margin-left:6px">' + esc(m.role) + "</span></div>" +
-        '<div class="r-why">' + esc(m.why) + ' <a href="#/train?pet=' + m.id + '">🧬 培养</a></div></div></div>';
+        '<div class="r-why">' + esc(m.why) + ' <a href="#/train?pet=' + m.id + '">🧬 培养</a></div>' +
+        (m.restrictedSlot
+          ? '<div class="sq-note">⚠ 待核验：特性「' + esc(pet.ability || "") + "」——" + esc(descFirst(abDesc)) +
+            "按现有数据，其 2、4 号位配招在实战中能否使用待核验。</div>"
+          : "") +
+        "</div></div>";
     }).join("");
     var linksHtml = "";
     if (d.links && d.links.length) {
@@ -2645,6 +2726,7 @@ function rotationCardHTML(d){
       }).join("");
       var msRows = pb.movesets.map(function(ms){
         var mpet = DB.petById[ms.id];
+        var mflag = (d.members.filter(function(mm){ return mm.id === ms.id; })[0] || {}).restrictedSlot;
         var chips = ms.moves.map(function(mv){
           return '<span class="mv-chip">' + badge(mv.type) + '<span class="mv-nm">' + esc(mv.name) + "</span><small>" +
             esc(mv.category) + (mv.power != null ? " · 威力 " + mv.power : "") + " · ★" + (mv.energy != null ? mv.energy : "—") + "</small></span>";
@@ -2652,7 +2734,10 @@ function rotationCardHTML(d){
         return '<div class="pb-ms"><a href="#/train?pet=' + ms.id + '"><span class="ava">' + imgTag(mpet.avatar, mpet.name, true, true) + "</span></a>" +
           '<div><div class="r-nm"><a href="#/train?pet=' + ms.id + '">' + esc(ms.name) + '</a>' +
           ' <span style="color:var(--sub);font-size:12px">推荐配招（本队定制：配合链关键技能优先锁定，其余按培养模型补齐）</span></div>' +
-          '<div class="mv-chips">' + chips + "</div></div></div>";
+          '<div class="mv-chips">' + chips + "</div>" +
+          (ms.energyMod ? '<div class="sq-note">⚠ 特性「' + esc(mpet.ability || "") + "」使全技能能耗+" + ms.energyMod + "，上方 ★ 已按实际能耗修正。</div>" : "") +
+          (mflag ? '<div class="sq-note">⚠ 待核验：特性限制可用技能位，其 2、4 号位配招在实战中能否使用待核验。</div>' : "") +
+          "</div></div>";
       }).join("");
       pbHtml = '<h4 style="margin:12px 0 2px">📖 战术手册</h4>' +
         '<div class="pb-lead"><span class="ava">' + imgTag(leadPet.avatar, leadPet.name, true, true) + "</span>" +
