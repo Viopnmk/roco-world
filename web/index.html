@@ -3089,13 +3089,46 @@ function rotationCardHTML(d){
         '<div class="pb-phases">' + phaseCards + "</div>" +
         '<h4 style="margin:12px 0 2px">🎒 成员推荐技能（点头像或名字看培养方案）</h4>' + msRows;
     }
+    var enHtml = "";
+    if (d.energy) {
+      var en = d.energy;
+      var eRows = en.perPet.map(function(p){
+        var bits = [];
+        if (p.initRule) bits.push(esc(p.initRule));
+        if (p.charge) bits.push("入场前充能：" + esc(p.charge.text) + "（每次 +" + p.charge.per + "）");
+        if (p.traitRecovery && p.traitRecovery.length) bits.push("特性回能：" + p.traitRecovery.map(function(r){ return esc(r.text); }).join("；"));
+        if (p.traitNotes && p.traitNotes.length) bits.push("特性注记：" + p.traitNotes.map(function(t){ return esc(t); }).join("；"));
+        if (p.selfRecovery && p.selfRecovery.length) bits.push("配招自回：" + p.selfRecovery.map(function(r){ return "「" + esc(r.name) + "」+" + r.per; }).join("、"));
+        if (p.feed && p.feed.length) bits.push("供能：" + p.feed.map(function(r){ return "「" + esc(r.name) + "」" + esc(r.kind) + (r.per ? " +" + r.per : ""); }).join("、"));
+        bits.push(p.path ? "回能路径：" + esc(p.path) : "回能路径：无（靠聚能 +5 / 回合行动）");
+        return '<div class="pb-ms"><div><div class="r-nm">' + esc(p.name) +
+          ' <span style="color:var(--sub);font-size:12px">入场能量 <b>' + p.init + "</b>/10" +
+          (p.zeroInit ? "（初始为 0，靠场下预充）" : "") +
+          " · 配招总能耗 ★" + p.totalCost + " · 大招「" + esc(p.bigMove || "—") + "」★" + p.maxCost + "</span></div>" +
+          '<div class="r-why">' + bits.join("。") + "。</div></div></div>";
+      }).join("");
+      var lRows = en.ledger.map(function(r){
+        return '<div class="sq-blurb">回合 ' + r.turn + "：" + esc(r.actor) + " 用「" + esc(r.action) + "」（★" + r.cost + "），能量 " +
+          r.before + " → " + r.after + (r.gain ? "（含回能 +" + r.gain + "）" : "") + (r.note ? "。" + esc(r.note) : "") + "</div>";
+      }).join("");
+      var muHtml = (en.matchups || []).map(function(mu){
+        return '<div class="sq-blurb">🆚 ' + esc(mu.vs) + "：" + esc(mu.text) + "</div>";
+      }).join("");
+      enHtml = '<h4 style="margin:12px 0 2px">🔋 能量明细（第 16 期）</h4>' +
+        '<div class="sq-blurb">' + esc(en.modelNote) + "</div>" + eRows +
+        '<div class="cov-line">团队能量：入场缺口合计 <b>' + en.team.initShortfall + "</b> 点 · 平均配招总能耗 ★<b>" + en.team.avgTotalCost + "</b> · 大招回能闭环" +
+        (en.team.closedLoop ? " <b>成立</b>" : " <b>未完全成立</b>（逐只回能路径见上）") + "</div>" +
+        '<h4 style="margin:12px 0 2px">🧾 前 3 回合能量账（按手册剧本推演）</h4>' + lRows +
+        '<h4 style="margin:12px 0 2px">🔄 上场顺序与轮换策略</h4><div class="sq-blurb">' + esc(en.rotation) + "</div>" +
+        '<h4 style="margin:12px 0 2px">🆚 面对不同敌方阵容</h4>' + muHtml;
+    }
     var prosHtml = (d.pros || []).map(function(t){
       return '<div class="sq-blurb">✅ ' + esc(t) + "</div>";
     }).join("");
     var consHtml = (d.cons || []).map(function(t){
       return '<div class="sq-blurb">⚠ ' + esc(t) + "</div>";
     }).join("");
-    html += '<div class="sq-detail">' + mems + linksHtml + pbHtml +
+    html += '<div class="sq-detail">' + mems + linksHtml + pbHtml + enHtml +
       '<h4 style="margin:12px 0 2px">队伍评分（与配队页同口径）</h4>' + rows +
       '<div class="cov-line">打击面覆盖 <b>' + s.detail.superList.length + "/18</b> 种属性能 ×2 克制 · 平均速度 <b>" +
       avgSpe + "</b> · 弱点 TOP：" +
@@ -3123,8 +3156,9 @@ function renderSquads(){
       ' · 下次自动更新 ' + fmtDT(rot.nextAt) + '（每 48 小时一轮，与上一轮阵容尽量不重样）</div>';
     body = (squads.notice ? '<div class="sq-notice">' + esc(squads.notice) + "</div>" : "") + info +
       squads.rotList.map(rotationCardHTML).join("") +
-      '<div class="footnote">阵容由本站模型按数据规则自动生成、每 48 小时轮换一轮（生成器 tools/gen_rotation.mjs，由定时任务调用，不依赖打开网页）：每轮从 18 个战术里选 3 个互不相同的战术，' +
-      '各战术多次构建后取综合分最高的一版（质量门槛 ≥58 分，强度优先）；与上一轮每套阵容重合不超过 2 只、本轮 3 套之间也互不重样。战术池含天气队、机制队（印记 / 奉献 / 吸血 / 能量 / 首领）与自由混搭（火草 / 地武 / 消耗控制 / 高速爆发 / 联防反击 / 属性互补）等，' +
+      '<div class="footnote">阵容由本站模型按数据规则自动生成、每 48 小时轮换一轮（生成器 tools/gen_rotation.mjs，由定时任务调用，不依赖打开网页）：每轮从 21 个战术里选 3 个互不相同的战术，' +
+      '各战术多次构建后取综合分最高的一版（质量门槛 ≥58 分，强度优先）；与上一轮每套阵容重合不超过 2 只、本轮 3 套之间也互不重样。战术池含天气队、机制队（印记 / 奉献 / 吸血 / 能量 / 首领）、自由混搭（火草 / 地武 / 消耗控制 / 高速爆发 / 联防反击 / 属性互补）与第 16 期主题战术（高爆发输出 / 均衡攻防 / 能量经济）等，' +
+      '第 16 期起部分阵容带「🔋 能量明细」：逐只入场能量按特性 desc 逐只计算（默认满能量 10，特性明文「初始能量为0」者为 0、靠入场前事件预充），配上前 3 回合能量账与轮换策略，能量参数的来源与待验证项见仓库 ENERGY-phase16.md。' +
       '不再局限于纯属性队。配合链里出现的每个特性 / 技能都出自该精灵的真实数据（特性字段或可学技能池），引文为 desc 原文，可在图鉴里逐条查证。评分与配队页 scoreTeam 同口径。' +
       '详情里的 📖 战术手册（起手 + 开局 / 建立优势 / 中期 / 收割 / 逆风五段剧本 + 成员推荐配招）同样由生成器离线算好：起手按速度与开场型资源（天气 / 供能 / 蓄势 / 状态 / 先手）统一打分选出，剧本点名的每个成员与技能 / 特性都真实属于该精灵。成员推荐配招是本队定制：先锁定配合链与起手点名的关键技能（如雪天队的「冬至」必带），其余位置再按培养模型（buildCard）补齐，所以和培养页的个体最优配招可能不同——手册保的是团队联动，培养页保的是单只最强。' +
       '注：本作不存在「晴天」天气；「霞光梦境」天气全库没有引用它收益的技能 / 特性，证据不足，未纳入天气战术。</div>';
