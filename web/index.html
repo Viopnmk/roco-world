@@ -1554,6 +1554,125 @@ function bloodScoreOf(pet, e){
   return score;
 }
 
+/* ================= 第 15 期：培养页审计修复的共用判定 =================
+   seg0：desc 第一段（按 。； 切），与审计口径一致。
+   isSelfDestruct：desc 明文自毁（使用后消耗全部生命类）——一次性手段，
+   不是常规输出（审计 T14-3.1，阵容侧第 9 期已排除、培养页此前漏排）。
+   isPriceDrop：降价机制招（本技能能耗逐回合永久下降，如「抛石」★30 起步
+   逐回合 -5）——前期贵到不可用，不当常规输出（审计 T14-3.2）。
+   selfBuffOf：自我强化类（「自己获得物攻+100%」式记法，不含 STATUS_WORDS
+   任何一词，原先对辅助位选择器不可见，审计 T14-4.3）。 */
+function seg0(desc){ return String(desc || "").split(/[。；]/)[0]; }
+function isSelfDestruct(sk){
+  return /(使用后)?(消耗|耗尽)(自己|自身)?全部生命|失去全部(生命|体力)/.test(sk.desc || "");
+}
+function isPriceDrop(sk){
+  /* 口径收紧：全库带「本技能能耗永久-」字样的共 11 招，绝大多数是正常
+     价位技能的附带优惠（如水刃 ★4、岩土暴击 ★8、冲撞 ★7），不是问题；
+     审计 T14-3.2 点名的降价机制招只有「抛石」——基础能耗 ★30 起价、
+     逐回合降价是其唯一机制。故此类 = 带降价字样且基础能耗 ≥★20。 */
+  return /本技能能耗永久-/.test(sk.desc || "") && (sk.energy || 0) >= 20;
+}
+function selfBuffOf(sk){
+  var d = sk.desc || "";
+  return /自己获得[^。；]*(物攻|魔攻|双攻|速度|物防|魔防|威力)\s*\+/.test(d) ||
+         /自身[^。；]*(物攻|魔攻|双攻|速度|物防|魔防)\s*\+/.test(d);
+}
+/* 辅助位效果标签（第 15 期，审计 T14-4.2）：按 desc 的作用对象与机制分类，
+   不再用关键词子串冒充标签——驱散敌方增益≠「增益」、交换≠「增益」、
+   回复能量≠「回复（生命）」。标签只许用 desc 能支撑的词。 */
+function statusLabelsOf(sk){
+  var d = sk.desc || "", labs = [];
+  function push(x){ if (labs.indexOf(x) < 0) labs.push(x); }
+  if (/驱散敌方/.test(d)) push("驱散");
+  if (/交换/.test(d) && /增益|减益/.test(d)) push("交换");
+  if (/驱散自己的减益|驱散自身/.test(d)) push("净化");
+  if (selfBuffOf(sk)) push("强化");
+  if (/回复\d+%\s*生命|回复生命|回复\d+点生命/.test(d)) push("回复");
+  else if (/回复[^。；]*能量/.test(d)) push("回复能量");
+  if (/护盾/.test(d)) push("护盾");
+  if (/减伤/.test(d)) push("减伤");
+  if (/吸血/.test(d)) push("吸血");
+  if (!labs.length) {
+    STATUS_WORDS.forEach(function(w){
+      if (w !== "增益" && w !== "回复" && d.indexOf(w) >= 0) push(w);
+    });
+  }
+  if (!labs.length) push("辅助");
+  return labs.slice(0, 3);
+}
+/* 特性对配招能耗的静态修正（第 15 期，审计 T14-2.1）：desc 能解析出固定
+   增减的特性按最终配招逐招算展示能耗——全技能±N（留学生/安眠，含入夜
+   条件注记）、非X系±N（盲从）、X系±N（生物电）、「防御」技能−N（缩壳）、
+   每携带1个X系技能则Y系±N（消波块，按配招实数计）。带变量/时机触发的
+   （每有1层、入场时、使用技能后、离场时等）一律不算静态，交由
+   abilityCardNotes 给动态提示。敌方目标的能耗效果不影响本人展示。
+   返回 { adj: {技能名: 增量}, note, applied } 或 null。 */
+function abilityEnergyAdj(pet, moves){
+  var ab = pet.ability ? DB.abilityByName[pet.ability] : null;
+  var d = ab ? String(ab.desc || "") : "";
+  if (!d || !/能耗/.test(d)) return null;
+  if (/敌方[^。；]*能耗[+-]\d|使敌方[^。；]*能耗[+-]\d/.test(d)) return null;
+  if (/每有1层|每使用1次|离场时|应对成功后|每回合|下次行动|入场时|使用[^。；]{0,8}技能后/.test(d)) return null;
+  var adj = {}, rule = null, m;
+  function addIf(skill, delta){ if (delta) adj[skill.name] = (adj[skill.name] || 0) + delta; }
+  if ((m = d.match(/每携带\s*1\s*个(.{1,2})系技能[^，。；]*[，,](.{1,2})系技能能耗([+-]\d+)/))) {
+    var cnt = moves.filter(function(x){ return x.skill.type === m[1]; }).length;
+    var per = parseInt(m[3], 10);
+    moves.forEach(function(x){ if (x.skill.type === m[2]) addIf(x.skill, per * cnt); });
+    rule = "每携带 1 个" + m[1] + "系技能，" + m[2] + "系技能能耗" + m[3] +
+      (cnt ? "（当前配招带 " + cnt + " 个" + m[1] + "系技能）" : "（当前配招没有" + m[1] + "系技能，此减耗不触发，上方 ★ 为基础值）");
+  } else if ((m = d.match(/非(.{1,2})系技能能耗([+-]\d+)/))) {
+    var dv = parseInt(m[2], 10);
+    moves.forEach(function(x){ if (x.skill.type !== m[1]) addIf(x.skill, dv); });
+    rule = "非" + m[1] + "系技能能耗" + m[2];
+  } else if ((m = d.match(/防御技能能耗([+-]\d+)/))) {
+    var dv2 = parseInt(m[1], 10), hasDef = false;
+    moves.forEach(function(x){ if (x.skill.name === "防御") { hasDef = true; addIf(x.skill, dv2); } });
+    rule = "「防御」技能能耗" + m[1] + (hasDef ? "" : "（当前配招未携带「防御」，此减耗不生效）");
+  } else if ((m = d.match(/全技能能耗([+-]\d+)/))) {
+    var dv3 = parseInt(m[1], 10);
+    moves.forEach(function(x){ addIf(x.skill, dv3); });
+    rule = "全技能能耗" + m[1] + (/入夜后/.test(d) ? "（入夜后生效）" : "");
+  } else if ((m = d.match(/携带的(.{1,2})系技能[^。；]*能耗([+-]\d+)/))) {
+    var dv4 = parseInt(m[2], 10), hit = 0;
+    moves.forEach(function(x){ if (x.skill.type === m[1]) { hit++; addIf(x.skill, dv4); } });
+    rule = m[1] + "系技能能耗" + m[2] + (hit ? "" : "（当前配招没有" + m[1] + "系技能，此修正不触发，上方 ★ 为基础值）");
+  }
+  if (!rule) return null;
+  var applied = Object.keys(adj).some(function(k){ return adj[k] !== 0; });
+  return { adj: adj, applied: applied,
+    note: "特性「" + pet.ability + "」：" + rule + (applied ? "，上方 ★ 已按实际能耗修正" : "") };
+}
+/* 培养卡特性提示行（第 15 期，审计二）：技能位硬限制 → 待核验注记（口径
+   与阵容侧 restrictedSlot 一致）；位置依赖 → 顺序提示；动态能耗（desc 带
+   能耗±N 但静态解析不适用、且非敌方目标）→ 基础值提示。 */
+function abilityCardNotes(pet, ea){
+  var ab = pet.ability ? DB.abilityByName[pet.ability] : null;
+  var d = ab ? String(ab.desc || "") : "";
+  var notes = [];
+  if (!d) return notes;
+  if (ea && ea.note) notes.push(ea.note);
+  var slotM = d.match(/仅可(?:以)?使用(?:是)?([0-9号、和]+)号位技能/);
+  if (slotM) {
+    var allowed = (slotM[1].match(/\d+/g) || []).map(function(x){ return parseInt(x, 10); });
+    var blocked = [1, 2, 3, 4].filter(function(x){ return allowed.indexOf(x) < 0; });
+    notes.push("⚠ 待核验：特性「" + pet.ability + "」——" + descFirst(d) +
+      "按现有数据，其 " + blocked.join("、") + " 号位配招在实战中能否使用待核验。");
+  } else if (/号位|技能顺序|技能位置/.test(d)) {
+    notes.push("特性提示：「" + pet.ability + "」与技能位置有关——" + descFirst(d) +
+      "本页配招顺序与游戏内技能位的对应关系待核验，实战摆位时请留意该特性的触发条件。");
+  }
+  /* 敌方目标判定要贴紧能耗短语本身：触发条件里提到敌方（如「敌方精灵
+     离场时，自己获得全技能能耗-3」的珊瑚骨）不算敌方目标，仍要给提示。 */
+  var enemyOnly = /敌方[^，。；]{0,10}能耗[+-]\d|使其获得全技能能耗/.test(d);
+  if (!ea && !enemyOnly && /能耗\s*[+-]\s*\d|能耗永久[+-]\d|基础能耗，变为/.test(d)) {
+    notes.push("特性提示：「" + pet.ability + "」会影响技能能耗——" + descFirst(d) +
+      "上方 ★ 为基础能耗，实战中会随该特性的触发而变化。");
+  }
+  return notes;
+}
+
 function buildCardInner(pet, bannedBlood){
   var st = pet.stats;
   var pool = petPool(pet);
@@ -1563,10 +1682,22 @@ function buildCardInner(pet, bannedBlood){
   var threats = TYPES18.filter(function(a){ return typeMult(a, pet.types) > 1; });
 
   /* ---- 携带技能 ×4 ---- */
-  var atkPool = pool.filter(function(e){
+  var atkAll = pool.filter(function(e){
     return e.skill.power != null && (e.skill.category === "物理" || e.skill.category === "魔法") &&
       !(bannedBlood && e.src === "blood" && bannedBlood[e.skill.name]);
-  }).map(function(e){ return { e: e, eff: effPower(pet, e.skill) }; })
+  }).map(function(e){ return { e: e, eff: effPower(pet, e.skill) }; });
+  /* 第 15 期：自损招与降价机制招不进常规输出池（见 isSelfDestruct /
+     isPriceDrop 的注释），只在常规池补不满时作兜底且 why 明示；常规池
+     排序带温和能耗惩罚——排序分 = 有效威力 / (1 + max(0, 能耗-5)×0.05)，
+     只压 ★6 以上的高能耗招（★10 约打八折、★15 约打六七折），why 里写的
+     有效威力仍是原值、不受惩罚影响。 */
+  var atkPool = atkAll.filter(function(x){ return !isSelfDestruct(x.e.skill) && !isPriceDrop(x.e.skill); })
+    .sort(function(a, b){
+      var ka = a.eff / (1 + Math.max(0, (a.e.skill.energy || 0) - 5) * 0.05);
+      var kb = b.eff / (1 + Math.max(0, (b.e.skill.energy || 0) - 5) * 0.05);
+      return (kb - ka) || (b.eff - a.eff);
+    });
+  var atkSpecial = atkAll.filter(function(x){ return isSelfDestruct(x.e.skill) || isPriceDrop(x.e.skill); })
     .sort(function(a, b){ return b.eff - a.eff; });
   var moves = [], usedName = {};
   function take(entry, why){
@@ -1578,9 +1709,19 @@ function buildCardInner(pet, bannedBlood){
   free(atkPool).filter(function(x){
     return pet.types.indexOf(x.e.skill.type) >= 0 && x.e.skill.category === mainSide;
   }).slice(0, 2).forEach(function(x, i){
-    take(x, i === 0
-      ? "本系" + mainSide + "主攻：威力 " + x.e.skill.power + "，吃本系加成 ×1.2，有效威力 " + Math.round(x.eff) + "，是它输出的核心"
-      : "第二招本系输出：威力 " + x.e.skill.power + "、能耗 ★" + (x.e.skill.energy != null ? x.e.skill.energy : "—") + "，与主攻招错开能耗，保证本系火力不断档");
+    if (i === 0) {
+      take(x, "本系" + mainSide + "主攻：威力 " + x.e.skill.power + "，吃本系加成 ×1.2，有效威力 " + Math.round(x.eff) + "，是它输出的核心");
+      return;
+    }
+    /* 第 15 期（审计 T14-4.1）：「与主攻招错开能耗」只在两招能耗差 ≥2 时
+       才许写——原模板对同能耗的 159 例也声称错开，与事实不符；差 0/1 时
+       如实写相同/接近，不预设算法没做过的能耗安排。 */
+    var e0 = moves.length ? moves[0].skill.energy : null, e1 = x.e.skill.energy, tail;
+    if (e0 != null && e1 != null && Math.abs(e0 - e1) >= 2) tail = "与主攻招错开能耗，保证本系火力不断档";
+    else if (e0 != null && e1 != null && e0 === e1) tail = "与主攻招同能耗，本系输出多一个同节奏的选择";
+    else if (e0 != null && e1 != null) tail = "与主攻招能耗仅差 1 点，节奏接近，本系输出多一个选择";
+    else tail = "本系输出的第二选择，丰富出手节奏";
+    take(x, "第二招本系输出：威力 " + x.e.skill.power + "、能耗 ★" + (e1 != null ? e1 : "—") + "，" + tail);
   });
   if (moves.length < 2) {
     free(atkPool).slice(0, 2 - moves.length).forEach(function(x){
@@ -1613,11 +1754,22 @@ function buildCardInner(pet, bannedBlood){
       if (usedName[e.skill.name] || e.skill.category !== "变化") return;
       if (bannedBlood && e.src === "blood" && bannedBlood[e.skill.name]) return;
       var hits = STATUS_WORDS.filter(function(w){ return (e.skill.desc || "").indexOf(w) >= 0; });
-      if (hits.length && (!bestStatus || hits.length > bestStatus.hits.length)) bestStatus = { e: e, hits: hits };
+      /* 第 15 期（审计 T14-4.3）：自我强化类 desc 不含 STATUS_WORDS 任何一
+         词、原先系统性不可见，621 只有隐形强化招也只能退回「防御」；现按
+         「命中一个功能词」给自我强化 +2 分权重，让真辅助能选上，「防御」
+         仍可作兜底；同分时本系辅助 +0.5 优先（更贴合精灵本身，也避免全站
+         都退化成同一批通用增效技）。标签改按 statusLabelsOf 的语义分类
+         （审计 T14-4.2）。 */
+      var score = hits.length + (selfBuffOf(e.skill) ? 2 : 0) +
+        (pet.types.indexOf(e.skill.type) >= 0 ? 0.5 : 0);
+      if (score > 0 && (!bestStatus || score > bestStatus.score)) bestStatus = { e: e, score: score };
     });
     if (bestStatus) {
-      var d0 = (bestStatus.e.skill.desc || "").split(/[。；]/)[0];
-      take({ e: bestStatus.e }, "辅助位：带「" + bestStatus.hits.join("、") + "」效果——" + d0);
+      var bsk = bestStatus.e.skill;
+      var bwhy = "辅助位：带「" + statusLabelsOf(bsk).join("、") + "」效果——" + seg0(bsk.desc);
+      if (/应对/.test(seg0(bsk.desc))) bwhy += "（注：带应对触发，效果在应对时机才生效）";
+      if (/回复\d+%\s*生命|回复生命/.test(bsk.desc || "") && /自己和敌方|敌方也/.test(bsk.desc || "")) bwhy += "（注：敌方也会一起回复）";
+      take({ e: bestStatus.e }, bwhy);
     }
   }
   while (moves.length < 4) {
@@ -1625,28 +1777,88 @@ function buildCardInner(pet, bannedBlood){
     if (!rest.length) break;
     take(rest[0], "输出补位：威力 " + rest[0].e.skill.power + "，有效威力 " + Math.round(rest[0].eff) + "，是剩余攻击招里最能打的一招");
   }
-
-  /* ---- 性格推荐 ---- */
-  var isTank = st.atk < 95 && st.spa < 95 && (st.def >= 100 || st.spd >= 100 || st.hp >= 120);
-  function natPick(plus, minus, why){
-    var n = natureOf(plus, minus);
-    return n ? { name: n.name, plus: plus, minus: minus, why: why } : null;
+  while (moves.length < 4) { /* 兜底：常规池实在补不满时才许用自损/降价招，why 必须明示代价/机制 */
+    var sp = free(atkSpecial);
+    if (!sp.length) break;
+    var ssk = sp[0].e.skill;
+    if (isPriceDrop(ssk)) {
+      var dm = (ssk.desc || "").match(/能耗永久-(\d+)/);
+      take(sp[0], "机制补位：「" + ssk.name + "」起价能耗 ★" + ssk.energy + "，回合结束时能耗永久-" + (dm ? dm[1] : "5") + "（desc 原文的降价机制）——前期贵到不可用，只当后期降价后的备用输出，不是常规火力");
+    } else {
+      take(sp[0], "兜底补位：「" + ssk.name + "」威力 " + ssk.power + "，但使用后消耗全部生命（desc 原文），只能当最后一搏的一次性手段，不能当常规输出");
+    }
   }
+
+  /* ---- 性格推荐（第 15 期：与最终配招互看，审计 T14-5.1/5.2） ----
+     原先性格只按种族值画像选、配招只按技能池选，两条线不互看：40 只的
+     主推减项实锤命中配招第一输出招的攻项，why 还写「减掉用不上的 X」，
+     与同卡配招直接矛盾。现在先算配招实际用到的攻击向：第一输出招
+     （有效威力最高的攻击招）的攻项、以及被 ≥2 招攻击招用到的攻项，
+     一律列入减项禁区；减项优先落到配招没用到的攻项，双攻都在用时改减
+     速度/较弱防御/生命并如实说明取向；why 永远不许对配招在用的属性
+     说「用不上」。加项若落在攻击项上，必须与配招第一输出招同侧。 */
+  var isTank = st.atk < 95 && st.spa < 95 && (st.def >= 100 || st.spd >= 100 || st.hp >= 120);
+  var atkUseCount = { atk: 0, spa: 0 }, firstKey = null, firstEff = -1, firstMoveName = { atk: null, spa: null };
+  moves.forEach(function(mv){
+    var sk = mv.skill;
+    if (sk.power == null || (sk.category !== "物理" && sk.category !== "魔法")) return;
+    var k = sk.category === "物理" ? "atk" : "spa";
+    atkUseCount[k]++;
+    if (!firstMoveName[k]) firstMoveName[k] = sk.name;
+    var e = effPower(pet, sk);
+    if (e > firstEff) { firstEff = e; firstKey = k; }
+  });
+  var forbiddenMinus = {};
+  if (firstKey) forbiddenMinus[firstKey] = 1;
+  ["atk", "spa"].forEach(function(k){ if (atkUseCount[k] >= 2) forbiddenMinus[k] = 1; });
+  var isDual = !isTank && Math.abs(st.atk - st.spa) < 10;
+  function chooseMinus(pref, plus){
+    var loDef = st.def <= st.spd ? "def" : "spd", hiDefK = loDef === "def" ? "spd" : "def";
+    var cands = [pref, "atk", "spa", "spe", loDef, hiDefK, "hp"], seen = {};
+    for (var i = 0; i < cands.length; i++) {
+      var k = cands[i];
+      if (!k || seen[k] || k === plus || forbiddenMinus[k]) continue;
+      seen[k] = 1;
+      return k;
+    }
+    return pref !== plus ? pref : "hp";
+  }
+  function minusWhy(key, forced){
+    if (key === "atk" || key === "spa") {
+      if (!atkUseCount[key]) return "减掉配招里没用到的" + STAT_NAME[key] + "（种族值 " + st[key] + "），几乎没损失";
+      return "减" + STAT_NAME[key] + "会略微削弱配招里的「" + firstMoveName[key] + "」，但第一输出招的" + STAT_NAME[firstKey] + "不受影响" +
+        (isDual ? "——双攻种族值接近，这是走单系专精的取向，想双修就别减攻" : "");
+    }
+    if (key === "spe") return forced
+      ? "减速度（" + st.spe + "）——配招双攻都在用，减哪一攻都伤输出，只能从速度上让步"
+      : "减速度（" + st.spe + "），它本来就不靠抢先手吃饭，损失最小";
+    if (key === "def" || key === "spd") return "减" + STAT_NAME[key] + "（" + st[key] + "）——配招双攻都在用，改从耐久里让出较弱的一项";
+    return "减生命（" + st.hp + "）——配招双攻都在用，改从体力上让步";
+  }
+  function natPick(plus, prefMinus, lead){
+    var minus = chooseMinus(prefMinus, plus);
+    var n = natureOf(plus, minus);
+    return n ? { name: n.name, plus: plus, minus: minus, why: lead + "；" + minusWhy(minus, minus !== prefMinus) } : null;
+  }
+  /* 加项对齐：主推加项若是攻击项，必须落在配招第一输出招那一侧（审计附录
+     A 的绒绒型错配：种族值主攻在魔攻、配招第一输出却是物理招时，按种族值
+     加魔攻会加错边）；备选加项仅在配招完全不用那一侧时才对齐。 */
+  var mainPlus = firstKey || mainKey;
   var natMain = null, natAlt = null;
   if (isTank) {
     var hiDef = st.def >= st.spd ? "def" : "spd";
     var loAtk = st.atk <= st.spa ? "atk" : "spa";
-    natMain = natPick(hiDef, loAtk, "它双攻都不高（物攻 " + st.atk + " / 魔攻 " + st.spa + "），靠" + STAT_NAME[hiDef] + " " + st[hiDef] + " 和体力 " + st.hp + " 站场：加" + STAT_NAME[hiDef] + "让它更扛揍，减掉" + STAT_NAME[loAtk] + "（" + st[loAtk] + "）几乎没损失");
-    natAlt = natPick("hp", loAtk, "备选加生命：把体力 " + st.hp + " 再堆高更耐久，一样减掉用不上的" + STAT_NAME[loAtk]);
+    natMain = natPick(hiDef, loAtk, "它双攻都不高（物攻 " + st.atk + " / 魔攻 " + st.spa + "），靠" + STAT_NAME[hiDef] + " " + st[hiDef] + " 和体力 " + st.hp + " 站场：加" + STAT_NAME[hiDef] + "让它更扛揍");
+    natAlt = natPick("hp", loAtk, "备选加生命：把体力 " + st.hp + " 再堆高更耐久");
   } else if (st.spe >= 95 && st[mainKey] >= 90) {
-    natMain = natPick("spe", offKey, "速度 " + st.spe + "、" + STAT_NAME[mainKey] + " " + st[mainKey] + "，是高速输出型：加速度抢先手，减掉用不上的" + STAT_NAME[offKey] + "（只有 " + st[offKey] + "）");
-    natAlt = natPick(mainKey, offKey, "备选加" + STAT_NAME[mainKey] + "堆一击伤害，同样减" + STAT_NAME[offKey] + "，适合不缺先手的场合");
+    natMain = natPick("spe", offKey, "速度 " + st.spe + "、" + STAT_NAME[mainKey] + " " + st[mainKey] + "，是高速输出型：加速度抢先手");
+    natAlt = natPick(mainPlus, offKey, "备选加" + STAT_NAME[mainPlus] + "堆一击伤害，适合不缺先手的场合");
   } else if (st.spe < 70) {
-    natMain = natPick(mainKey, "spe", "速度只有 " + st.spe + "，抢先手没指望，干脆加" + STAT_NAME[mainKey] + "（" + st[mainKey] + "）堆一击伤害，减速度不心疼");
-    natAlt = natPick(mainKey, offKey, "备选同样加" + STAT_NAME[mainKey] + "，但减" + STAT_NAME[offKey] + "保住速度，怕被同速线压制时用这个");
+    natMain = natPick(mainPlus, "spe", "速度只有 " + st.spe + "，抢先手没指望，干脆加" + STAT_NAME[mainPlus] + "（" + st[mainPlus] + "）堆一击伤害");
+    natAlt = natPick(mainPlus, offKey, "备选同样加" + STAT_NAME[mainPlus] + "，但保住速度，怕被同速线压制时用这个");
   } else {
-    natMain = natPick(mainKey, offKey, "中速输出型：主攻" + STAT_NAME[mainKey] + " " + st[mainKey] + " 是饭碗，先把它堆满，减掉几乎不用的" + STAT_NAME[offKey] + "（" + st[offKey] + "）");
-    natAlt = natPick("spe", offKey, "备选加速度（现在 " + st.spe + "），抢一档先手，一样减" + STAT_NAME[offKey] + "，适合速度线吃紧的队伍");
+    natMain = natPick(mainPlus, offKey, "中速输出型：配招的第一输出走" + STAT_NAME[mainPlus] + "（种族值 " + st[mainPlus] + "），先把它堆满");
+    natAlt = natPick("spe", offKey, "备选加速度（现在 " + st.spe + "），抢一档先手，适合速度线吃紧的队伍");
   }
 
   /* ---- 个体值优先 ---- */
@@ -1656,7 +1868,18 @@ function buildCardInner(pet, bannedBlood){
   ivScore.hp = st.hp >= 120 ? 70 : st.hp >= 95 ? 55 : 40;
   ivScore.def = st.def >= 110 ? 50 : st.def >= 90 ? 30 : 10;
   ivScore.spd = st.spd >= 110 ? 50 : st.spd >= 90 ? 30 : 10;
-  if (isTank) { ivScore.def += 30; ivScore.spd += 30; ivScore.hp += 10; }
+  if (isTank) {
+    /* 第 15 期（审计 T14-6.1）：坦克的个体值以生存为先——原先主攻项无条件
+       100 分恒占一位，84 只坦克 100% 至少漏掉一项生存项、56 只还把速度排
+       进前三，与同卡性格「加防减攻」自相矛盾。坦克口径：体力/双防拉满，
+       攻击项降为次要（35/30），速度封顶 25，保证前三恒为体力/物防/魔防。 */
+    ivScore[mainKey] = 35;
+    ivScore[offKey] = 30;
+    ivScore.hp += 25;
+    ivScore.def += 30;
+    ivScore.spd += 30;
+    if (ivScore.spe > 25) ivScore.spe = 25;
+  }
   var ivWhy = {};
   ivWhy[mainKey] = "主攻项，决定输出上限";
   ivWhy[offKey] = "副攻项，基本不用";
@@ -1692,6 +1915,20 @@ function bloodRecs(pet, moves){
   });
   bloods.sort(function(a, b){ return b.score - a.score; });
   function whyOf(b){
+    /* 第 15 期（审计 T14-7.1/7.2）：理由必须按解锁技能本身的类别写——变化
+       类技能不造成伤害，既不能「反手打回去」也不提供打击面，更没有威力
+       可吃本系加成 ×1.2；原模板只按血脉属性套攻击话术，271 条夸大、2 条
+       硬错误（对「蜡质膜」声称吃本系加成）。变化类改引 desc 首句讲效果
+       与定位，攻击类维持原口径（其反打/补面声称已按克制表复算成立）。 */
+    if (b.skill.category === "变化" || b.skill.power == null) {
+      var sd = b.skill.desc || "", sbits = ["解锁的「" + b.skill.name + "」是变化技能、不造成伤害：" + seg0(sd)];
+      if (selfBuffOf(b.skill)) sbits.push("它是自我强化技，价值在强化后用自家输出收割，选它图的是强化幅度，不是" + b.type + "系的打击面");
+      else if (/敌方获得|使敌方/.test(sd)) sbits.push("它是给敌方挂状态/减益的技能，价值在效果本身，不提供打击面");
+      else if (/回复/.test(sd)) sbits.push("它是续航类技能，价值在回复本身，不提供打击面");
+      else sbits.push("它的价值在 desc 写明的效果本身，不提供打击面");
+      if (pet.types.indexOf(b.type) >= 0) sbits.push("血脉与精灵本系相同（变化技能没有威力，不享受本系 ×1.2 加成）");
+      return sbits.join("；");
+    }
     var bits = [];
     if (b.counter.length) bits.push(b.type + "系 ×2 克制 " + b.counter.join("、") + "——全是克制" + pet.types.join("/") + "系的属性，对位时能反手打回去");
     if (b.fresh.length) bits.push("补上新打击面 " + b.fresh.slice(0, 4).join("、") + (b.fresh.length > 4 ? " 等 " + b.fresh.length + " 种" : ""));
@@ -1734,6 +1971,19 @@ function buildCard(pet){
     card = buildCardInner(pet, banned);
   }
   card.bloods = bloodRecs(pet, card.moves);
+  /* 第 15 期：特性与培养页对齐——静态能耗修正逐招落到展示值 dispEnergy
+     （不改 skills.json 基础值，与第 12 期阵容侧 energyMod 同口径但按 desc
+     现算、覆盖面更广），技能位限制/动态能耗/位置依赖生成 abilityNotes
+     提示行，渲染层据此展示。 */
+  var ea = abilityEnergyAdj(pet, card.moves);
+  if (ea) {
+    card.moves.forEach(function(m){
+      var dv = ea.adj[m.skill.name];
+      if (dv) m.dispEnergy = Math.max(0, (m.skill.energy != null ? m.skill.energy : 0) + dv);
+    });
+    card.energyAdj = ea.adj;
+  }
+  card.abilityNotes = abilityCardNotes(pet, ea);
   return card;
 }
 
@@ -1753,21 +2003,27 @@ function natLineHTML(n, tag){
 }
 function trainCardHTML(pet){
   var c = buildCard(pet);
+  var abObj = pet.ability ? DB.abilityByName[pet.ability] : null;
   var head = '<section class="blk"><div class="mini"><div class="ava">' + imgTag(pet.avatar, pet.name, true, false) + "</div>" +
     '<div><div class="m-nm">' + esc(pet.name) + ' <small style="color:var(--sub);font-size:12px">No.' + esc(pet.no) + "</small></div>" +
     '<div class="badges">' + pet.types.map(badge).join("") + "</div>" +
     '<div class="m-stats">体力 ' + pet.stats.hp + " · 物攻 " + pet.stats.atk + " · 物防 " + pet.stats.def +
     "<br>魔攻 " + pet.stats.spa + " · 魔防 " + pet.stats.spd + " · 速度 " + pet.stats.spe + " · 总和 " + pet.stats.total +
-    "<br>特性：" + esc(pet.ability) + "</div></div></div>" +
+    "<br>特性：" + esc(pet.ability) + (abObj && abObj.desc ? "——" + esc(descFirst(abObj.desc)) : "") + "</div></div></div>" +
     '<div style="margin-top:8px;font-size:13px"><a href="#/pet/' + pet.id + '">→ 看图鉴详情</a></div></section>';
 
   var movesHtml = c.moves.length ? '<div class="train-skills">' + c.moves.map(function(m){
     var sk = m.skill;
     return '<div class="tskill"><div class="ts-head">' + badge(sk.type) + '<span class="ts-nm">' + esc(sk.name) + "</span>" + srcTagOf(m) + "</div>" +
       '<div class="ts-meta">' + esc(sk.category) + " · " + (sk.power != null ? "威力 " + sk.power : "状态/辅助") +
-      " · 能耗 ★" + (sk.energy != null ? sk.energy : "—") + '</div>' +
+      " · 能耗 ★" + (m.dispEnergy != null ? m.dispEnergy : (sk.energy != null ? sk.energy : "—")) + '</div>' +
       '<div class="ts-why">' + esc(m.why) + "</div></div>";
   }).join("") + "</div>" : '<div class="desc">这只精灵暂时没有可推荐的技能数据。</div>';
+  if (c.abilityNotes && c.abilityNotes.length) {
+    movesHtml += c.abilityNotes.map(function(n){
+      return '<div class="train-note" style="margin-top:8px">' + esc(n) + "</div>";
+    }).join("");
+  }
 
   var natHtml = c.natMain
     ? natLineHTML(c.natMain, "主推") + (c.natAlt ? '<div style="margin-top:10px">' + natLineHTML(c.natAlt, "备选") + "</div>" : "")
@@ -1806,7 +2062,7 @@ function renderTrain(){
     cardHtml +
     '<div class="footnote">培养方案由本站推荐模型按规则生成，不是官方攻略，仅供参考：携带技能从该精灵的可学技能池（等级 / 技能石 / 血脉三组去重）里，按有效威力（威力 × 本系加成 1.2 × 物/魔攻与主攻项的匹配度）、打击面补盲与辅助价值挑选；' +
     '性格按种族值画像匹配性格表（性格数据来自 BWIKI「模块:Natures/data」，共 30 种，每种一项 +10%、一项 −10%，含生命项）；血脉技能受互斥规则约束（同时只能有一种血脉、只能带同系的那一个血脉技能），配招最多保留 1 个血脉技能，改血脉推荐与配招保留的血脉技能对齐。' +
-    '全部只按种族值估算，不含个体值差异与实战环境。</div>';
+    '全部只按种族值估算，不含个体值差异与实战环境。特性对能耗的静态修正（如「留学生」全技能能耗+2）已按特性 desc 计入上方 ★ 并在卡内注记，动态触发类特性只给提示、不改数值；特性对技能威力的修正未纳入有效威力排序，选招时请结合卡头特性说明自行判断。</div>';
   bindPicker("trPick", function(p){
     train.petId = p.id;
     renderTrain();
