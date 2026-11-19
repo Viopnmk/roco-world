@@ -3,8 +3,8 @@
  * roco-world 阵容轮换生成器（第 8 期）
  *
  * 用法（cron 每 48 小时调用一次，工作目录 = 仓库根目录）：
- *   node tools/gen_rotation.mjs            # 生成新一轮（自带第 9 期战术手册）
- *   node tools/gen_rotation.mjs --enrich   # 只给当前轮次补战术手册，其余字段不动（幂等）
+ *   node tools/gen_rotation.mjs            # 生成新一轮（自带战术手册，走第 10 期一致性管线）
+ *   node tools/gen_rotation.mjs --enrich   # 只给当前轮次按一致性管线重算配合链与战术手册，成员/轮次/时间/分数不动（幂等）
  *
  * 做什么：
  *   1. 读取 web/index.html 的内联脚本，在 Node vm 里以浏览器 stub 运行，
@@ -685,10 +685,18 @@ function buildBest(tac, seedBase, sets, maxOverlap){
     const pets = opt.members.map(m => m.pet);
     if (!tac.validatePets(pets)) continue;
     if (sets.some(s => pets.filter(p => s.has(p.id)).length > maxOverlap)) continue;
-    const links = genLinks({ id: tac.key, weather: tac.weather || null }, opt.members);
-    if (links.length < 2) continue;
+    const links0 = genLinks({ id: tac.key, weather: tac.weather || null }, opt.members);
+    if (links0.length < 2) continue;
     if (opt.score > bestSeen) bestSeen = opt.score;
-    if (!best || opt.score > best.score) best = { members: opt.members, score: opt.score, links };
+    /* 第 10 期：入选候选必须先过一致性管线（定配合→定配招→写手册→硬断言）；
+       只对有望夺冠的候选跑完整管线，省去注定落选者的开销。断言抛错会
+       直接中止整个生成（非零退出、不写文件）——那是模型 bug 的信号，
+       不静默绕过；管线判不合格（剔链后 links <2 等）则跳过该候选。 */
+    if (!best || opt.score > best.score){
+      const fin = finalizeSquad(tac, opt.members, null, 'default');
+      if (!fin) continue;
+      best = { members: opt.members, score: opt.score, links: fin.links, playbook: fin.playbook };
+    }
     if (best.score >= 68 && att >= 4) break;
   }
   tac._bestSeen = bestSeen;
@@ -758,13 +766,18 @@ function makeCons(tac, members, met){
 /* ---------------- 9.5 战术手册（第 9 期）：起手 + 五段剧本 + 推荐配招 ----------------
  * 全部数据驱动：起手用统一打分（速度 + 开场型资源权重 + 耐久兜底），不按
  * 战术名硬编码；五段剧本模板参数化，每段点名的成员必是本队成员、引用的
- * 每个技能/特性名必属于所指精灵（与配合链同一验证口径）；推荐配招直接
- * 调用页面 buildCard（与培养页同款同源）。生成过程无随机、无时间依赖，
- * 同一支队伍重复生成结果一致（enrich 幂等的前提）。 */
+ * 每个技能/特性名必属于所指精灵（与配合链同一验证口径）。
+ * 第 10 期起生成顺序钉死为「先定配合 → 再定配招 → 最后写手册」（见 9.6）：
+ * 配招是团队定制（关键技能锁定 + buildCard 补齐），手册只从最终配招里
+ * 引用技能。生成过程无随机、无时间依赖，同一支队伍重复生成结果一致
+ * （enrich 幂等的前提）。 */
 function evQuote0(ev){
-  /* desc 第一小句（在 。； 处截断），去尾标点后嵌入句子中段 */
+  /* desc 第一小句（在 。； 处截断），去尾标点后嵌入句子中段；
+     摘录里的「」一律去掉括号——摘录是证据不是引用，避免其中提到的
+     其它技能名被一致性断言误判为手册引用（全库仅 3 条 desc 有此情况） */
   const src = ev.k === '特性' ? A.DB.abilityByName[ev.n] : A.skillOf(ev.n);
   let d = src ? String(src.desc || '').split(/[。；]/)[0] : '';
+  d = d.replace(/「/g, '').replace(/」/g, '');
   if (d.length > 42) d = d.slice(0, 42) + '…';
   return d;
 }
@@ -780,21 +793,7 @@ function beneEv(pet, w){
   for (const n of w.beneSkills) if (A.petHasSkill(pet, n)) return { n, k: '技能' };
   return null;
 }
-function bestEffMove(pet){
-  /* 自损招（如「彗星」：使用后消耗全部生命）不作代表招——有效威力口径不计自损代价，
-     拿它当收割手招牌会误导；带这类代价的招从手册的爆发/最大招口径里剔除 */
-  let best = null, be = 0;
-  A.petSkills(pet).forEach(sk => {
-    if (/(消耗|失去)全部(生命|体力)|同归于尽/.test(sk.desc || '')) return;
-    const e = A.effPower(pet, sk);
-    if (e > be){ be = e; best = sk; }
-  });
-  return best ? { sk: best, eff: be } : null;
-}
-function burstPB(pet){
-  const bm = bestEffMove(pet);
-  return bm ? bm.eff : 0;
-}
+
 /* 开场型资源：天气设定 / 供能 / 蓄势特性 / 状态或印记挂载 / 先手招 / 入场增益。
    蓄势与入场增益计分并写入起手理由，但不作为「第一回合动作」（蓄势要在场下攒、
    入场增益是被动），第一回合动作的优先级 = 天气 > 供能 > 挂载 > 先手 > 纯火力。 */
@@ -831,19 +830,13 @@ function pickLead(members, tac){
   });
   return best;
 }
-function primaryRes(leadC){
-  for (const k of ['weather', 'feed', 'setup', 'prio']){
-    const r = leadC.res.find(x => x.kind === k);
-    if (r) return r;
-  }
-  return null;
-}
-function leadReason(leadC, members){
+function leadReason(leadC, members, citedRes){
   const pet = leadC.pet;
   const rank = 1 + members.filter(x => x.pet.stats.spe > pet.stats.spe).length;
   let s = pet.name + ' 起手：速度 ' + pet.stats.spe + '（全队第 ' + rank + '）';
-  if (leadC.res.length){
-    leadC.res.slice(0, 2).forEach(r => {
+  const cited = citedRes || leadC.res;
+  if (cited.length){
+    cited.slice(0, 2).forEach(r => {
       s += '，' + r.ev.k + '「' + r.ev.n + '」——' + evQuote0(r.ev);
     });
   } else {
@@ -851,58 +844,178 @@ function leadReason(leadC, members){
   }
   return s + '。';
 }
-function bigHolderOf(members, exclude){
-  let best = null;
-  members.forEach(m => {
-    if (m.pet === exclude) return;
-    const big = A.displayBigMove(m.pet, 5);
-    if (!big) return;
-    const key = (big.energy || 0) * 1000 + (big.power || 0);
-    if (!best || key > best.key) best = { pet: m.pet, sk: big, key };
+/* ---------------- 9.6 一致性管线（第 10 期）：先定配合 → 再定配招 → 最后写手册 ----------------
+ * 第 9 期的问题：配招（buildCard 只看个体）、配合链（squadLinks 按全技能池
+ * 检测）、手册（按全技能池写剧本）三套逻辑各算各的，配合链/手册点名的
+ * 关键技能常常不在推荐配招里。本期钉死顺序：
+ *   1) 先算 links 与 lead，提取每只精灵的「关键技能」（优先级：① links
+ *      发起技能 → ② links 受益技能 → ③ 起手理由引用技能）；某只关键技能
+ *      >4 时按优先级只保留前 4，并剔除引用了被挤掉技能的 links（剔除
+ *      后 links <2 ⇒ 该阵容不合格：默认模式判构建失败、enrich 报错停手）；
+ *   2) 团队定制配招 = 关键技能在前 + buildCard 输出依次补齐到 4 招；
+ *   3) 手册只从最终配招里挑技能引用（起手动作、收割代表招、中期轴心
+ *      手段、逆风拖字诀皆然），挑不到就换轴心/换说法；
+ *   4) assertSquadConsistency 硬断言（见下）：两条生成路径都执行，
+ *      任一失败抛错退出且不覆盖 rotation.json。 */
+function linkBeneficiaryEntries(L, members){
+  /* links 受益技能提取：text 里被「」引用、属于受益者 b 的技能（自连锁
+     a===b 时属于 a 本人）；属于 a 的 token 也一并纳入（超集锁定）。
+     特性 token 跳过：特性固有、不占配招位。b 为「全队」时无受益技能。 */
+  const byName = new Map(members.map(m => [m.pet.name, m.pet]));
+  const a = byName.get(L.a) || null;
+  const b = (L.b && byName.get(L.b)) || null;
+  const out = [];
+  const tokens = [...String(L.text || '').matchAll(/「([^」]+)」/g)].map(x => x[1]);
+  tokens.forEach(t => {
+    if (t === L.via) return;
+    const targets = [];
+    if (b && b !== a) targets.push(b);
+    if (a) targets.push(a);
+    for (const p of targets){
+      if (!p || p.ability === t) continue;
+      if (A.petHasSkill(p, t)){ out.push({ pet: p, skill: t }); break; }
+    }
   });
-  return best;
+  return out;
 }
-function movesetOf(pet){
-  const card = A.buildCard(pet);
-  const moves = card.moves.map(mv => ({
-    name: mv.skill.name, type: mv.skill.type, category: mv.skill.category,
-    power: mv.skill.power, energy: mv.skill.energy,
-  }));
-  if (moves.length < 4){
-    const have = new Set(moves.map(x => x.name));
+function computeKeySkills(members, links, leadC){
+  const byName = new Map(members.map(m => [m.pet.name, m.pet]));
+  const key = new Map(members.map(m => [m.pet.id, []]));
+  const add = (pet, name) => {
+    if (!pet || !name) return;
+    const arr = key.get(pet.id);
+    if (arr && !arr.includes(name)) arr.push(name);
+  };
+  links.forEach(L => {                        /* ① 发起技能 */
+    if (L.viaKind === '技能') add(byName.get(L.a), L.via);
+  });
+  links.forEach(L => {                        /* ② 受益技能 */
+    linkBeneficiaryEntries(L, members).forEach(be => add(be.pet, be.skill));
+  });
+  if (leadC)                                  /* ③ 起手理由引用技能（res 前两项；动作技能在 res 序内天然靠前） */
+    leadC.res.slice(0, 2).forEach(r => { if (r.ev.k === '技能') add(leadC.pet, r.ev.n); });
+  return key;
+}
+function pruneLinks(members, links, leadC){
+  /* 关键技能 >4 的精灵：只保留前 4，引用了被挤掉技能的 links 剔除；
+     迭代到稳定。被挤掉的是起手引用技能等非 links 来源时无链可剔，
+     返回 overflow=true 交调用方判不合格。 */
+  let cur = links.slice();
+  const removed = [];
+  for (let iter = 0; iter < 10; iter++){
+    const keyMap = computeKeySkills(members, cur, leadC);
+    const over = new Map();
+    keyMap.forEach((arr, pid) => { if (arr.length > 4) over.set(pid, arr.slice(4)); });
+    if (!over.size) return { links: cur, keyMap, removed, overflow: false };
+    const byName = new Map(members.map(m => [m.pet.name, m.pet]));
+    const next = cur.filter(L => {
+      const a = byName.get(L.a);
+      let drop = !!(a && L.viaKind === '技能' && over.has(a.id) && over.get(a.id).includes(L.via));
+      if (!drop)
+        drop = linkBeneficiaryEntries(L, members)
+          .some(be => over.has(be.pet.id) && over.get(be.pet.id).includes(be.skill));
+      if (drop) removed.push(L);
+      return !drop;
+    });
+    if (next.length === cur.length)
+      return { links: cur, keyMap, removed, overflow: true };
+    cur = next;
+  }
+  const keyMap = computeKeySkills(members, cur, leadC);
+  let overflow = false;
+  keyMap.forEach(arr => { if (arr.length > 4) overflow = true; });
+  return { links: cur, keyMap, removed, overflow };
+}
+function buildMoveset(pet, keyNames){
+  /* 团队定制配招：关键技能（已按优先级排序）在前，buildCard 输出依次
+     补齐（跳过已含的）；仍不足 4 招时按有效威力从技能池补满。 */
+  const moves = [], have = new Set();
+  const push = sk => {
+    if (sk && !have.has(sk.name) && moves.length < 4){
+      moves.push({ name: sk.name, type: sk.type, category: sk.category, power: sk.power, energy: sk.energy });
+      have.add(sk.name);
+    }
+  };
+  (keyNames || []).forEach(n => push(A.skillOf(n)));
+  A.buildCard(pet).moves.forEach(mv => push(mv.skill));
+  if (moves.length < 4)
     A.petSkills(pet).map(sk => ({ sk, eff: A.effPower(pet, sk) }))
       .sort((a, b) => b.eff - a.eff)
-      .forEach(x => {
-        if (moves.length < 4 && !have.has(x.sk.name)){
-          moves.push({ name: x.sk.name, type: x.sk.type, category: x.sk.category, power: x.sk.power, energy: x.sk.energy });
-          have.add(x.sk.name);
-        }
-      });
-  }
+      .forEach(x => push(x.sk));
   return moves.slice(0, 4);
 }
 
-function buildPlaybook(tac, members, links){
+function buildPlaybook(tac, members, links, movesets){
   links = links || [];
   const pets = members.map(m => m.pet);
+  /* 第 10 期：手册只许引用最终配招里的技能（特性固有除外）。起手打分仍
+     按全技能池（pickLead 不变），但文案引用受配招约束；关键技能锁定已
+     保证起手动作等关键技能必在配招里（见 9.6），这里再过滤一层兜底。 */
+  const mvNames = new Map((movesets || []).map(ms => [ms.id, new Set(ms.moves.map(x => x.name))]));
+  const mvList = new Map((movesets || []).map(ms => [ms.id, ms.moves]));
+  const inMv = (pet, name) => mvNames.has(pet.id) && mvNames.get(pet.id).has(name);
+  function bestEffMoveIn(pet){
+    /* 配招内最高有效威力招；自损招（用后消耗全部生命等）不作代表招，口径同第 9 期 */
+    let best = null, be = 0;
+    (mvList.get(pet.id) || []).forEach(mv => {
+      const sk = A.skillOf(mv.name);
+      if (!sk) return;
+      if (/(消耗|失去)全部(生命|体力)|同归于尽/.test(sk.desc || '')) return;
+      const e = A.effPower(pet, sk);
+      if (e > be){ be = e; best = sk; }
+    });
+    return best ? { sk: best, eff: be } : null;
+  }
+  function sustainIn(pet){
+    /* 配招内的续航招（展示口径同页面 sustainExample：优先 desc 带「生命」） */
+    const list = A.sustainSkillsOf(pet).filter(sk => inMv(pet, sk.name));
+    if (!list.length) return null;
+    const heal = list.filter(sk => (sk.desc || '').includes('生命'));
+    return (heal.length ? heal : list)[0];
+  }
+  function sustainNIn(pet){
+    return A.sustainSkillsOf(pet).filter(sk => inMv(pet, sk.name)).length;
+  }
+  function respondsIn(pet){
+    return petFlagsX(pet).responds.filter(e => e.k === '特性' || inMv(pet, e.n));
+  }
+  function bigHolderIn(exclude){
+    /* 大招受益者只从最终配招里找：某成员配招里真有一招 ★≥5 的才点名 */
+    let best = null;
+    members.forEach(m => {
+      if (m.pet === exclude) return;
+      (mvList.get(m.pet.id) || []).forEach(mv => {
+        if (mv.power == null || (mv.energy || 0) < 5) return;
+        const key = (mv.energy || 0) * 1000 + (mv.power || 0);
+        if (!best || key > best.key) best = { pet: m.pet, sk: mv, key };
+      });
+    });
+    return best;
+  }
   const leadC = pickLead(members, tac);
   const lead = leadC.pet;
-  const prim = primaryRes(leadC);
+  const citedRes = leadC.res.filter(r => r.ev.k === '特性' || inMv(lead, r.ev.n));
+  let prim = null;
+  for (const k of ['weather', 'feed', 'setup', 'prio']){
+    prim = citedRes.find(x => x.kind === k) || null;
+    if (prim) break;
+  }
   const wc = A.weakCounts(pets);
   const weakMax = Math.max.apply(null, TYPES18.map(a => wc[a]));
   const weakTops = TYPES18.filter(a => wc[a] === weakMax && weakMax > 0);
 
   /* ---- 中期轴心：耐久为主（任务定义），减伤/回复/应对手段是资格与加分，
-          权重压住不让技能数量盖过耐久差；优先在持手段者里选 ---- */
+          权重压住不让技能数量盖过耐久差；优先在持手段者里选。
+          第 10 期：手段只认最终配招里的——手册要引用它，必须真带上场 ---- */
+  function shieldIn(pet){
+    return allEntries(pet).some(e => e.k === '技能' && /减伤/.test(e.desc) && inMv(pet, e.n));
+  }
   function pivotScore(pet){
-    const fx = petFlagsX(pet);
-    const shieldN = allEntries(pet).filter(e => e.k === '技能' && /减伤/.test(e.desc)).length;
-    return A.duraOf(pet) + Math.min(A.sustainSkillsOf(pet).length, 2) * 25 +
-      Math.min(fx.responds.length, 2) * 15 + (shieldN ? 10 : 0);
+    return A.duraOf(pet) + Math.min(sustainNIn(pet), 2) * 25 +
+      Math.min(respondsIn(pet).length, 2) * 15 + (shieldIn(pet) ? 10 : 0);
   }
   function pivotHasTools(pet){
-    return A.sustainSkillsOf(pet).length > 0 || petFlagsX(pet).responds.length > 0 ||
-      allEntries(pet).some(e => e.k === '技能' && /减伤/.test(e.desc));
+    return sustainNIn(pet) > 0 || respondsIn(pet).length > 0 || shieldIn(pet);
   }
   const pivotPool = members.filter(m => pivotHasTools(m.pet));
   let pivot = null, pivotBest = -Infinity;
@@ -910,23 +1023,30 @@ function buildPlaybook(tac, members, links){
     const s = pivotScore(m.pet);
     if (s > pivotBest){ pivotBest = s; pivot = m.pet; }
   });
-  /* ---- 后期收割手：速度+有效威力最强（纯供能位爆发不足时让位） ---- */
-  const finCands = members.map(m => ({ pet: m.pet, burst: burstPB(m.pet), score: burstPB(m.pet) + m.pet.stats.spe * 0.5 }))
-    .sort((a, b) => b.score - a.score);
+  /* ---- 后期收割手：速度+有效威力最强（纯供能位爆发不足时让位）；
+          第 10 期：爆发与代表招都只看最终配招 ---- */
+  const finCands = members.map(m => {
+    const bm = bestEffMoveIn(m.pet);
+    const burst = bm ? bm.eff : 0;
+    return { pet: m.pet, burst, score: burst + m.pet.stats.spe * 0.5 };
+  }).sort((a, b) => b.score - a.score);
   let finisher = finCands[0].pet;
   for (const c of finCands){ if (c.burst >= 90){ finisher = c.pet; break; } }
-  const finMove = bestEffMove(finisher);
-  /* ---- 残局核心：击杀收益（击败回能/回复）或吸血续航 ---- */
+  const finMove = bestEffMoveIn(finisher);
+  /* ---- 残局核心：击杀收益（击败回能/回复）或吸血续航；
+          引用条目必须是特性或在最终配招里 ---- */
   let residual = null;
   for (const m of members){
-    const hit = allEntries(m.pet).find(e => /(击败|击杀|打倒)/.test(e.desc) && /(回复|吸血)/.test(e.desc));
+    const hit = allEntries(m.pet).find(e => (e.k === '特性' || inMv(m.pet, e.n)) &&
+      /(击败|击杀|打倒)/.test(e.desc) && /(回复|吸血)/.test(e.desc));
     if (hit){ residual = { pet: m.pet, ev: hit, kind: 'kill' }; break; }
   }
   if (!residual){
     for (const m of members){
       const dr = A.drainOf(m.pet);
       if (dr.length < 2) continue;
-      const stateEv = dr.filter(e => e.n === '贪婪' || e.n === '等价交换' || e.k === '特性')[0];
+      const stateEv = dr.filter(e => (e.n === '贪婪' || e.n === '等价交换' || e.k === '特性') &&
+        (e.k === '特性' || inMv(m.pet, e.n)))[0];
       if (stateEv){ residual = { pet: m.pet, ev: stateEv, kind: 'drain' }; break; }
     }
   }
@@ -944,7 +1064,7 @@ function buildPlaybook(tac, members, links){
           ? benes.slice(0, 3).join('、') + ' 在' + tac.weather + '下直接受益' + (durM ? '，天气持续 ' + durM[1] + ' 回合' : '') + '，这段窗口就是本队的第一波优势期。'
           : '天气在场期间，队友轮换上场都能吃到收益，先把回合数打进天气窗口里。');
     } else if (prim && prim.kind === 'feed'){
-      const big = bigHolderOf(members, lead);
+      const big = bigHolderIn(lead);
       if (prim.ev.n === '加大功率'){
         text = lead.name + ' 起手用「加大功率」主动脱离——' + evQuote0(prim.ev) + '，把 8 点能量交给接棒入场的队友。' +
           (big ? '接棒优先给 ' + big.pet.name + '：它的大招「' + big.sk.name + '」（能耗 ★' + big.sk.energy + '、威力 ' + big.sk.power + '）吃满这 8 点能量就能提前开火。'
@@ -957,16 +1077,18 @@ function buildPlaybook(tac, members, links){
     } else if (prim && prim.kind === 'setup'){
       let s2 = '';
       if (prim.word === '星陨印记'){
-        const consumer = members.find(m => m.pet !== lead && A.markUseOf(m.pet).length);
+        const consumer = members.find(m => m.pet !== lead &&
+          A.markUseOf(m.pet).some(e => e.k === '特性' || inMv(m.pet, e.n)));
         if (consumer){
-          const uev = A.markUseOf(consumer.pet)[0];
+          const uev = A.markUseOf(consumer.pet).filter(e => e.k === '特性' || inMv(consumer.pet, e.n))[0];
           s2 = consumer.pet.name + ' 的' + uev.k + '「' + uev.n + '」按星陨印记层数放大收益，层数从第一回合就开始攒。';
         }
       } else {
         const consumer = members.find(m => m.pet !== lead &&
-          petFlagsX(m.pet).consumers.some(c => c.w === prim.word));
+          petFlagsX(m.pet).consumers.some(c => c.w === prim.word && (c.e.k === '特性' || inMv(m.pet, c.e.n))));
         if (consumer){
-          const ce = petFlagsX(consumer.pet).consumers.find(c => c.w === prim.word).e;
+          const ce = petFlagsX(consumer.pet).consumers
+            .find(c => c.w === prim.word && (c.e.k === '特性' || inMv(consumer.pet, c.e.n))).e;
           s2 = consumer.pet.name + ' 的' + ce.k + '「' + ce.n + '」正好吃' + prim.word + '，状态层数就是它的弹药。';
         }
       }
@@ -976,7 +1098,7 @@ function buildPlaybook(tac, members, links){
       text = lead.name + ' 起手用先手招「' + prim.ev.n + '」抢第一波——' + evQuote0(prim.ev) + '，先把对面血线压下去。' +
         '先手压血是逼对面先交技能、先换人，本队的第一阶段配合链就能顺势展开。';
     } else {
-      const bm = bestEffMove(lead);
+      const bm = bestEffMoveIn(lead);
       text = (bm
         ? lead.name + ' 没有开场型资源，靠速度 ' + lead.stats.spe + ' 起手，用「' + bm.sk.name + '」（' + bm.sk.type + '系' + bm.sk.category + '、威力 ' + bm.sk.power + '、有效威力 ' + Math.round(bm.eff) + '）先压一波血线。'
         : lead.name + ' 靠速度 ' + lead.stats.spe + ' 与耐久起手，先站住场再谈配合。') +
@@ -996,7 +1118,7 @@ function buildPlaybook(tac, members, links){
           (links[1].b === links[1].a ? '自身连锁' : links[1].b) + '——' + clean(links[1].text) + '。';
     } else {
       const other = members.find(m => m.pet !== lead) || members[0];
-      const bm = bestEffMove(other.pet);
+      const bm = bestEffMoveIn(other.pet);
       text = '本队没有成型的配合链，第一阶段就打最朴素的交换：' + lead.name + ' 先手压血，' +
         (bm ? other.pet.name + ' 用「' + bm.sk.name + '」（威力 ' + bm.sk.power + '）在侧翼补刀，把对面血线压进收割区。'
             : other.pet.name + ' 跟进补刀，把对面血线压进收割区。');
@@ -1005,8 +1127,8 @@ function buildPlaybook(tac, members, links){
   }
   /* ---- 中期：换人轴心 + 弱点联防 + 滚雪球 ---- */
   {
-    const susEx = A.sustainExample(pivot);
-    const respEx = petFlagsX(pivot).responds[0];
+    const susEx = sustainIn(pivot);
+    const respEx = respondsIn(pivot)[0];
     let text = pivot.name + ' 是换人轴心：耐久（体力+双防）' + A.duraOf(pivot) +
       (susEx ? '，带续航招「' + susEx.name + '」——' + evQuote0({ n: susEx.name, k: '技能' }) : '') +
       (respEx ? '，还有应对触发' + respEx.k + '「' + respEx.n + '」' : '') +
@@ -1073,7 +1195,7 @@ function buildPlaybook(tac, members, links){
       const s = resisted.length * 40 + A.duraOf(m.pet) * 0.1 + (A.sustainSkillsOf(m.pet).length ? 25 : 0);
       if (s > subBest){ subBest = s; sub = m.pet; subResisted = resisted; }
     });
-    const subSus = sub ? A.sustainExample(sub) : null;
+    const subSus = sub ? sustainIn(sub) : null;
     let text;
     if (leadWeak.length){
       text = '若首发 ' + lead.name + '（' + lead.types.join('/') + ' 系）被对面 ' + leadWeak.join('、') +
@@ -1086,12 +1208,14 @@ function buildPlaybook(tac, members, links){
       text = lead.name + ' 没有被 ×2 克制的属性，逆风主要来自速度被压：被先手压血时换 ' + sub.name + ' 顶上——耐久 ' +
         A.duraOf(sub) + (subSus ? '，带续航招「' + subSus.name + '」能站场回血' : '') + '，先把节奏稳住。';
     }
-    /* 拖字诀资源：降属性 → 能耗压制 → 挂状态 → 回复，取第一个真实存在的 */
+    /* 拖字诀资源：降属性 → 能耗压制 → 挂状态 → 回复，取第一个真实存在的；
+       第 10 期：只认特性或最终配招里的条目，配招外的一律跳过 */
     let drag = null;
-    for (const m of members){ const e = petFlagsX(m.pet).downs[0]; if (e){ drag = { pet: m.pet, ev: e, mode: 'down' }; break; } }
-    if (!drag) for (const m of members){ const e = petFlagsX(m.pet).taxes[0]; if (e){ drag = { pet: m.pet, ev: e, mode: 'tax' }; break; } }
-    if (!drag) for (const m of members){ const f = petFlagsX(m.pet); if (f.status.length){ drag = { pet: m.pet, ev: f.status[0].e, mode: 'status', word: f.status[0].w }; break; } }
-    if (!drag) for (const m of members){ const s0 = A.sustainExample(m.pet); if (s0){ drag = { pet: m.pet, ev: { n: s0.name, k: '技能' }, mode: 'heal' }; break; } }
+    const citable = (pet, e) => e && (e.k === '特性' || inMv(pet, e.n));
+    for (const m of members){ const e = petFlagsX(m.pet).downs.find(x => citable(m.pet, x)); if (e){ drag = { pet: m.pet, ev: e, mode: 'down' }; break; } }
+    if (!drag) for (const m of members){ const e = petFlagsX(m.pet).taxes.find(x => citable(m.pet, x)); if (e){ drag = { pet: m.pet, ev: e, mode: 'tax' }; break; } }
+    if (!drag) for (const m of members){ const s0 = petFlagsX(m.pet).status.find(x => citable(m.pet, x.e)); if (s0){ drag = { pet: m.pet, ev: s0.e, mode: 'status', word: s0.w }; break; } }
+    if (!drag) for (const m of members){ const s0 = sustainIn(m.pet); if (s0){ drag = { pet: m.pet, ev: { n: s0.name, k: '技能' }, mode: 'heal' }; break; } }
     if (drag){
       if (drag.mode === 'status')
         text += '拖字诀靠 ' + drag.pet.name + ' 的' + drag.ev.k + '「' + drag.ev.n + '」挂上' + drag.word + '，层数每回合都在结算，拖得越久对面掉得越多。';
@@ -1112,17 +1236,110 @@ function buildPlaybook(tac, members, links){
   }
 
   return {
-    lead: { id: lead.id, name: lead.name, reason: leadReason(leadC, members) },
+    lead: { id: lead.id, name: lead.name, reason: leadReason(leadC, members, citedRes) },
     phases,
-    movesets: members.map(m => ({ id: m.pet.id, name: m.pet.name, moves: movesetOf(m.pet) })),
+    movesets,
   };
 }
-/* enrich 模式：只给现有 rotation.json 的当前轮次补 playbook，
-   成员/round/generatedAt/nextAt/分数全部不动；重复运行结果一致（幂等）。 */
+/* ---------------- 9.7 一致性硬断言 + 管线收口（第 10 期） ----------------
+ * assertSquadConsistency：逐套逐条验——
+ *   - movesets 每只恰 4 招、不重复、全部 ∈ 该精灵 learnset；
+ *   - links 发起技能 ∈ 发起者配招（特性 = 其 ability）；
+ *   - links 受益技能（技能型）∈ 受益者配招；
+ *   - playbook 全部文本（lead.reason + 五段）按句切分：句中每个被「」
+ *     引用且是技能/特性的名字，必须属于该句点名的成员（技能 ∈ 其配招、
+ *     特性 = 其 ability）；句中没点名成员时按全队口径验。
+ * 任一失败抛错：调用方（默认生成 / enrich）随之非零退出且不写文件。 */
+function assertSquadConsistency(sqLike, members, tacKey){
+  const errs = [];
+  const pets = members.map(m => m.pet);
+  const byName = new Map(pets.map(p => [p.name, p]));
+  const byId = new Map(pets.map(p => [p.id, p]));
+  const pb = sqLike.playbook;
+  const mvMap = new Map();
+  if (!pb) errs.push('缺 playbook');
+  else {
+    if (!pb.lead || !byId.has(pb.lead.id)) errs.push('lead 不在队里');
+    if (!Array.isArray(pb.phases) || pb.phases.length !== 5) errs.push('剧本不是 5 段');
+    if (!Array.isArray(pb.movesets) || pb.movesets.length !== 6) errs.push('movesets 不是 6 行');
+    (pb.movesets || []).forEach(ms => {
+      const pet = byId.get(ms.id);
+      if (!pet){ errs.push('moveset 成员 id=' + ms.id + ' 不在队里'); return; }
+      const names = (ms.moves || []).map(x => x.name);
+      if (names.length !== 4) errs.push(pet.name + ' 配招不是 4 招（实际 ' + names.length + '）');
+      if (new Set(names).size !== names.length) errs.push(pet.name + ' 配招有重复');
+      names.forEach(n => { if (!A.petHasSkill(pet, n)) errs.push(pet.name + ' 配招「' + n + '」不在 learnset 里'); });
+      mvMap.set(pet.id, new Set(names));
+    });
+  }
+  const inMoves = (pet, name) => mvMap.has(pet.id) && mvMap.get(pet.id).has(name);
+  (sqLike.links || []).forEach(L => {
+    const a = byName.get(L.a);
+    if (!a){ errs.push('配合链发起者「' + L.a + '」不在队里'); return; }
+    if (L.viaKind === '技能' && !inMoves(a, L.via))
+      errs.push('配合链发起技能「' + L.via + '」不在 ' + L.a + ' 的配招里');
+    if (L.viaKind === '特性' && a.ability !== L.via)
+      errs.push('配合链发起特性「' + L.via + '」不是 ' + L.a + ' 的特性');
+    linkBeneficiaryEntries(L, members).forEach(be => {
+      if (!inMoves(be.pet, be.skill))
+        errs.push('配合链受益技能「' + be.skill + '」不在 ' + be.pet.name + ' 的配招里');
+    });
+  });
+  if (pb){
+    const texts = [pb.lead && pb.lead.reason].concat((pb.phases || []).map(p => p.text)).filter(Boolean);
+    texts.forEach(tx => {
+      String(tx).split(/[。；]/).forEach(sent => {
+        if (!sent) return;
+        const named = pets.filter(p => sent.includes(p.name));
+        const scope = named.length ? named : pets;
+        [...sent.matchAll(/「([^」]+)」/g)].forEach(mt => {
+          const t = mt[1];
+          const isSkill = !!A.skillOf(t);
+          const isTrait = !!(A.DB.abilityByName && A.DB.abilityByName[t]);
+          if (!isSkill && !isTrait) return;
+          const ok = scope.some(p => (isSkill && inMoves(p, t)) || (isTrait && p.ability === t));
+          if (!ok) errs.push('手册引用「' + t + '」不属于句中成员的配招/特性（句首：' + sent.slice(0, 30) + '…）');
+        });
+      });
+    });
+  }
+  if (errs.length)
+    throw new Error('一致性断言失败（' + (tacKey || '?') + '）：' + errs.join('；'));
+}
+/* finalizeSquad：一套阵容的收口管线（9.6 顺序）——算 lead 与关键技能 →
+   必要时剔链 → 定制配招 → 写手册 → 跑硬断言。
+   mode='default'：不合格（剔链后 links <2 或关键技能仍 >4）返回 null；
+   mode='enrich'：不合格直接抛错停手（不静默写文件），剔除的 links
+   通过 removedLinks 返回给调用方报告。 */
+function finalizeSquad(tac, members, existingLinks, mode){
+  const leadC = pickLead(members, tac);
+  const rawLinks = existingLinks ? existingLinks.slice()
+    : genLinks({ id: tac.key, weather: tac.weather || null }, members);
+  const pr = pruneLinks(members, rawLinks, leadC);
+  if (pr.overflow || pr.links.length < 2){
+    if (mode === 'enrich')
+      throw new Error('enrich 中止：' + tac.key + ' 关键技能超限剔链后配合链只剩 ' + pr.links.length +
+        ' 条（overflow=' + pr.overflow + '），按第 10 期规则报错停手、不写文件');
+    return null;
+  }
+  const movesets = members.map(m => ({
+    id: m.pet.id, name: m.pet.name,
+    moves: buildMoveset(m.pet, pr.keyMap.get(m.pet.id) || []),
+  }));
+  const playbook = buildPlaybook(tac, members, pr.links, movesets);
+  assertSquadConsistency({ links: pr.links, playbook }, members, tac.key);
+  return { links: pr.links, playbook, removedLinks: pr.removed };
+}
+
+/* enrich 模式：只给现有 rotation.json 的当前轮次按新管线重算 links 与
+   playbook（成员/round/generatedAt/nextAt/分数全部不动）；links 如因
+   关键技能超限被剔除会在日志里逐条明示；重复运行结果一致（幂等）。
+   任一阵容断言失败或剔链后 links <2 → 抛错停手，文件不写。 */
 function enrich(){
   const raw = fs.readFileSync(ROT_PATH, 'utf8');
   const j = JSON.parse(raw);
   if (!j || !Array.isArray(j.squads) || !j.squads.length) throw new Error('rotation.json 结构异常，无可 enrich 的轮次');
+  const removedReport = [];
   j.squads.forEach(sq => {
     const tac = TACTICS.find(t => t.key === sq.tactic) || { key: sq.tactic, weather: null };
     const members = sq.members.map(mo => {
@@ -1130,11 +1347,18 @@ function enrich(){
       if (!pet) throw new Error('rotation.json 成员 id=' + mo.id + ' 在图鉴里找不到');
       return { pet, role: mo.role, why: mo.why };
     });
-    sq.playbook = buildPlaybook(tac, members, sq.links || []);
+    const fin = finalizeSquad(tac, members, sq.links || [], 'enrich');
+    sq.links = fin.links;
+    sq.playbook = fin.playbook;
+    if (fin.removedLinks.length)
+      removedReport.push(sq.title + ' 剔除 ' + fin.removedLinks.length + ' 条：' +
+        fin.removedLinks.map(L => L.a + '「' + L.via + '」→' + L.b).join('、'));
   });
   fs.writeFileSync(ROT_PATH, JSON.stringify(j, null, 1) + '\n');
-  log('enrich 完成：第 ' + j.round + ' 轮 ' + j.squads.length + ' 套已补战术手册（' +
+  log('enrich 完成：第 ' + j.round + ' 轮 ' + j.squads.length + ' 套已按一致性管线重算（' +
     j.squads.map(s => s.title + ' 起手=' + s.playbook.lead.name).join('；') + '），其余字段未动');
+  if (removedReport.length) log('links 剔除明细：' + removedReport.join('；'));
+  else log('links 无剔除');
 }
 
 /* ---------------- 10. 轮换选择与主流程 ---------------- */
@@ -1213,13 +1437,15 @@ function main(){
       },
       members: c.cand.members.map(m => ({ id: m.pet.id, name: m.pet.name, role: m.role, why: m.why })),
       links: c.cand.links,
-      playbook: buildPlaybook(c.tac, c.cand.members, c.cand.links),
+      playbook: c.cand.playbook,
       pros: makePros(c.tac, c.cand.members, c.met, c.cand.links),
       cons: makeCons(c.tac, c.cand.members, c.met),
     };
     if (c.relaxed) sq.relaxed = true;
     return sq;
   });
+  /* 写盘前对最终成品再跑一遍一致性硬断言（与 finalize 内部同口径，双保险） */
+  chosen.forEach((c, i) => assertSquadConsistency(squads[i], c.cand.members, c.tac.key));
   const out = {
     round,
     generatedAt: now.toISOString(),
