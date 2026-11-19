@@ -2670,6 +2670,8 @@ function renderSquads(){
     b.addEventListener("click", function(){
       var id = b.getAttribute("data-sq-open");
       squads.openId = squads.openId === id ? "" : id;
+      squads.savedY = window.scrollY;
+      squads.keepScroll = true;
       renderSquads();
     });
   });
@@ -2702,7 +2704,8 @@ function renderSquads(){
       renderSquads();
     });
   });
-  window.scrollTo(0, 0);
+  if (squads.keepScroll) { squads.keepScroll = false; window.scrollTo(0, squads.savedY || 0); }
+  else window.scrollTo(0, 0);
 }
 
 /* ============ 路由与启动 ============ */
