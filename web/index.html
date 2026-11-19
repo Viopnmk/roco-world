@@ -1473,6 +1473,13 @@ function renderTeam(){
    - 血脉：候选 = learnset.bloodline 每条（条目自带血脉系别），按其技能属性的
      反打价值（×2 克制几个威胁属性）×3 + 新增打击面数 + 威力/100 打分。
      改血脉只多学一个该系技能（15 级解锁），不改变自身属性与被克制关系。
+   - 血脉互斥（第 13 期，玩家实战验证的硬规则）：精灵同时只能拥有一种
+     血脉，血脉技能只能携带与当前血脉同系的那一个 ⇒ 配招里 bloodline
+     来源技能最多 1 个。buildCard 先按原流程出配招，若含 ≥2 个血脉技能，
+     按 bloodScoreOf 择优保留 1 个（本系优先 ＞ 有效威力/功能价值（desc）
+     ＞ 补盲 ＞ 能耗效率），其余血脉技能全部禁用后重算，名额用等级/技能
+     石技能补位，补不满宁可少于 4 招也不许塞第二个血脉技能。改血脉推荐
+     与最终配招对齐：配招保留了哪系血脉技能，首选就指向哪系。
    - 个体值：按画像给主攻/速度/生存打分取前三项。 */
 var train = { petId: null };
 var STATUS_WORDS = ["回复", "恢复", "治疗", "回血", "护盾", "减伤", "强化", "提升", "增益", "聚能", "吸血", "免疫", "净化", "降低"];
@@ -1510,7 +1517,44 @@ function natureOf(plus, minus){
   return null;
 }
 
-function buildCard(pet){
+/* 血脉技能择优（第 13 期）：多个血脉候选只能留 1 个时按此打分——
+   本系优先（+80）＞ 有效威力（攻击招，含本系 ×1.2 与攻项匹配）＋功能
+   价值（读 desc：天气设定/供能/状态印记施加/先手/回复/吸血/强化/减伤）
+   ＞ 补盲（反打威胁属性 ×12 + 相对本系的新打击面 ×3）＞ 能耗效率（−★×3）。
+   buildCard 的冲突消解与生成器 gen_rotation 的关键技能血脉取舍共用此函数，
+   两边同一套标准。 */
+function bloodFuncBonus(desc){
+  var d = desc || "", s = 0;
+  if (/天气/.test(d) && /改为|变成/.test(d)) s += 40;
+  if (/回复\d+能量|获得\d+能量|回复能量/.test(d)) s += 30;
+  if (/奉献/.test(d)) s += 20;
+  if (/先手\+|迅捷/.test(d)) s += 25;
+  if (/中毒|灼烧|冻结|寄生|星陨印记/.test(d)) s += 30;
+  if (/连击/.test(d)) s += 20;
+  if (/吸血/.test(d)) s += 20;
+  if (/回复\d+%生命|回复生命|治疗/.test(d)) s += 25;
+  if (/获得[^。；]*(物攻|魔攻|双攻|速度|威力)\+/.test(d)) s += 15;
+  if (/减伤|护盾/.test(d)) s += 15;
+  return s;
+}
+function bloodScoreOf(pet, e){
+  var sk = e.skill;
+  var score = 0;
+  if (pet.types.indexOf(sk.type) >= 0) score += 80;
+  score += effPower(pet, sk);
+  score += bloodFuncBonus(sk.desc);
+  var threats = TYPES18.filter(function(a){ return typeMult(a, pet.types) > 1; });
+  score += threats.filter(function(a){ return typeMult(sk.type, [a]) >= 2; }).length * 12;
+  var stabCov = {};
+  pet.types.forEach(function(t){
+    TYPES18.forEach(function(d){ if (typeMult(t, [d]) >= 2) stabCov[d] = 1; });
+  });
+  score += TYPES18.filter(function(d){ return typeMult(sk.type, [d]) >= 2 && !stabCov[d]; }).length * 3;
+  if (sk.energy != null) score -= sk.energy * 3;
+  return score;
+}
+
+function buildCardInner(pet, bannedBlood){
   var st = pet.stats;
   var pool = petPool(pet);
   var mainSide = st.atk >= st.spa ? "物理" : "魔法";
@@ -1520,7 +1564,8 @@ function buildCard(pet){
 
   /* ---- 携带技能 ×4 ---- */
   var atkPool = pool.filter(function(e){
-    return e.skill.power != null && (e.skill.category === "物理" || e.skill.category === "魔法");
+    return e.skill.power != null && (e.skill.category === "物理" || e.skill.category === "魔法") &&
+      !(bannedBlood && e.src === "blood" && bannedBlood[e.skill.name]);
   }).map(function(e){ return { e: e, eff: effPower(pet, e.skill) }; })
     .sort(function(a, b){ return b.eff - a.eff; });
   var moves = [], usedName = {};
@@ -1566,6 +1611,7 @@ function buildCard(pet){
     var bestStatus = null;
     pool.forEach(function(e){
       if (usedName[e.skill.name] || e.skill.category !== "变化") return;
+      if (bannedBlood && e.src === "blood" && bannedBlood[e.skill.name]) return;
       var hits = STATUS_WORDS.filter(function(w){ return (e.skill.desc || "").indexOf(w) >= 0; });
       if (hits.length && (!bestStatus || hits.length > bestStatus.hits.length)) bestStatus = { e: e, hits: hits };
     });
@@ -1603,29 +1649,6 @@ function buildCard(pet){
     natAlt = natPick("spe", offKey, "备选加速度（现在 " + st.spe + "），抢一档先手，一样减" + STAT_NAME[offKey] + "，适合速度线吃紧的队伍");
   }
 
-  /* ---- 改血脉推荐 ---- */
-  var poolTypes = petAtkTypes(pet);
-  var bloods = [];
-  ((pet.learnset && pet.learnset.bloodline) || []).forEach(function(b){
-    var sk = skillOf(b.skill);
-    if (!sk || sk.category === "特性") return;
-    var t = b.type || sk.type;
-    var counter = threats.filter(function(a){ return typeMult(t, [a]) >= 2; });
-    var fresh = TYPES18.filter(function(d){ return typeMult(t, [d]) >= 2 && bestMult(poolTypes, [d]) < 2; });
-    var score = counter.length * 3 + fresh.length + (sk.power || 0) / 100 +
-      (pet.types.indexOf(t) >= 0 ? 0.5 : 0);
-    bloods.push({ type: t, skill: sk, score: score, counter: counter, fresh: fresh });
-  });
-  bloods.sort(function(a, b){ return b.score - a.score; });
-  var bloodTop = bloods.slice(0, 2).map(function(b, i){
-    var bits = [];
-    if (b.counter.length) bits.push(b.type + "系 ×2 克制 " + b.counter.join("、") + "——全是克制" + pet.types.join("/") + "系的属性，对位时能反手打回去");
-    if (b.fresh.length) bits.push("补上新打击面 " + b.fresh.slice(0, 4).join("、") + (b.fresh.length > 4 ? " 等 " + b.fresh.length + " 种" : ""));
-    if (pet.types.indexOf(b.type) >= 0) bits.push("与本系相同，解锁的技能吃本系加成 ×1.2");
-    if (!bits.length) bits.push("在它的血脉技能里综合价值最高（" + b.skill.category + (b.skill.power != null ? " · 威力 " + b.skill.power : "") + "）");
-    return { type: b.type, skill: b.skill, why: bits.join("；") };
-  });
-
   /* ---- 个体值优先 ---- */
   var ivScore = { atk: 0, spa: 0, spe: 0, hp: 0, def: 0, spd: 0 };
   ivScore[mainKey] = 100;
@@ -1646,7 +1669,72 @@ function buildCard(pet){
     return (ivScore[b] - ivScore[a]) || (ivOrder.indexOf(a) - ivOrder.indexOf(b));
   }).slice(0, 3).map(function(k){ return { key: k, label: STAT_NAME[k], why: ivWhy[k] }; });
 
-  return { moves: moves, natMain: natMain, natAlt: natAlt, bloods: bloodTop, ivs: ivs, isTank: isTank };
+  return { moves: moves, natMain: natMain, natAlt: natAlt, ivs: ivs, isTank: isTank };
+}
+
+/* 改血脉推荐（第 13 期起与最终配招对齐）：配招里保留了血脉技能时，首选
+   必须指向保留技能的那一系（血脉必须是该系才能带它），其余血脉方向只作
+   「互斥、二选一」的信息提示，不再并列推荐一个会与配招冲突的方向；
+   配招没带血脉技能时维持原口径（按反打/补面价值给首选 + 备选）。 */
+function bloodRecs(pet, moves){
+  var threats = TYPES18.filter(function(a){ return typeMult(a, pet.types) > 1; });
+  var poolTypes = petAtkTypes(pet);
+  var bloods = [];
+  ((pet.learnset && pet.learnset.bloodline) || []).forEach(function(b){
+    var sk = skillOf(b.skill);
+    if (!sk || sk.category === "特性") return;
+    var t = b.type || sk.type;
+    var counter = threats.filter(function(a){ return typeMult(t, [a]) >= 2; });
+    var fresh = TYPES18.filter(function(d){ return typeMult(t, [d]) >= 2 && bestMult(poolTypes, [d]) < 2; });
+    var score = counter.length * 3 + fresh.length + (sk.power || 0) / 100 +
+      (pet.types.indexOf(t) >= 0 ? 0.5 : 0);
+    bloods.push({ type: t, skill: sk, score: score, counter: counter, fresh: fresh });
+  });
+  bloods.sort(function(a, b){ return b.score - a.score; });
+  function whyOf(b){
+    var bits = [];
+    if (b.counter.length) bits.push(b.type + "系 ×2 克制 " + b.counter.join("、") + "——全是克制" + pet.types.join("/") + "系的属性，对位时能反手打回去");
+    if (b.fresh.length) bits.push("补上新打击面 " + b.fresh.slice(0, 4).join("、") + (b.fresh.length > 4 ? " 等 " + b.fresh.length + " 种" : ""));
+    if (pet.types.indexOf(b.type) >= 0) bits.push("与本系相同，解锁的技能吃本系加成 ×1.2");
+    if (!bits.length) bits.push("在它的血脉技能里综合价值最高（" + b.skill.category + (b.skill.power != null ? " · 威力 " + b.skill.power : "") + "）");
+    return bits.join("；");
+  }
+  var kept = null;
+  (moves || []).forEach(function(m){ if (m.src === "blood") kept = m; });
+  if (!kept) return bloods.slice(0, 2).map(function(b){ return { type: b.type, skill: b.skill, why: whyOf(b) }; });
+  var kb = null;
+  bloods.forEach(function(b){ if (b.skill.name === kept.skill.name) kb = b; });
+  if (!kb) kb = { type: kept.bloodType || kept.skill.type, skill: kept.skill, counter: [], fresh: [] };
+  var bits = ["配招里携带的「" + kept.skill.name + "」正是这一系血脉解锁的技能——精灵同时只能有一种血脉，血脉必须是" + kb.type + "系才能带它"];
+  var kw = whyOf(kb);
+  if (kw) bits.push(kw);
+  var others = bloods.filter(function(b){ return b.skill.name !== kept.skill.name; });
+  if (others.length) bits.push("其他血脉技能（如「" + others[0].skill.name + "」）与它互斥、不能同时带，想换血脉方向必须连配招里的血脉技能一起换");
+  return [{ type: kb.type, skill: kb.skill, why: bits.join("；") }];
+}
+
+/* buildCard（第 13 期）：先按原流程出配招；若含 ≥2 个血脉技能，按
+   bloodScoreOf 在入选的血脉技能里择优保留 1 个，其余血脉技能全部禁用
+   后重算（名额由等级/技能石技能按原打分补位，补不满宁可少于 4 招）；
+   最后按最终配招生成对齐的改血脉推荐。 */
+function buildCard(pet){
+  var card = buildCardInner(pet, null);
+  var bloodIn = card.moves.filter(function(m){ return m.src === "blood"; });
+  if (bloodIn.length >= 2){
+    var pool = petPool(pet);
+    var byName = {};
+    pool.forEach(function(e){ byName[e.skill.name] = e; });
+    var keeper = bloodIn.slice().sort(function(a, b){
+      return bloodScoreOf(pet, byName[b.skill.name]) - bloodScoreOf(pet, byName[a.skill.name]);
+    })[0];
+    var banned = {};
+    pool.forEach(function(e){
+      if (e.src === "blood" && e.skill.name !== keeper.skill.name) banned[e.skill.name] = 1;
+    });
+    card = buildCardInner(pet, banned);
+  }
+  card.bloods = bloodRecs(pet, card.moves);
+  return card;
 }
 
 function srcTagOf(m){
@@ -1695,7 +1783,7 @@ function trainCardHTML(pet){
     '<section class="blk"><h3>🎒 携带技能推荐（' + c.moves.length + '）</h3>' + movesHtml + "</section>" +
     '<section class="blk"><h3>🧭 性格推荐</h3>' + natHtml + "</section>" +
     '<section class="blk"><h3>🩸 改血脉推荐</h3>' + bloodHtml +
-    '<div class="footnote">改血脉只会让精灵在 15 级多学一个该系血脉技能，不改变精灵自身属性，也不会改变它被克制的关系。</div></section>' +
+    '<div class="footnote">改血脉只会让精灵在 15 级多学一个该系血脉技能，不改变精灵自身属性，也不会改变它被克制的关系。注意：精灵同时只能拥有一种血脉，血脉技能只能携带与当前血脉同系的那一个，不同血脉的技能互相排斥（玩家实战验证）；本站配招与改血脉推荐已按此互斥规则处理，配招里最多保留 1 个血脉技能，改血脉首选与配招保留的血脉技能对齐。</div></section>' +
     '<section class="blk"><h3>📈 个体值优先</h3><div class="brk">' +
     c.ivs.map(function(v){ return "<span><b>" + v.label + "</b> · " + esc(v.why) + "</span>"; }).join("") + "</div></section>";
 }
@@ -1717,7 +1805,7 @@ function renderTrain(){
     (pet ? '<div style="margin-top:10px">' + miniCard(pet) + "</div>" : "") + "</section>" +
     cardHtml +
     '<div class="footnote">培养方案由本站推荐模型按规则生成，不是官方攻略，仅供参考：携带技能从该精灵的可学技能池（等级 / 技能石 / 血脉三组去重）里，按有效威力（威力 × 本系加成 1.2 × 物/魔攻与主攻项的匹配度）、打击面补盲与辅助价值挑选；' +
-    '性格按种族值画像匹配性格表（性格数据来自 BWIKI「模块:Natures/data」，共 30 种，每种一项 +10%、一项 −10%，含生命项）；血脉按其解锁技能的反打弱点与补打击面价值排序。' +
+    '性格按种族值画像匹配性格表（性格数据来自 BWIKI「模块:Natures/data」，共 30 种，每种一项 +10%、一项 −10%，含生命项）；血脉技能受互斥规则约束（同时只能有一种血脉、只能带同系的那一个血脉技能），配招最多保留 1 个血脉技能，改血脉推荐与配招保留的血脉技能对齐。' +
     '全部只按种族值估算，不含个体值差异与实战环境。</div>';
   bindPicker("trPick", function(p){
     train.petId = p.id;
