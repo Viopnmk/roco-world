@@ -299,6 +299,18 @@
   .sq-detail{margin-top:12px; border-top:1px solid #f0f1f6; padding-top:10px;}
   .sq-link{font-size:13px; line-height:1.6; color:#3c3f52; background:#f6f7ff; border:1px solid #e3e6fb; border-radius:10px; padding:8px 10px; margin-top:6px;}
   .sq-quote{font-size:12px; color:var(--sub); margin-top:2px;}
+  .pb-lead{display:flex; gap:10px; align-items:flex-start; background:#fff8ec; border:1px solid #f3e3bd; border-radius:10px; padding:8px 10px; margin-top:6px;}
+  .pb-lead .ava, .pb-ms .ava{flex:none;}
+  .pb-phases{margin-top:8px; display:flex; flex-direction:column; gap:6px;}
+  .pb-phase{background:#fafbfe; border:1px solid var(--line); border-radius:10px; padding:8px 10px;}
+  .pb-pt{font-weight:700; font-size:13.5px; display:flex; align-items:center; gap:6px;}
+  .pb-no{display:inline-flex; width:18px; height:18px; border-radius:50%; background:var(--accent); color:#fff; font-size:12px; align-items:center; justify-content:center; flex:none;}
+  .pb-tx{font-size:13px; line-height:1.6; color:#3c3f52; margin-top:3px;}
+  .pb-ms{display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed #eceef5;}
+  .mv-chips{display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;}
+  .mv-chip{display:inline-flex; align-items:center; gap:4px; background:#f2f4fb; border:1px solid #e1e6f5; border-radius:999px; padding:2px 8px 2px 3px; font-size:12px;}
+  .mv-chip small{color:var(--sub); white-space:nowrap;}
+  .mv-nm{font-weight:600; white-space:nowrap;}
   .role-tag{font-size:11px; padding:3px 8px; border-radius:999px; font-weight:600; background:#fdf0d2; color:#8a5a00; white-space:nowrap;}
   .sq-mem .r-why a{color:var(--accent); font-weight:600;}
   .sq-notice{background:#eafaf0; border:1px solid #bfe8cd; color:#1e6b3c; border-radius:12px;
@@ -2623,13 +2635,38 @@ function rotationCardHTML(d){
           '<div class="sq-quote">出处原文：' + esc(L.quote) + "</div></div>";
       }).join("");
     }
+    var pbHtml = "";
+    if (d.playbook) {
+      var pb = d.playbook;
+      var leadPet = DB.petById[pb.lead.id];
+      var phaseCards = pb.phases.map(function(ph, i){
+        return '<div class="pb-phase"><div class="pb-pt"><span class="pb-no">' + (i + 1) + "</span>" + esc(ph.title) + '</div>' +
+          '<div class="pb-tx">' + esc(ph.text) + "</div></div>";
+      }).join("");
+      var msRows = pb.movesets.map(function(ms){
+        var mpet = DB.petById[ms.id];
+        var chips = ms.moves.map(function(mv){
+          return '<span class="mv-chip">' + badge(mv.type) + '<span class="mv-nm">' + esc(mv.name) + "</span><small>" +
+            esc(mv.category) + (mv.power != null ? " · 威力 " + mv.power : "") + " · ★" + (mv.energy != null ? mv.energy : "—") + "</small></span>";
+        }).join("");
+        return '<div class="pb-ms"><a href="#/train?pet=' + ms.id + '"><span class="ava">' + imgTag(mpet.avatar, mpet.name, true, true) + "</span></a>" +
+          '<div><div class="r-nm"><a href="#/train?pet=' + ms.id + '">' + esc(ms.name) + '</a>' +
+          ' <span style="color:var(--sub);font-size:12px">推荐配招（与培养页同款模型现算）</span></div>' +
+          '<div class="mv-chips">' + chips + "</div></div></div>";
+      }).join("");
+      pbHtml = '<h4 style="margin:12px 0 2px">📖 战术手册</h4>' +
+        '<div class="pb-lead"><span class="ava">' + imgTag(leadPet.avatar, leadPet.name, true, true) + "</span>" +
+        '<div><div class="r-nm">🎯 起手：' + esc(pb.lead.name) + '</div><div class="r-why">' + esc(pb.lead.reason) + "</div></div></div>" +
+        '<div class="pb-phases">' + phaseCards + "</div>" +
+        '<h4 style="margin:12px 0 2px">🎒 成员推荐技能（点头像或名字看培养方案）</h4>' + msRows;
+    }
     var prosHtml = (d.pros || []).map(function(t){
       return '<div class="sq-blurb">✅ ' + esc(t) + "</div>";
     }).join("");
     var consHtml = (d.cons || []).map(function(t){
       return '<div class="sq-blurb">⚠ ' + esc(t) + "</div>";
     }).join("");
-    html += '<div class="sq-detail">' + mems + linksHtml +
+    html += '<div class="sq-detail">' + mems + linksHtml + pbHtml +
       '<h4 style="margin:12px 0 2px">队伍评分（与配队页同口径）</h4>' + rows +
       '<div class="cov-line">打击面覆盖 <b>' + s.detail.superList.length + "/18</b> 种属性能 ×2 克制 · 平均速度 <b>" +
       avgSpe + "</b> · 弱点 TOP：" +
@@ -2660,10 +2697,11 @@ function renderSquads(){
       '<div class="footnote">阵容由本站模型按数据规则自动生成、每 48 小时轮换一轮（生成器 tools/gen_rotation.mjs，由定时任务调用，不依赖打开网页）：每轮从 18 个战术里选 3 个互不相同的战术，' +
       '各战术多次构建后取综合分最高的一版（质量门槛 ≥58 分，强度优先）；与上一轮每套阵容重合不超过 2 只、本轮 3 套之间也互不重样。战术池含天气队、机制队（印记 / 奉献 / 吸血 / 能量 / 首领）与自由混搭（火草 / 地武 / 消耗控制 / 高速爆发 / 联防反击 / 属性互补）等，' +
       '不再局限于纯属性队。配合链里出现的每个特性 / 技能都出自该精灵的真实数据（特性字段或可学技能池），引文为 desc 原文，可在图鉴里逐条查证。评分与配队页 scoreTeam 同口径。' +
+      '详情里的 📖 战术手册（起手 + 开局 / 建立优势 / 中期 / 收割 / 逆风五段剧本 + 成员推荐配招）同样由生成器离线算好：起手按速度与开场型资源（天气 / 供能 / 蓄势 / 状态 / 先手）统一打分选出，剧本点名的每个成员与技能 / 特性都真实属于该精灵；推荐配招与培养页同款模型（buildCard）现算，口径完全一致。' +
       '注：本作不存在「晴天」天气；「霞光梦境」天气全库没有引用它收益的技能 / 特性，证据不足，未纳入天气战术。</div>';
   }
   app.innerHTML = navHTML("squads") +
-    '<header class="top"><h1>🏆 阵容推荐</h1><p>每 48 小时自动轮换的 3 套模型阵容：从 662 只精灵里按战术（天气 / 机制 / 自由混搭）现组现评，强度优先、轮轮不重样。展开详情看成员分工与 🔗 配合链——谁喂谁、谁引爆谁，条条有技能 / 特性原文为据。看中哪套，一键设为我方队伍去打 6v6 分析。</p></header>' +
+    '<header class="top"><h1>🏆 阵容推荐</h1><p>每 48 小时自动轮换的 3 套模型阵容：从 662 只精灵里按战术（天气 / 机制 / 自由混搭）现组现评，强度优先、轮轮不重样。展开详情看成员分工、🔗 配合链与 📖 战术手册——谁起手、五段剧本怎么打、每只配什么招，条条有技能 / 特性原文为据。看中哪套，一键设为我方队伍去打 6v6 分析。</p></header>' +
     body;
 
   app.querySelectorAll("[data-sq-open]").forEach(function(b){

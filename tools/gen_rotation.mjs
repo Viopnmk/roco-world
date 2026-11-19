@@ -3,7 +3,8 @@
  * roco-world 阵容轮换生成器（第 8 期）
  *
  * 用法（cron 每 48 小时调用一次，工作目录 = 仓库根目录）：
- *   node tools/gen_rotation.mjs
+ *   node tools/gen_rotation.mjs            # 生成新一轮（自带第 9 期战术手册）
+ *   node tools/gen_rotation.mjs --enrich   # 只给当前轮次补战术手册，其余字段不动（幂等）
  *
  * 做什么：
  *   1. 读取 web/index.html 的内联脚本，在 Node vm 里以浏览器 stub 运行，
@@ -754,6 +755,388 @@ function makeCons(tac, members, met){
   return cons.slice(0, 3);
 }
 
+/* ---------------- 9.5 战术手册（第 9 期）：起手 + 五段剧本 + 推荐配招 ----------------
+ * 全部数据驱动：起手用统一打分（速度 + 开场型资源权重 + 耐久兜底），不按
+ * 战术名硬编码；五段剧本模板参数化，每段点名的成员必是本队成员、引用的
+ * 每个技能/特性名必属于所指精灵（与配合链同一验证口径）；推荐配招直接
+ * 调用页面 buildCard（与培养页同款同源）。生成过程无随机、无时间依赖，
+ * 同一支队伍重复生成结果一致（enrich 幂等的前提）。 */
+function evQuote0(ev){
+  /* desc 第一小句（在 。； 处截断），去尾标点后嵌入句子中段 */
+  const src = ev.k === '特性' ? A.DB.abilityByName[ev.n] : A.skillOf(ev.n);
+  let d = src ? String(src.desc || '').split(/[。；]/)[0] : '';
+  if (d.length > 42) d = d.slice(0, 42) + '…';
+  return d;
+}
+function setterEv(pet, w){
+  if (typeof A.setterEvObj === 'function') return A.setterEvObj(pet, w);
+  for (const n of w.setterSkills) if (A.petHasSkill(pet, n)) return { n, k: '技能' };
+  for (const n of w.setterAbilities) if (pet.ability === n) return { n, k: '特性' };
+  return null;
+}
+function beneEv(pet, w){
+  if (typeof A.beneEvObj === 'function') return A.beneEvObj(pet, w);
+  for (const n of w.beneAbilities) if (pet.ability === n) return { n, k: '特性' };
+  for (const n of w.beneSkills) if (A.petHasSkill(pet, n)) return { n, k: '技能' };
+  return null;
+}
+function bestEffMove(pet){
+  /* 自损招（如「彗星」：使用后消耗全部生命）不作代表招——有效威力口径不计自损代价，
+     拿它当收割手招牌会误导；带这类代价的招从手册的爆发/最大招口径里剔除 */
+  let best = null, be = 0;
+  A.petSkills(pet).forEach(sk => {
+    if (/(消耗|失去)全部(生命|体力)|同归于尽/.test(sk.desc || '')) return;
+    const e = A.effPower(pet, sk);
+    if (e > be){ be = e; best = sk; }
+  });
+  return best ? { sk: best, eff: be } : null;
+}
+function burstPB(pet){
+  const bm = bestEffMove(pet);
+  return bm ? bm.eff : 0;
+}
+/* 开场型资源：天气设定 / 供能 / 蓄势特性 / 状态或印记挂载 / 先手招 / 入场增益。
+   蓄势与入场增益计分并写入起手理由，但不作为「第一回合动作」（蓄势要在场下攒、
+   入场增益是被动），第一回合动作的优先级 = 天气 > 供能 > 挂载 > 先手 > 纯火力。 */
+const RES_W = { weather: 150, feed: 80, charge: 65, setup: 55, prio: 35, guard: 30 };
+function leadResources(pet, tac){
+  const out = [];
+  if (tac && tac.weather){
+    const w = A.WEATHER_DEFS.find(x => x.weather === tac.weather);
+    if (w){ const ev = setterEv(pet, w); if (ev) out.push({ kind: 'weather', ev, w }); }
+  }
+  const feed = A.energyFeedOf(pet)[0];
+  if (feed) out.push({ kind: 'feed', ev: feed });
+  else if (A.petHasSkill(pet, '假寐')) out.push({ kind: 'feed', ev: { n: '假寐', k: '技能' } });
+  if (A.chargeTypeOf(pet) !== undefined) out.push({ kind: 'charge', ev: { n: pet.ability, k: '特性' } });
+  const fx = petFlagsX(pet);
+  if (fx.status.length) out.push({ kind: 'setup', ev: fx.status[0].e, word: fx.status[0].w });
+  else { const mk = A.markApplyOf(pet)[0]; if (mk) out.push({ kind: 'setup', ev: mk, word: '星陨印记' }); }
+  const pm = (typeof A.prioMoveName === 'function') ? A.prioMoveName(pet) : null;
+  if (pm) out.push({ kind: 'prio', ev: { n: pm.name, k: '技能' } });
+  if (fx.entryGuard) out.push({ kind: 'guard', ev: { n: pet.ability, k: '特性' } });
+  return out;
+}
+function pickLead(members, tac){
+  let best = null;
+  members.forEach(m => {
+    const pet = m.pet;
+    const res = leadResources(pet, tac);
+    let score = pet.stats.spe * 0.6 + A.duraOf(pet) * 0.06;
+    res.forEach(r => { score += RES_W[r.kind] || 0; });
+    if (!best || score > best.score ||
+        (score === best.score && (pet.stats.spe > best.pet.stats.spe ||
+         (pet.stats.spe === best.pet.stats.spe && pet.id < best.pet.id))))
+      best = { pet, res, score };
+  });
+  return best;
+}
+function primaryRes(leadC){
+  for (const k of ['weather', 'feed', 'setup', 'prio']){
+    const r = leadC.res.find(x => x.kind === k);
+    if (r) return r;
+  }
+  return null;
+}
+function leadReason(leadC, members){
+  const pet = leadC.pet;
+  const rank = 1 + members.filter(x => x.pet.stats.spe > pet.stats.spe).length;
+  let s = pet.name + ' 起手：速度 ' + pet.stats.spe + '（全队第 ' + rank + '）';
+  if (leadC.res.length){
+    leadC.res.slice(0, 2).forEach(r => {
+      s += '，' + r.ev.k + '「' + r.ev.n + '」——' + evQuote0(r.ev);
+    });
+  } else {
+    s += '，没有开场型资源，靠耐久（体力+双防）' + A.duraOf(pet) + ' 兜底压血线';
+  }
+  return s + '。';
+}
+function bigHolderOf(members, exclude){
+  let best = null;
+  members.forEach(m => {
+    if (m.pet === exclude) return;
+    const big = A.displayBigMove(m.pet, 5);
+    if (!big) return;
+    const key = (big.energy || 0) * 1000 + (big.power || 0);
+    if (!best || key > best.key) best = { pet: m.pet, sk: big, key };
+  });
+  return best;
+}
+function movesetOf(pet){
+  const card = A.buildCard(pet);
+  const moves = card.moves.map(mv => ({
+    name: mv.skill.name, type: mv.skill.type, category: mv.skill.category,
+    power: mv.skill.power, energy: mv.skill.energy,
+  }));
+  if (moves.length < 4){
+    const have = new Set(moves.map(x => x.name));
+    A.petSkills(pet).map(sk => ({ sk, eff: A.effPower(pet, sk) }))
+      .sort((a, b) => b.eff - a.eff)
+      .forEach(x => {
+        if (moves.length < 4 && !have.has(x.sk.name)){
+          moves.push({ name: x.sk.name, type: x.sk.type, category: x.sk.category, power: x.sk.power, energy: x.sk.energy });
+          have.add(x.sk.name);
+        }
+      });
+  }
+  return moves.slice(0, 4);
+}
+
+function buildPlaybook(tac, members, links){
+  links = links || [];
+  const pets = members.map(m => m.pet);
+  const leadC = pickLead(members, tac);
+  const lead = leadC.pet;
+  const prim = primaryRes(leadC);
+  const wc = A.weakCounts(pets);
+  const weakMax = Math.max.apply(null, TYPES18.map(a => wc[a]));
+  const weakTops = TYPES18.filter(a => wc[a] === weakMax && weakMax > 0);
+
+  /* ---- 中期轴心：耐久为主（任务定义），减伤/回复/应对手段是资格与加分，
+          权重压住不让技能数量盖过耐久差；优先在持手段者里选 ---- */
+  function pivotScore(pet){
+    const fx = petFlagsX(pet);
+    const shieldN = allEntries(pet).filter(e => e.k === '技能' && /减伤/.test(e.desc)).length;
+    return A.duraOf(pet) + Math.min(A.sustainSkillsOf(pet).length, 2) * 25 +
+      Math.min(fx.responds.length, 2) * 15 + (shieldN ? 10 : 0);
+  }
+  function pivotHasTools(pet){
+    return A.sustainSkillsOf(pet).length > 0 || petFlagsX(pet).responds.length > 0 ||
+      allEntries(pet).some(e => e.k === '技能' && /减伤/.test(e.desc));
+  }
+  const pivotPool = members.filter(m => pivotHasTools(m.pet));
+  let pivot = null, pivotBest = -Infinity;
+  (pivotPool.length ? pivotPool : members).forEach(m => {
+    const s = pivotScore(m.pet);
+    if (s > pivotBest){ pivotBest = s; pivot = m.pet; }
+  });
+  /* ---- 后期收割手：速度+有效威力最强（纯供能位爆发不足时让位） ---- */
+  const finCands = members.map(m => ({ pet: m.pet, burst: burstPB(m.pet), score: burstPB(m.pet) + m.pet.stats.spe * 0.5 }))
+    .sort((a, b) => b.score - a.score);
+  let finisher = finCands[0].pet;
+  for (const c of finCands){ if (c.burst >= 90){ finisher = c.pet; break; } }
+  const finMove = bestEffMove(finisher);
+  /* ---- 残局核心：击杀收益（击败回能/回复）或吸血续航 ---- */
+  let residual = null;
+  for (const m of members){
+    const hit = allEntries(m.pet).find(e => /(击败|击杀|打倒)/.test(e.desc) && /(回复|吸血)/.test(e.desc));
+    if (hit){ residual = { pet: m.pet, ev: hit, kind: 'kill' }; break; }
+  }
+  if (!residual){
+    for (const m of members){
+      const dr = A.drainOf(m.pet);
+      if (dr.length < 2) continue;
+      const stateEv = dr.filter(e => e.n === '贪婪' || e.n === '等价交换' || e.k === '特性')[0];
+      if (stateEv){ residual = { pet: m.pet, ev: stateEv, kind: 'drain' }; break; }
+    }
+  }
+
+  const phases = [];
+  /* ---- 开局 ---- */
+  {
+    let text;
+    if (prim && prim.kind === 'weather'){
+      const src = prim.ev.k === '特性' ? A.DB.abilityByName[prim.ev.n] : A.skillOf(prim.ev.n);
+      const durM = src ? String(src.desc || '').match(/持续\s*(\d+)\s*回合/) : null;
+      const benes = members.filter(m => m.pet !== lead && beneEv(m.pet, prim.w)).map(m => m.pet.name);
+      text = lead.name + ' 首发，先用' + prim.ev.k + '「' + prim.ev.n + '」把天气改成' + tac.weather + '——' + evQuote0(prim.ev) + '。' +
+        (benes.length
+          ? benes.slice(0, 3).join('、') + ' 在' + tac.weather + '下直接受益' + (durM ? '，天气持续 ' + durM[1] + ' 回合' : '') + '，这段窗口就是本队的第一波优势期。'
+          : '天气在场期间，队友轮换上场都能吃到收益，先把回合数打进天气窗口里。');
+    } else if (prim && prim.kind === 'feed'){
+      const big = bigHolderOf(members, lead);
+      if (prim.ev.n === '加大功率'){
+        text = lead.name + ' 起手用「加大功率」主动脱离——' + evQuote0(prim.ev) + '，把 8 点能量交给接棒入场的队友。' +
+          (big ? '接棒优先给 ' + big.pet.name + '：它的大招「' + big.sk.name + '」（能耗 ★' + big.sk.energy + '、威力 ' + big.sk.power + '）吃满这 8 点能量就能提前开火。'
+               : '接棒给队里能耗最高的大招位，让它提前一轮开火。');
+      } else {
+        text = lead.name + ' 起手先用' + prim.ev.k + '「' + prim.ev.n + '」给全队攒资源——' + evQuote0(prim.ev) + '。' +
+          (big ? '受益最大的是 ' + big.pet.name + ' 的大招「' + big.sk.name + '」（能耗 ★' + big.sk.energy + '、威力 ' + big.sk.power + '），能量门槛一降它就能提前开火。'
+               : '全队技能的能量门槛一起降低，后面几只的出手节奏都会变顺。');
+      }
+    } else if (prim && prim.kind === 'setup'){
+      let s2 = '';
+      if (prim.word === '星陨印记'){
+        const consumer = members.find(m => m.pet !== lead && A.markUseOf(m.pet).length);
+        if (consumer){
+          const uev = A.markUseOf(consumer.pet)[0];
+          s2 = consumer.pet.name + ' 的' + uev.k + '「' + uev.n + '」按星陨印记层数放大收益，层数从第一回合就开始攒。';
+        }
+      } else {
+        const consumer = members.find(m => m.pet !== lead &&
+          petFlagsX(m.pet).consumers.some(c => c.w === prim.word));
+        if (consumer){
+          const ce = petFlagsX(consumer.pet).consumers.find(c => c.w === prim.word).e;
+          s2 = consumer.pet.name + ' 的' + ce.k + '「' + ce.n + '」正好吃' + prim.word + '，状态层数就是它的弹药。';
+        }
+      }
+      text = lead.name + ' 起手先用' + prim.ev.k + '「' + prim.ev.n + '」给对面挂上' + prim.word + '——' + evQuote0(prim.ev) + '，层数从第一回合就开始结算。' +
+        (s2 || '先把层数铺起来，对面带着状态打，后面每个回合都在亏血。');
+    } else if (prim && prim.kind === 'prio'){
+      text = lead.name + ' 起手用先手招「' + prim.ev.n + '」抢第一波——' + evQuote0(prim.ev) + '，先把对面血线压下去。' +
+        '先手压血是逼对面先交技能、先换人，本队的第一阶段配合链就能顺势展开。';
+    } else {
+      const bm = bestEffMove(lead);
+      text = (bm
+        ? lead.name + ' 没有开场型资源，靠速度 ' + lead.stats.spe + ' 起手，用「' + bm.sk.name + '」（' + bm.sk.type + '系' + bm.sk.category + '、威力 ' + bm.sk.power + '、有效威力 ' + Math.round(bm.eff) + '）先压一波血线。'
+        : lead.name + ' 靠速度 ' + lead.stats.spe + ' 与耐久起手，先站住场再谈配合。') +
+        '先把对面打疼、逼它进入本队的节奏，再让配合位上场跑链。';
+    }
+    phases.push({ key: 'open', title: '开局', text });
+  }
+  /* ---- 第一阶段：围绕配合链第 1 条（及第 2 条） ---- */
+  {
+    const clean = t => String(t || '').replace(/[。；]/g, '，');
+    let text;
+    if (links.length){
+      text = '先把配合链跑通：' + links[0].a + ' 的' + links[0].viaKind + '「' + links[0].via + '」→ ' +
+        (links[0].b === links[0].a ? '自身连锁' : links[0].b) + '——' + clean(links[0].text) + '。';
+      if (links[1])
+        text += '第二条链同步推进：' + links[1].a + ' 的' + links[1].viaKind + '「' + links[1].via + '」→ ' +
+          (links[1].b === links[1].a ? '自身连锁' : links[1].b) + '——' + clean(links[1].text) + '。';
+    } else {
+      const other = members.find(m => m.pet !== lead) || members[0];
+      const bm = bestEffMove(other.pet);
+      text = '本队没有成型的配合链，第一阶段就打最朴素的交换：' + lead.name + ' 先手压血，' +
+        (bm ? other.pet.name + ' 用「' + bm.sk.name + '」（威力 ' + bm.sk.power + '）在侧翼补刀，把对面血线压进收割区。'
+            : other.pet.name + ' 跟进补刀，把对面血线压进收割区。');
+    }
+    phases.push({ key: 'early', title: '第一阶段 · 建立优势', text });
+  }
+  /* ---- 中期：换人轴心 + 弱点联防 + 滚雪球 ---- */
+  {
+    const susEx = A.sustainExample(pivot);
+    const respEx = petFlagsX(pivot).responds[0];
+    let text = pivot.name + ' 是换人轴心：耐久（体力+双防）' + A.duraOf(pivot) +
+      (susEx ? '，带续航招「' + susEx.name + '」——' + evQuote0({ n: susEx.name, k: '技能' }) : '') +
+      (respEx ? '，还有应对触发' + respEx.k + '「' + respEx.n + '」' : '') +
+      '，血线吃紧或要拖回合时换它上场站住。';
+    if (weakTops.length){
+      const T = weakTops[0];
+      const resister = members.filter(m => A.typeMult(T, m.pet.types) < 1)
+        .sort((a, b) => A.duraOf(b.pet) - A.duraOf(a.pet))[0];
+      if (resister){
+        text += '全队最怕 ' + T + ' 系（' + weakMax + ' 只被 ×2 克制），联防答案是 ' + resister.pet.name + '：' +
+          T + ' 系打它只有 ×' + A.typeMult(T, resister.pet.types) + '，对面用 ' + T + ' 系进攻时就换它顶。';
+      } else {
+        const anti = members.find(m => A.petAtkTypes(m.pet).some(t => A.typeMult(t, [T]) >= 2));
+        if (anti){
+          const t = A.petAtkTypes(anti.pet).find(x => A.typeMult(x, [T]) >= 2);
+          text += '全队最怕 ' + T + ' 系（' + weakMax + ' 只被 ×2 克制）且没人能抗，就用 ' + anti.pet.name + ' 的 ' + t +
+            ' 系进攻反打——' + t + ' 系 ×2 克制 ' + T + ' 系，先手点掉对面的 ' + T + ' 系输出。';
+        } else {
+          const fast = members.slice().sort((a, b) => b.pet.stats.spe - a.pet.stats.spe)[0];
+          text += '全队最怕 ' + T + ' 系（' + weakMax + ' 只被 ×2 克制），没人能抗也没有反打属性，靠 ' + fast.pet.name +
+            ' 的速度 ' + fast.pet.stats.spe + ' 先手处理对面的 ' + T + ' 系输出，别让它舒服出手。';
+        }
+      }
+    }
+    const snow = links.find(L => L.kind === 'mark') || links.find(L => L.kind === 'energy') ||
+      links.find(L => L.kind === 'charge') || links.find(L => L.kind === 'offering') || links.find(L => L.kind === 'weather');
+    if (snow){
+      if (snow.kind === 'mark') text += '雪球在印记链上：' + snow.a + ' 继续叠层、' + snow.b + ' 按层数收割，层数只会越滚越高。';
+      else if (snow.kind === 'energy') text += '雪球在能量链上：' + snow.a + ' 供能不停，' + snow.b + ' 的大招就能一发接一发。';
+      else if (snow.kind === 'charge') text += '雪球在蓄势上：' + snow.a + ' 在场下把状态蓄满，入场那一波就是中期最强的爆发点。';
+      else if (snow.kind === 'offering') text += '雪球在奉献池上：' + snow.a + ' 不断产出、全队共享，拖得越久全队技能越强。';
+      else text += '中期注意天气回合：窗口过半就要考虑让 ' + snow.a + ' 续上天气，别让 ' + snow.b + ' 的受益断档。';
+    }
+    phases.push({ key: 'mid', title: '中期 · 扩大优势', text });
+  }
+  /* ---- 后期：收割 ---- */
+  {
+    let text = finMove
+      ? '收割交给 ' + finisher.name + '：速度 ' + finisher.stats.spe + '，最大招「' + finMove.sk.name + '」（' +
+        finMove.sk.type + '系' + finMove.sk.category + '、威力 ' + finMove.sk.power + '、能耗 ★' + finMove.sk.energy +
+        '、有效威力 ' + Math.round(finMove.eff) + '），' +
+        (finisher.stats.spe >= 100 ? '对面残血时它先手点名，一只一只带走。' : '对面残血时它一招一个，一只一只带走。')
+      : '收割交给 ' + finisher.name + '：速度 ' + finisher.stats.spe + '，靠速度线逐个点名残血。';
+    if (residual){
+      const same = residual.pet === finisher;
+      if (residual.kind === 'kill')
+        text += (same ? residual.pet.name + ' 同时是残局核心：' : '残局核心是 ' + residual.pet.name + '：') +
+          residual.ev.k + '「' + residual.ev.n + '」带击杀收益——' + evQuote0(residual.ev) + '，残局每收掉一只都能把收益滚起来。';
+      else
+        text += (same ? residual.pet.name + ' 同时是残局核心：' : '残局核心是 ' + residual.pet.name + '：') +
+          residual.ev.k + '「' + residual.ev.n + '」挂上吸血后边打边回——' + evQuote0(residual.ev) + '，残局换血它占便宜。';
+    } else {
+      text += '本队没有击杀收益型效果，残局就靠 ' + finisher.name + ' 的速度线逐个收割，优先点掉对面最快的，别给它翻盘的回合。';
+    }
+    phases.push({ key: 'late', title: '后期 · 收割', text });
+  }
+  /* ---- 逆风局 ---- */
+  {
+    const leadWeak = TYPES18.filter(a => A.typeMult(a, lead.types) > 1);
+    let sub = null, subBest = -Infinity, subResisted = [];
+    members.forEach(m => {
+      if (m.pet === lead) return;
+      const resisted = leadWeak.filter(t => A.typeMult(t, m.pet.types) < 1);
+      const s = resisted.length * 40 + A.duraOf(m.pet) * 0.1 + (A.sustainSkillsOf(m.pet).length ? 25 : 0);
+      if (s > subBest){ subBest = s; sub = m.pet; subResisted = resisted; }
+    });
+    const subSus = sub ? A.sustainExample(sub) : null;
+    let text;
+    if (leadWeak.length){
+      text = '若首发 ' + lead.name + '（' + lead.types.join('/') + ' 系）被对面 ' + leadWeak.join('、') +
+        ' 系克制，别硬打：换 ' + sub.name + ' 顶上——' +
+        (subResisted.length
+          ? '它对 ' + subResisted.join('、') + ' 系有抗性（' + subResisted[0] + ' 系打它只有 ×' + A.typeMult(subResisted[0], sub.types) + '）'
+          : '它耐久 ' + A.duraOf(sub) + '，是全队最能扛的一档') +
+        (subSus ? '，带续航招「' + subSus.name + '」能站场回血' : '') + '，先把节奏稳住。';
+    } else {
+      text = lead.name + ' 没有被 ×2 克制的属性，逆风主要来自速度被压：被先手压血时换 ' + sub.name + ' 顶上——耐久 ' +
+        A.duraOf(sub) + (subSus ? '，带续航招「' + subSus.name + '」能站场回血' : '') + '，先把节奏稳住。';
+    }
+    /* 拖字诀资源：降属性 → 能耗压制 → 挂状态 → 回复，取第一个真实存在的 */
+    let drag = null;
+    for (const m of members){ const e = petFlagsX(m.pet).downs[0]; if (e){ drag = { pet: m.pet, ev: e, mode: 'down' }; break; } }
+    if (!drag) for (const m of members){ const e = petFlagsX(m.pet).taxes[0]; if (e){ drag = { pet: m.pet, ev: e, mode: 'tax' }; break; } }
+    if (!drag) for (const m of members){ const f = petFlagsX(m.pet); if (f.status.length){ drag = { pet: m.pet, ev: f.status[0].e, mode: 'status', word: f.status[0].w }; break; } }
+    if (!drag) for (const m of members){ const s0 = A.sustainExample(m.pet); if (s0){ drag = { pet: m.pet, ev: { n: s0.name, k: '技能' }, mode: 'heal' }; break; } }
+    if (drag){
+      if (drag.mode === 'status')
+        text += '拖字诀靠 ' + drag.pet.name + ' 的' + drag.ev.k + '「' + drag.ev.n + '」挂上' + drag.word + '，层数每回合都在结算，拖得越久对面掉得越多。';
+      else if (drag.mode === 'heal')
+        text += '拖字诀靠 ' + drag.pet.name + ' 的「' + drag.ev.n + '」回血站场，把回合数拖到配合链攒满。';
+      else
+        text += '拖字诀靠 ' + drag.pet.name + ' 的' + drag.ev.k + '「' + drag.ev.n + '」——' + evQuote0(drag.ev) + '，先把对面的节奏拖慢。';
+    }
+    const flipKinds = ['mark', 'energy', 'charge', 'weather', 'offering', 'drain', 'status', 'heal'];
+    let flip = null;
+    for (const k of flipKinds){ flip = links.find(L => L.kind === k); if (flip) break; }
+    if (flip)
+      text += '翻盘点在配合链：' + flip.a + ' 的' + flip.viaKind + '「' + flip.via + '」→ ' +
+        (flip.b === flip.a ? '自身连锁' : flip.b) + '，这条链攒满、跑通的那一波，就是反打的信号。';
+    else if (finMove)
+      text += '翻盘点在 ' + finisher.name + ' 的大招「' + finMove.sk.name + '」：能量攒满后一波反打，别提前交掉。';
+    phases.push({ key: 'comeback', title: '逆风局 · 调整', text });
+  }
+
+  return {
+    lead: { id: lead.id, name: lead.name, reason: leadReason(leadC, members) },
+    phases,
+    movesets: members.map(m => ({ id: m.pet.id, name: m.pet.name, moves: movesetOf(m.pet) })),
+  };
+}
+/* enrich 模式：只给现有 rotation.json 的当前轮次补 playbook，
+   成员/round/generatedAt/nextAt/分数全部不动；重复运行结果一致（幂等）。 */
+function enrich(){
+  const raw = fs.readFileSync(ROT_PATH, 'utf8');
+  const j = JSON.parse(raw);
+  if (!j || !Array.isArray(j.squads) || !j.squads.length) throw new Error('rotation.json 结构异常，无可 enrich 的轮次');
+  j.squads.forEach(sq => {
+    const tac = TACTICS.find(t => t.key === sq.tactic) || { key: sq.tactic, weather: null };
+    const members = sq.members.map(mo => {
+      const pet = A.DB.petById[mo.id];
+      if (!pet) throw new Error('rotation.json 成员 id=' + mo.id + ' 在图鉴里找不到');
+      return { pet, role: mo.role, why: mo.why };
+    });
+    sq.playbook = buildPlaybook(tac, members, sq.links || []);
+  });
+  fs.writeFileSync(ROT_PATH, JSON.stringify(j, null, 1) + '\n');
+  log('enrich 完成：第 ' + j.round + ' 轮 ' + j.squads.length + ' 套已补战术手册（' +
+    j.squads.map(s => s.title + ' 起手=' + s.playbook.lead.name).join('；') + '），其余字段未动');
+}
+
 /* ---------------- 10. 轮换选择与主流程 ---------------- */
 function readPrev(){
   try {
@@ -830,6 +1213,7 @@ function main(){
       },
       members: c.cand.members.map(m => ({ id: m.pet.id, name: m.pet.name, role: m.role, why: m.why })),
       links: c.cand.links,
+      playbook: buildPlaybook(c.tac, c.cand.members, c.cand.links),
       pros: makePros(c.tac, c.cand.members, c.met, c.cand.links),
       cons: makeCons(c.tac, c.cand.members, c.met),
     };
@@ -856,6 +1240,8 @@ if (process.env.ROT_DIAG){
     log('DIAG ' + tac.key + '（' + tac.title + '）：' + (cand ? '最高 ' + cand.score + ' 分，配合链 ' + cand.links.length + ' 条' : '构建失败') +
       '，耗时 ' + (Date.now() - t0) + 'ms');
   }
+} else if (process.argv.includes('--enrich')) {
+  enrich();
 } else {
   main();
 }
