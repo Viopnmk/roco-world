@@ -378,6 +378,15 @@
   "desc": "自己每使用1次聚能，回合结束时获得物攻+50%。"
  },
  {
+  "key": "dc5g_df252dda54a0ff",
+  "name": "幸福铃音",
+  "type": "无",
+  "category": "特性",
+  "power": null,
+  "energy": 0,
+  "desc": "天气为霞光梦境时，回合结束时敌方获得3层寄生。"
+ },
+ {
   "key": "dc5g_ecb2c7cab049d3",
   "name": "剪影",
   "type": "无",
